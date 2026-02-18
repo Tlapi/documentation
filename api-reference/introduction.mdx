@@ -1,33 +1,49 @@
 ---
 title: 'Introduction'
-description: 'Example section for showcasing API endpoints'
+description: 'Get started with the Ecomail API v2.0'
 ---
 
-<Note>
-  If you're not looking to build API reference documentation, you can delete
-  this section by removing the api-reference folder.
-</Note>
+The Ecomail API v2.0 lets you programmatically manage your email marketing — lists, subscribers, campaigns, automations, and more.
 
-## Welcome
+## Base URL
 
-There are two ways to build API documentation: [OpenAPI](https://mintlify.com/docs/api-playground/openapi/setup) and [MDX components](https://mintlify.com/docs/api-playground/mdx/configuration). For the starter kit, we are using the following OpenAPI specification.
+All API requests use the following base URL:
 
-<Card
-  title="Plant Store Endpoints"
-  icon="leaf"
-  href="https://github.com/mintlify/starter/blob/main/api-reference/openapi.json"
->
-  View the OpenAPI specification file
-</Card>
+```
+https://api2.ecomailapp.cz/
+```
 
 ## Authentication
 
-All API endpoints are authenticated using Bearer tokens and picked up from the specification file.
+Before using the API, you need an API key. To obtain one:
 
-```json
-"security": [
-  {
-    "bearerAuth": []
-  }
-]
+1. Log in to your Ecomail account
+2. Go to **Manage your account** → **For developers**
+3. Click **Copy API Key**
+
+Every request must include a `key` header containing your API key:
+
+```bash
+curl https://api2.ecomailapp.cz/lists \
+  -H "key: YOUR_API_KEY" \
+  -H "Content-Type: application/json"
 ```
+
+<Warning>
+  Keep your API key secret. Do not expose it in client-side code or public repositories.
+</Warning>
+
+### Required headers
+
+| Header         | Value                  |
+| -------------- | ---------------------- |
+| `key`          | Your API key           |
+| `Content-Type` | `application/json`     |
+
+## Rate limiting
+
+The API allows up to **1,000 requests per minute** per API key. If you exceed this limit, the API returns a `429 Too Many Requests` status code with a `Retry-After` header indicating how many seconds to wait before retrying.
+
+## Response format
+
+All responses are returned as JSON. Successful responses return the requested data directly. Error responses include an appropriate HTTP status code.
