@@ -1,0 +1,202 @@
+---
+title: 'Add new subscriber to list'
+api: 'POST https://api2.ecomailapp.cz/lists/{list_id}/subscribe'
+description: 'Subscribe a new contact to a specific list.'
+---
+
+<ParamField path="list_id" type="integer" required>
+  ID of the list.
+</ParamField>
+
+<ParamField body="subscriber_data" type="object" required>
+  Information about the subscriber.
+
+  <Expandable title="subscriber_data properties">
+    <ParamField body="subscriber_data[email]" type="string" required>
+      Subscriber's email address.
+    </ParamField>
+
+    <ParamField body="subscriber_data[name]" type="string">
+      First name.
+    </ParamField>
+
+    <ParamField body="subscriber_data[surname]" type="string">
+      Last name.
+    </ParamField>
+
+    <ParamField body="subscriber_data[gender]" type="string">
+      Gender. Must be `male` or `female`.
+    </ParamField>
+
+    <ParamField body="subscriber_data[status]" type="integer">
+      Subscriber status. `1` = subscribed, `2` = unsubscribed, `4` = hard bounce, `5` = spam complaint, `6` = unconfirmed.
+    </ParamField>
+
+    <ParamField body="subscriber_data[company]" type="string">
+      Company name.
+    </ParamField>
+
+    <ParamField body="subscriber_data[city]" type="string">
+      City.
+    </ParamField>
+
+    <ParamField body="subscriber_data[street]" type="string">
+      Street address.
+    </ParamField>
+
+    <ParamField body="subscriber_data[zip]" type="string">
+      ZIP or postal code.
+    </ParamField>
+
+    <ParamField body="subscriber_data[country]" type="string">
+      Country code.
+    </ParamField>
+
+    <ParamField body="subscriber_data[phone]" type="string">
+      Phone number.
+    </ParamField>
+
+    <ParamField body="subscriber_data[pretitle]" type="string">
+      Pre-title (e.g. Mr., Mrs.).
+    </ParamField>
+
+    <ParamField body="subscriber_data[surtitle]" type="string">
+      Post-nominal title (e.g. PhD).
+    </ParamField>
+
+    <ParamField body="subscriber_data[birthday]" type="string">
+      Birthday in `YYYY-MM-DD` format.
+    </ParamField>
+
+    <ParamField body="subscriber_data[nameday]" type="string">
+      Name day in `MM-DD` format.
+    </ParamField>
+
+    <ParamField body="subscriber_data[source]" type="string">
+      Source of the subscriber.
+    </ParamField>
+
+    <ParamField body="subscriber_data[custom_fields]" type="object">
+      Custom field values. Limited to 5000 characters total. Reserved system merge tags are ignored. If a field doesn't exist, a new field is created. Supported types: `string`, `date`, `json`, `int`, `float`, `url`. Float precision is limited to 3 decimal places.
+    </ParamField>
+
+    <ParamField body="subscriber_data[tags]" type="array">
+      Subscriber tags. Limited to 2000 characters total and 50 characters per tag. Content overwrites current tags. Only updates if the parameter is present and `update_existing` is `true`. To clear all tags, send an empty array.
+    </ParamField>
+
+    <ParamField body="subscriber_data[groups]" type="object">
+      Group assignments. Overwrites current values. To keep existing selections, send the current values together with new ones.
+    </ParamField>
+  </Expandable>
+</ParamField>
+
+<ParamField body="trigger_autoresponders" type="boolean" default="false">
+  Trigger automations when the subscriber is added.
+</ParamField>
+
+<ParamField body="trigger_notification" type="boolean" default="false">
+  Send a notification about the new subscriber if configured in list settings.
+</ParamField>
+
+<ParamField body="update_existing" type="boolean" default="false">
+  Update the subscriber if they already exist in the list.
+</ParamField>
+
+<ParamField body="skip_confirmation" type="boolean" default="false">
+  Skip double opt-in confirmation. If `false`, the system sends a double opt-in email and the subscriber is added with status `6` (unconfirmed).
+</ParamField>
+
+<ParamField body="resubscribe" type="boolean" default="false">
+  Force resubscribe if the subscriber was previously unsubscribed (status `2`). If `status` is provided in `subscriber_data`, it takes precedence. For resubscribe to work, the status must be `1`.
+</ParamField>
+
+<Note>
+  If the subscriber already exists in the list, the response includes `already_subscribed: true`.
+</Note>
+
+<Note>
+  The `inserted_at` field in the response returns the time in UTC format.
+</Note>
+
+<RequestExample>
+```bash cURL
+curl -X POST https://api2.ecomailapp.cz/lists/1/subscribe \
+  -H "key: YOUR_API_KEY" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "subscriber_data": {
+      "name": "Jan",
+      "surname": "Novak",
+      "email": "jan@novak.cz",
+      "gender": "male",
+      "company": "Company name",
+      "city": "Praha",
+      "country": "CZ",
+      "phone": "+420777888999",
+      "birthday": "1984-01-01",
+      "custom_fields": {
+        "SHOP": "myshop.cz",
+        "BIRTHDAY": { "value": "2022-01-20", "type": "date" }
+      },
+      "tags": ["tags"],
+      "groups": { "grp_5a145ee75780f": ["Category 1", "Category 2"] }
+    },
+    "trigger_autoresponders": false,
+    "update_existing": false,
+    "resubscribe": false
+  }'
+```
+
+```php PHP
+$listId = 1;
+$ch = curl_init();
+curl_setopt($ch, CURLOPT_URL, "https://api2.ecomailapp.cz/lists/{$listId}/subscribe");
+curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+curl_setopt($ch, CURLOPT_POST, true);
+curl_setopt($ch, CURLOPT_HTTPHEADER, [
+    'key: YOUR_API_KEY',
+    'Content-Type: application/json',
+]);
+curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode([
+    'subscriber_data' => [
+        'name' => 'Jan',
+        'surname' => 'Novak',
+        'email' => 'jan@novak.cz',
+        'gender' => 'male',
+        'company' => 'Company name',
+        'city' => 'Praha',
+        'country' => 'CZ',
+        'phone' => '+420777888999',
+        'birthday' => '1984-01-01',
+        'custom_fields' => [
+            'SHOP' => 'myshop.cz',
+            'BIRTHDAY' => ['value' => '2022-01-20', 'type' => 'date'],
+        ],
+        'tags' => ['tags'],
+        'groups' => ['grp_5a145ee75780f' => ['Category 1', 'Category 2']],
+    ],
+    'trigger_autoresponders' => false,
+    'update_existing' => false,
+    'resubscribe' => false,
+]));
+$response = curl_exec($ch);
+curl_close($ch);
+```
+</RequestExample>
+
+<ResponseExample>
+```json 200
+{
+  "id": 259471,
+  "name": "Jan",
+  "surname": "Novak",
+  "email": "jan@novak.cz",
+  "gender": null,
+  "bounce_soft": 0,
+  "bounced_hard": 0,
+  "bounce_message": null,
+  "inserted_at": "2015-01-21 10:50:04",
+  "already_subscribed": true
+}
+```
+</ResponseExample>

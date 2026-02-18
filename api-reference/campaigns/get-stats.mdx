@@ -1,0 +1,56 @@
+---
+title: 'Get campaign stats'
+api: 'GET https://api2.ecomailapp.cz/campaigns/{campaign_id}/stats'
+description: 'Returns aggregated statistics for a specific campaign.'
+---
+
+<ParamField path="campaign_id" type="integer" required>
+  Campaign ID.
+</ParamField>
+
+<RequestExample>
+```bash cURL
+curl https://api2.ecomailapp.cz/campaigns/1/stats \
+  -H "key: YOUR_API_KEY" \
+  -H "Content-Type: application/json"
+```
+
+```php PHP
+$campaignId = 1;
+$ch = curl_init();
+curl_setopt($ch, CURLOPT_URL, "https://api2.ecomailapp.cz/campaigns/{$campaignId}/stats");
+curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+curl_setopt($ch, CURLOPT_HTTPHEADER, [
+    'key: YOUR_API_KEY',
+    'Content-Type: application/json',
+]);
+$response = curl_exec($ch);
+curl_close($ch);
+```
+</RequestExample>
+
+<ResponseExample>
+```json 200
+{
+  "stats": {
+    "inject": 10,
+    "delivery": 10,
+    "delivery_rate": 97,
+    "open": 5,
+    "total_open": 10,
+    "open_rate": 10,
+    "click": 2,
+    "total_click": 4,
+    "click_rate": 4,
+    "bounce": 3,
+    "bounce_rate": 3,
+    "spam": 1,
+    "spam_rate": 0.01,
+    "unsub": 1,
+    "unsub_rate": 1,
+    "conversions": 0,
+    "conversions_value": 0
+  }
+}
+```
+</ResponseExample>

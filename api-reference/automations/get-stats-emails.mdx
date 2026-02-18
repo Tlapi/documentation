@@ -1,0 +1,73 @@
+---
+title: 'Get automation stats for multiple emails'
+api: 'POST https://api2.ecomailapp.cz/pipelines/{pipeline_id}/stats-detail'
+description: 'Fetch detailed engagement statistics for multiple email addresses in a given automation.'
+---
+
+<ParamField path="pipeline_id" type="integer" required>
+  Automation ID.
+</ParamField>
+
+<ParamField query="per_page" type="integer">
+  Number of results per page. Default is `100`, maximum is `5000`.
+</ParamField>
+
+<ParamField query="page" type="integer">
+  Page number.
+</ParamField>
+
+<ParamField body="emails" type="array" required>
+  Array of email addresses to retrieve statistics for.
+</ParamField>
+
+<RequestExample>
+```bash cURL
+curl -X POST "https://api2.ecomailapp.cz/pipelines/1/stats-detail?per_page=100&page=1" \
+  -H "key: YOUR_API_KEY" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "emails": ["foo@bar.cz", "foo2@bar.cz"]
+  }'
+```
+
+```php PHP
+$ch = curl_init();
+curl_setopt($ch, CURLOPT_URL, 'https://api2.ecomailapp.cz/pipelines/1/stats-detail?per_page=100&page=1');
+curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+curl_setopt($ch, CURLOPT_POST, true);
+curl_setopt($ch, CURLOPT_HTTPHEADER, [
+    'key: YOUR_API_KEY',
+    'Content-Type: application/json',
+]);
+curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode([
+    'emails' => ['foo@bar.cz', 'foo2@bar.cz'],
+]));
+$response = curl_exec($ch);
+curl_close($ch);
+```
+</RequestExample>
+
+<ResponseExample>
+```json 200
+{
+  "next_page_url": null,
+  "total": 2,
+  "per_page": 100,
+  "subscribers": {
+    "foo@bar.cz": {
+      "open": 6,
+      "send": 5,
+      "unsub": 1,
+      "click": 7,
+      "hard_bounce": 0,
+      "spam": 0
+    },
+    "foo2@bar.cz": {
+      "open": 4,
+      "send": 4,
+      "click": 8
+    }
+  }
+}
+```
+</ResponseExample>

@@ -1,0 +1,64 @@
+---
+title: 'Import discount coupons'
+api: 'POST https://api2.ecomailapp.cz/coupons/import'
+description: 'Import discount coupons into a default or specific folder.'
+---
+
+<ParamField body="folderId" type="integer">
+  Folder ID. If not provided, coupons are imported into the default folder.
+</ParamField>
+
+<ParamField body="codes" type="array" required>
+  Array of coupon code strings.
+</ParamField>
+
+<ParamField body="valid_until" type="string">
+  Expiration date in `YYYY-MM-DD` format.
+</ParamField>
+
+<ParamField body="update_existing" type="boolean" default="false">
+  Update existing coupons if they already exist.
+</ParamField>
+
+<RequestExample>
+```bash cURL
+curl -X POST https://api2.ecomailapp.cz/coupons/import \
+  -H "key: YOUR_API_KEY" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "folderId": 1,
+    "codes": ["kod1", "kod2", "kod3", "kod4"],
+    "valid_until": "2025-12-31",
+    "update_existing": false
+  }'
+```
+
+```php PHP
+$ch = curl_init();
+curl_setopt($ch, CURLOPT_URL, 'https://api2.ecomailapp.cz/coupons/import');
+curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+curl_setopt($ch, CURLOPT_POST, true);
+curl_setopt($ch, CURLOPT_HTTPHEADER, [
+    'key: YOUR_API_KEY',
+    'Content-Type: application/json',
+]);
+curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode([
+    'folderId' => 1,
+    'codes' => ['kod1', 'kod2', 'kod3', 'kod4'],
+    'valid_until' => '2025-12-31',
+    'update_existing' => false,
+]));
+$response = curl_exec($ch);
+curl_close($ch);
+```
+</RequestExample>
+
+<ResponseExample>
+```json 200
+{
+  "imported": 4,
+  "duplicated": 0,
+  "totalCount": 4
+}
+```
+</ResponseExample>

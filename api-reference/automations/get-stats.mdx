@@ -1,0 +1,58 @@
+---
+title: 'Get automation stats'
+api: 'GET https://api2.ecomailapp.cz/pipelines/{pipeline_id}/stats'
+description: 'Retrieve aggregate statistics for a specific automation.'
+---
+
+<ParamField path="pipeline_id" type="integer" required>
+  Automation ID.
+</ParamField>
+
+<RequestExample>
+```bash cURL
+curl https://api2.ecomailapp.cz/pipelines/1/stats \
+  -H "key: YOUR_API_KEY" \
+  -H "Content-Type: application/json"
+```
+
+```php PHP
+$ch = curl_init();
+curl_setopt($ch, CURLOPT_URL, 'https://api2.ecomailapp.cz/pipelines/1/stats');
+curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+curl_setopt($ch, CURLOPT_HTTPHEADER, [
+    'key: YOUR_API_KEY',
+    'Content-Type: application/json',
+]);
+$response = curl_exec($ch);
+curl_close($ch);
+```
+</RequestExample>
+
+<ResponseExample>
+```json 200
+{
+  "stats": {
+    "triggered": 1,
+    "ended": 1,
+    "open": 0,
+    "open_rate": 0,
+    "total_open": 0,
+    "not_opened": 2,
+    "send": 2,
+    "click": 1,
+    "total_click": 4,
+    "click_rate": 50,
+    "inject": 2,
+    "soft_bounce": 0,
+    "hard_bounce": 0,
+    "bounce": 0,
+    "bounce_rate": 0,
+    "conversions": 0,
+    "conversions_value": 0,
+    "spam": 0,
+    "unsub": 0,
+    "delivery_rate": 100
+  }
+}
+```
+</ResponseExample>

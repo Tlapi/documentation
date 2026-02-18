@@ -1,0 +1,52 @@
+---
+title: 'Create a new template'
+api: 'POST https://api2.ecomailapp.cz/template'
+description: 'Create a new email template.'
+---
+
+<ParamField body="name" type="string" required>
+  Template name.
+</ParamField>
+
+<ParamField body="html" type="string" required>
+  Template HTML content.
+</ParamField>
+
+<RequestExample>
+```bash cURL
+curl -X POST https://api2.ecomailapp.cz/template \
+  -H "key: YOUR_API_KEY" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "name": "New Template",
+    "html": "<b>Template HTML</b>"
+  }'
+```
+
+```php PHP
+$ch = curl_init();
+curl_setopt($ch, CURLOPT_URL, 'https://api2.ecomailapp.cz/template');
+curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+curl_setopt($ch, CURLOPT_POST, true);
+curl_setopt($ch, CURLOPT_HTTPHEADER, [
+    'key: YOUR_API_KEY',
+    'Content-Type: application/json',
+]);
+curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode([
+    'name' => 'New Template',
+    'html' => '<b>Template HTML</b>',
+]));
+$response = curl_exec($ch);
+curl_close($ch);
+```
+</RequestExample>
+
+<ResponseExample>
+```json 200
+{
+  "id": 1,
+  "name": "New Template",
+  "html": "<b>Template HTML</b>"
+}
+```
+</ResponseExample>

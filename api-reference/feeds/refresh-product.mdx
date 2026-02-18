@@ -1,0 +1,48 @@
+---
+title: 'Refresh product feed'
+api: 'GET https://api2.ecomailapp.cz/feeds/{feed_id}/refresh'
+description: 'Trigger a refresh of a product feed.'
+---
+
+<Note>
+  Limited to 1 refresh per hour. Only available for Marketer+ accounts and feeds with fewer than 50,000 products.
+</Note>
+
+<ParamField path="feed_id" type="integer" required>
+  ID of the product feed.
+</ParamField>
+
+<RequestExample>
+```bash cURL
+curl https://api2.ecomailapp.cz/feeds/1/refresh \
+  -H "key: YOUR_API_KEY" \
+  -H "Content-Type: application/json"
+```
+
+```php PHP
+$feedId = 1;
+$ch = curl_init();
+curl_setopt($ch, CURLOPT_URL, "https://api2.ecomailapp.cz/feeds/{$feedId}/refresh");
+curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+curl_setopt($ch, CURLOPT_HTTPHEADER, [
+    'key: YOUR_API_KEY',
+    'Content-Type: application/json',
+]);
+$response = curl_exec($ch);
+curl_close($ch);
+```
+</RequestExample>
+
+<ResponseExample>
+```json 200
+{
+  "message": "Your feed is being refreshed"
+}
+```
+
+```json 403
+{
+  "errors": "Account must be marketer+ tariff"
+}
+```
+</ResponseExample>

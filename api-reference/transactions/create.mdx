@@ -1,0 +1,186 @@
+---
+title: 'Create a transaction'
+api: 'POST https://api2.ecomailapp.cz/tracker/transaction'
+description: 'Create a new transaction for a subscriber.'
+---
+
+<Note>
+  Timestamps are saved and returned in UTC+0.
+</Note>
+
+<ParamField body="transaction" type="object" required>
+  Transaction details.
+
+  <Expandable title="transaction properties">
+    <ParamField body="transaction.order_id" type="string" required>
+      Your unique transaction ID.
+    </ParamField>
+
+    <ParamField body="transaction.email" type="string" required>
+      Subscriber's email address.
+    </ParamField>
+
+    <ParamField body="transaction.shop" type="string">
+      Name of your shop, used in conditionals in the app. Case sensitive. An empty value results in not being able to select the shop in segments.
+    </ParamField>
+
+    <ParamField body="transaction.amount" type="number">
+      Total amount including tax and shipping.
+    </ParamField>
+
+    <ParamField body="transaction.tax" type="number">
+      Tax amount only.
+    </ParamField>
+
+    <ParamField body="transaction.shipping" type="number">
+      Shipping amount only.
+    </ParamField>
+
+    <ParamField body="transaction.city" type="string">
+      Delivery city.
+    </ParamField>
+
+    <ParamField body="transaction.county" type="string">
+      Delivery county.
+    </ParamField>
+
+    <ParamField body="transaction.country" type="string">
+      Delivery country.
+    </ParamField>
+
+    <ParamField body="transaction.timestamp" type="integer">
+      Unix timestamp of the transaction.
+    </ParamField>
+
+    <ParamField body="transaction.props" type="string|object">
+      Optional properties, used in conditionals.
+    </ParamField>
+
+    <ParamField body="transaction.status" type="string">
+      Transaction status. Accepted values: `processing`, `canceled`, `pending`, `completed`, `null`.
+    </ParamField>
+  </Expandable>
+</ParamField>
+
+<ParamField body="transaction_items" type="array" required>
+  Array of transaction items.
+
+  <Expandable title="transaction item properties">
+    <ParamField body="transaction_items[].code" type="string">
+      Product code.
+    </ParamField>
+
+    <ParamField body="transaction_items[].title" type="string">
+      Product name.
+    </ParamField>
+
+    <ParamField body="transaction_items[].category" type="string">
+      Deprecated. Use `categories` instead.
+    </ParamField>
+
+    <ParamField body="transaction_items[].categories" type="array">
+      List of product categories. Limited to 100 characters per category and 20 categories per item. Currently not visible in the Ecomail app — use the `category` parameter for now.
+    </ParamField>
+
+    <ParamField body="transaction_items[].price" type="number">
+      Total price for the given quantity.
+    </ParamField>
+
+    <ParamField body="transaction_items[].amount" type="number">
+      Quantity of the product.
+    </ParamField>
+
+    <ParamField body="transaction_items[].tags" type="array">
+      Optional item tags. Limited to 5000 characters per account.
+    </ParamField>
+  </Expandable>
+</ParamField>
+
+<RequestExample>
+```bash cURL
+curl -X POST https://api2.ecomailapp.cz/tracker/transaction \
+  -H "key: YOUR_API_KEY" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "transaction": {
+      "order_id": "transaction_1234",
+      "email": "foo@bar.cz",
+      "shop": "myshop.cz",
+      "amount": 1500,
+      "tax": 200,
+      "shipping": 100,
+      "city": "Praha",
+      "timestamp": 1441905935,
+      "status": "completed"
+    },
+    "transaction_items": [
+      {
+        "code": "product code",
+        "title": "product name",
+        "categories": ["my category 1", "my category 2"],
+        "price": 1500,
+        "amount": 1,
+        "tags": ["M", "3+", "puzzle"]
+      }
+    ]
+  }'
+```
+
+```php PHP
+$ch = curl_init();
+curl_setopt($ch, CURLOPT_URL, 'https://api2.ecomailapp.cz/tracker/transaction');
+curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+curl_setopt($ch, CURLOPT_POST, true);
+curl_setopt($ch, CURLOPT_HTTPHEADER, [
+    'key: YOUR_API_KEY',
+    'Content-Type: application/json',
+]);
+curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode([
+    'transaction' => [
+        'order_id' => 'transaction_1234',
+        'email' => 'foo@bar.cz',
+        'shop' => 'myshop.cz',
+        'amount' => 1500,
+        'tax' => 200,
+        'shipping' => 100,
+        'city' => 'Praha',
+        'timestamp' => 1441905935,
+        'status' => 'completed',
+    ],
+    'transaction_items' => [
+        [
+            'code' => 'product code',
+            'title' => 'product name',
+            'categories' => ['my category 1', 'my category 2'],
+            'price' => 1500,
+            'amount' => 1,
+            'tags' => ['M', '3+', 'puzzle'],
+        ],
+    ],
+]));
+$response = curl_exec($ch);
+curl_close($ch);
+```
+</RequestExample>
+
+<ResponseExample>
+```json 200
+{
+  "order_id": "transaction_1234",
+  "email": "foo@bar.cz",
+  "shop": "myshop.cz",
+  "amount": 1500,
+  "timestamp": "2015-09-10 17:25:35",
+  "id": 1,
+  "status": "completed"
+}
+```
+
+```json 422
+{
+  "errors": {
+    "transaction.order_id": ["The transaction.order id has already been taken."]
+  }
+}
+```
+</ResponseExample>

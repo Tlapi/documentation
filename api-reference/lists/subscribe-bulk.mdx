@@ -1,0 +1,116 @@
+---
+title: 'Add bulk subscribers'
+api: 'POST https://api2.ecomailapp.cz/lists/{list_id}/subscribe-bulk'
+description: 'Subscribe multiple contacts to a specific list in a single request.'
+---
+
+<ParamField path="list_id" type="integer" required>
+  ID of the list.
+</ParamField>
+
+<ParamField body="subscriber_data" type="array" required>
+  Array of subscriber objects. Limited to 3000 subscribers per call — subscribers above the limit are ignored.
+
+  <Expandable title="subscriber object properties">
+    <ParamField body="subscriber_data[][email]" type="string" required>
+      Email address of the subscriber.
+    </ParamField>
+
+    <ParamField body="subscriber_data[][status]" type="integer" default="1">
+      Subscriber status. `1` = subscribed, `2` = unsubscribed, `4` = hard bounce.
+    </ParamField>
+  </Expandable>
+</ParamField>
+
+<ParamField body="update_existing" type="boolean" default="true">
+  Update subscribers that already exist in the list.
+</ParamField>
+
+<ParamField body="resubscribe" type="boolean" default="false">
+  Force resubscribe if the subscriber was previously unsubscribed.
+</ParamField>
+
+<ParamField body="trigger_autoresponders" type="boolean" default="false">
+  Trigger automations when subscribers are added.
+</ParamField>
+
+<Warning>
+  Maximum of 3000 subscribers per call. Subscribers above the limit are silently ignored.
+</Warning>
+
+<Note>
+  Subscribers added via bulk subscribe always skip double opt-in confirmation. Custom fields are limited to 5000 characters total. Tags are limited to 2000 characters total and 50 characters per tag — tag content only updates when the `tags` parameter is present and `update_existing` is `true`.
+</Note>
+
+<RequestExample>
+```bash cURL
+curl -X POST https://api2.ecomailapp.cz/lists/1/subscribe-bulk \
+  -H "key: YOUR_API_KEY" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "subscriber_data": [
+      {
+        "name": "Foo",
+        "surname": "Bar",
+        "email": "foo@bar.cz",
+        "custom_fields": { "category": "customer" }
+      },
+      {
+        "name": "Foo 2",
+        "email": "foo2@bar.cz"
+      }
+    ],
+    "update_existing": true,
+    "resubscribe": false,
+    "trigger_autoresponders": false
+  }'
+```
+
+```php PHP
+$listId = 1;
+$ch = curl_init();
+curl_setopt($ch, CURLOPT_URL, "https://api2.ecomailapp.cz/lists/{$listId}/subscribe-bulk");
+curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+curl_setopt($ch, CURLOPT_POST, true);
+curl_setopt($ch, CURLOPT_HTTPHEADER, [
+    'key: YOUR_API_KEY',
+    'Content-Type: application/json',
+]);
+curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode([
+    'subscriber_data' => [
+        [
+            'name' => 'Foo',
+            'surname' => 'Bar',
+            'email' => 'foo@bar.cz',
+            'custom_fields' => ['category' => 'customer'],
+        ],
+        [
+            'name' => 'Foo 2',
+            'email' => 'foo2@bar.cz',
+        ],
+    ],
+    'update_existing' => true,
+    'resubscribe' => false,
+    'trigger_autoresponders' => false,
+]));
+$response = curl_exec($ch);
+curl_close($ch);
+```
+</RequestExample>
+
+<ResponseExample>
+```json 200
+{
+  "inserts": 2
+}
+```
+
+```json 422
+{
+  "errors": {
+    "subscriber_data.0": { "email": ["Invalid email address"] },
+    "subscriber_data.1": { "email": ["Invalid email address"] }
+  }
+}
+```
+</ResponseExample>

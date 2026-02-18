@@ -1,0 +1,92 @@
+---
+title: 'Add new campaign'
+api: 'POST https://api2.ecomailapp.cz/campaigns'
+description: 'Create a new campaign.'
+---
+
+For list segments selection instead of a whole recipient list, use `"recepient_lists": {"segments": [{"id": "segment_id", "list": 14}]}`.
+Segment IDs can be obtained from the [Show list detail](/api-reference/lists/show) endpoint.
+
+<ParamField body="title" type="string" required>
+  Campaign title.
+</ParamField>
+
+<ParamField body="from_name" type="string" required>
+  Sender's name.
+</ParamField>
+
+<ParamField body="from_email" type="string" required>
+  Sender's email address.
+</ParamField>
+
+<ParamField body="reply_to" type="string" required>
+  Reply-to email address.
+</ParamField>
+
+<ParamField body="subject" type="string" required>
+  Campaign subject line.
+</ParamField>
+
+<ParamField body="html_text" type="string" required>
+  HTML content of the campaign.
+</ParamField>
+
+<ParamField body="recepient_lists" type="array|object" required>
+  Array of list IDs or an object with segments. See the example above for the segments format.
+</ParamField>
+
+<RequestExample>
+```bash cURL
+curl -X POST https://api2.ecomailapp.cz/campaigns \
+  -H "key: YOUR_API_KEY" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "title": "Campaign title",
+    "from_name": "Senders name",
+    "from_email": "test@ecomailapp.cz",
+    "reply_to": "test@ecomailapp.cz",
+    "subject": "New campaign subject",
+    "html_text": "HTML content of new campaign",
+    "recepient_lists": [1]
+  }'
+```
+
+```php PHP
+$ch = curl_init();
+curl_setopt($ch, CURLOPT_URL, 'https://api2.ecomailapp.cz/campaigns');
+curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+curl_setopt($ch, CURLOPT_POST, true);
+curl_setopt($ch, CURLOPT_HTTPHEADER, [
+    'key: YOUR_API_KEY',
+    'Content-Type: application/json',
+]);
+curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode([
+    'title' => 'Campaign title',
+    'from_name' => 'Senders name',
+    'from_email' => 'test@ecomailapp.cz',
+    'reply_to' => 'test@ecomailapp.cz',
+    'subject' => 'New campaign subject',
+    'html_text' => 'HTML content of new campaign',
+    'recepient_lists' => [1],
+]));
+$response = curl_exec($ch);
+curl_close($ch);
+```
+</RequestExample>
+
+<ResponseExample>
+```json 200
+{
+  "id": 712,
+  "title": "Campaign title",
+  "from_name": "Senders name",
+  "from_email": "test@ecomailapp.cz",
+  "reply_to": "test@ecomailapp.cz",
+  "subject": "New campaign subject",
+  "recepient_lists": [1],
+  "template_type": "html",
+  "campaign_type": "email",
+  "updated_at": "2023-06-14T10:16:16.112614Z"
+}
+```
+</ResponseExample>

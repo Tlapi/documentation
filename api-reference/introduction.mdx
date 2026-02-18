@@ -40,6 +40,14 @@ curl https://api2.ecomailapp.cz/lists \
 | `key`          | Your API key           |
 | `Content-Type` | `application/json`     |
 
+## CORS and security restrictions
+
+For security reasons, the API **does not accept direct HTTP requests from JavaScript/AJAX in a browser**. Attempting to call the API from a frontend application results in a CORS (Cross-Origin Resource Sharing) error.
+
+JavaScript runs client-side, meaning API requests made directly from a browser would expose your API key. Always send API requests **from a backend server** where your API key is safely stored. Do not expose API requests in client-side code to prevent key leaks.
+
+If you need to access the API from a web application, route requests through your **backend server** to handle authentication securely.
+
 ## Rate limiting
 
 The API allows up to **1,000 requests per minute** per API key. If you exceed this limit, the API returns a `429 Too Many Requests` status code with a `Retry-After` header indicating how many seconds to wait before retrying.

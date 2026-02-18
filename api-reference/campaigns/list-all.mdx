@@ -1,0 +1,88 @@
+---
+title: 'List all campaigns'
+api: 'GET https://api2.ecomailapp.cz/campaigns'
+description: 'Returns all campaigns with pagination and filtering.'
+---
+
+<Note>
+**Campaign status codes:**
+- `0` — Draft
+- `1` — Preparing
+- `2` — Sending
+- `3` — Sent
+- `4` — Errored
+- `7` — Scheduled
+</Note>
+
+<ParamField query="per_page" type="integer">
+  Number of items per page.
+</ParamField>
+
+<ParamField query="filters[title]" type="string">
+  Filter by campaign title.
+</ParamField>
+
+<ParamField query="filters[subject]" type="string">
+  Filter by campaign subject.
+</ParamField>
+
+<ParamField query="filters[status]" type="integer">
+  Filter by campaign status code.
+</ParamField>
+
+<ParamField query="filters[updated_at]" type="string">
+  Filter by updated date (`YYYY-MM-DD`).
+</ParamField>
+
+<ParamField query="filters[date_from]" type="string">
+  Filter from date (`YYYY-MM-DD`).
+</ParamField>
+
+<ParamField query="filters[date_to]" type="string">
+  Filter to date (`YYYY-MM-DD`).
+</ParamField>
+
+<ParamField query="filters[id]" type="integer">
+  Filter by campaign ID.
+</ParamField>
+
+<RequestExample>
+```bash cURL
+curl https://api2.ecomailapp.cz/campaigns \
+  -H "key: YOUR_API_KEY" \
+  -H "Content-Type: application/json"
+```
+
+```php PHP
+$ch = curl_init();
+curl_setopt($ch, CURLOPT_URL, 'https://api2.ecomailapp.cz/campaigns');
+curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+curl_setopt($ch, CURLOPT_HTTPHEADER, [
+    'key: YOUR_API_KEY',
+    'Content-Type: application/json',
+]);
+$response = curl_exec($ch);
+curl_close($ch);
+```
+</RequestExample>
+
+<ResponseExample>
+```json 200
+[
+  {
+    "id": 1,
+    "from_name": "From name",
+    "from_email": "from@foo.cz",
+    "reply_to": "reply@bar.cz",
+    "title": "My first campaign",
+    "subject": "First hello",
+    "sent_at": "2014-09-08 22:04:03",
+    "recipients": 1,
+    "status": 3,
+    "scheduled_at": null,
+    "template_id": 62,
+    "archive_url": "https://foo.ecomailapp.cz/campaigns/render/1/randomhashhere"
+  }
+]
+```
+</ResponseExample>

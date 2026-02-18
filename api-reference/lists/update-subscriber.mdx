@@ -1,0 +1,151 @@
+---
+title: 'Update subscriber'
+api: 'PUT https://api2.ecomailapp.cz/lists/{list_id}/update-subscriber'
+description: 'Update an existing subscriber in a specific list.'
+---
+
+<ParamField path="list_id" type="integer" required>
+  ID of the list.
+</ParamField>
+
+<ParamField body="email" type="string" required>
+  Email address of the subscriber to update.
+</ParamField>
+
+<ParamField body="subscriber_data" type="object">
+  Updated subscriber information.
+
+  <Expandable title="subscriber_data properties">
+    <ParamField body="subscriber_data[name]" type="string">
+      First name.
+    </ParamField>
+
+    <ParamField body="subscriber_data[surname]" type="string">
+      Last name.
+    </ParamField>
+
+    <ParamField body="subscriber_data[gender]" type="string">
+      Gender. Must be `male` or `female`.
+    </ParamField>
+
+    <ParamField body="subscriber_data[company]" type="string">
+      Company name.
+    </ParamField>
+
+    <ParamField body="subscriber_data[city]" type="string">
+      City.
+    </ParamField>
+
+    <ParamField body="subscriber_data[street]" type="string">
+      Street address.
+    </ParamField>
+
+    <ParamField body="subscriber_data[zip]" type="string">
+      ZIP or postal code.
+    </ParamField>
+
+    <ParamField body="subscriber_data[country]" type="string">
+      Country code.
+    </ParamField>
+
+    <ParamField body="subscriber_data[phone]" type="string">
+      Phone number.
+    </ParamField>
+
+    <ParamField body="subscriber_data[pretitle]" type="string">
+      Pre-title (e.g. Mr., Mrs.).
+    </ParamField>
+
+    <ParamField body="subscriber_data[surtitle]" type="string">
+      Post-nominal title (e.g. PhD).
+    </ParamField>
+
+    <ParamField body="subscriber_data[birthday]" type="string">
+      Birthday in `YYYY-MM-DD` format.
+    </ParamField>
+
+    <ParamField body="subscriber_data[nameday]" type="string">
+      Name day in `MM-DD` format.
+    </ParamField>
+
+    <ParamField body="subscriber_data[source]" type="string">
+      Source of the subscriber.
+    </ParamField>
+
+    <ParamField body="subscriber_data[custom_fields]" type="object">
+      Custom field values. Limited to 5000 characters total.
+    </ParamField>
+
+    <ParamField body="subscriber_data[tags]" type="array">
+      Subscriber tags. Limited to 2000 characters total and 50 characters per tag. Content overwrites current tags.
+    </ParamField>
+
+    <ParamField body="subscriber_data[groups]" type="object">
+      Group assignments. Overwrites current values.
+    </ParamField>
+  </Expandable>
+</ParamField>
+
+<RequestExample>
+```bash cURL
+curl -X PUT https://api2.ecomailapp.cz/lists/1/update-subscriber \
+  -H "key: YOUR_API_KEY" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "email": "foo@bar.cz",
+    "subscriber_data": {
+      "name": "Jan",
+      "surname": "Novak",
+      "gender": "male",
+      "company": "Company name",
+      "city": "Praha",
+      "custom_fields": { "SHOP": "myshop.cz" },
+      "tags": ["tags"],
+      "groups": { "grp_5a145ee75780f": ["Category 1", "Category 2"] }
+    }
+  }'
+```
+
+```php PHP
+$listId = 1;
+$ch = curl_init();
+curl_setopt($ch, CURLOPT_URL, "https://api2.ecomailapp.cz/lists/{$listId}/update-subscriber");
+curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+curl_setopt($ch, CURLOPT_CUSTOMREQUEST, 'PUT');
+curl_setopt($ch, CURLOPT_HTTPHEADER, [
+    'key: YOUR_API_KEY',
+    'Content-Type: application/json',
+]);
+curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode([
+    'email' => 'foo@bar.cz',
+    'subscriber_data' => [
+        'name' => 'Jan',
+        'surname' => 'Novak',
+        'gender' => 'male',
+        'company' => 'Company name',
+        'city' => 'Praha',
+        'custom_fields' => ['SHOP' => 'myshop.cz'],
+        'tags' => ['tags'],
+        'groups' => ['grp_5a145ee75780f' => ['Category 1', 'Category 2']],
+    ],
+]));
+$response = curl_exec($ch);
+curl_close($ch);
+```
+</RequestExample>
+
+<ResponseExample>
+```json 200
+{
+  "id": 12345,
+  "name": "Jan",
+  "surname": "Novak",
+  "email": "foo@bar.cz",
+  "gender": "male",
+  "bounce_soft": 0,
+  "bounce_hard": null,
+  "bounce_message": null,
+  "inserted_at": "2022-11-15 13:59:21"
+}
+```
+</ResponseExample>

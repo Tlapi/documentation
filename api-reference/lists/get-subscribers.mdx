@@ -1,0 +1,79 @@
+---
+title: 'Get subscribers'
+api: 'GET https://api2.ecomailapp.cz/lists/{list_id}/subscribers'
+description: 'Retrieve a paginated list of subscribers from a specific list.'
+---
+
+<ParamField path="list_id" type="integer" required>
+  ID of the list.
+</ParamField>
+
+<ParamField query="page" type="integer" default="1">
+  Page index.
+</ParamField>
+
+<ParamField query="status" type="string" default="subscribed">
+  Filter by status: `unsubscribed`, `not_confirmed`, `bounced`, `complained`.
+</ParamField>
+
+<ParamField query="per_page" type="integer" default="20">
+  Number of subscribers per page, up to 5000. We recommend keeping this at a lower number (e.g. 4000) depending on the amount of data each subscriber has.
+</ParamField>
+
+<Note>
+  Status values in the response: `1` = subscribed, `2` = unsubscribed, `4` = hard bounce, `5` = spam complaint, `6` = unconfirmed.
+</Note>
+
+<RequestExample>
+```bash cURL
+curl https://api2.ecomailapp.cz/lists/75/subscribers?page=1&per_page=20 \
+  -H "key: YOUR_API_KEY" \
+  -H "Content-Type: application/json"
+```
+
+```php PHP
+$listId = 75;
+$ch = curl_init();
+curl_setopt($ch, CURLOPT_URL, "https://api2.ecomailapp.cz/lists/{$listId}/subscribers?page=1&per_page=20");
+curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+curl_setopt($ch, CURLOPT_HTTPHEADER, [
+    'key: YOUR_API_KEY',
+    'Content-Type: application/json',
+]);
+$response = curl_exec($ch);
+curl_close($ch);
+```
+</RequestExample>
+
+<ResponseExample>
+```json 200
+{
+  "current_page": 1,
+  "data": [
+    {
+      "list_id": 75,
+      "email": "some1@contact.com",
+      "status": 1,
+      "subscribed_at": "2024-05-10T12:29:07.000000Z",
+      "unsubscribed_at": null,
+      "custom_fields": [],
+      "groups": null,
+      "source": "app",
+      "subscriber": {
+        "id": 1158595,
+        "name": "Foo",
+        "surname": "Bar",
+        "email": "some1@contact.com",
+        "gender": "male",
+        "company": null,
+        "city": "City",
+        "country": "CZ",
+        "phone": null
+      }
+    }
+  ],
+  "per_page": 20,
+  "total": 2
+}
+```
+</ResponseExample>

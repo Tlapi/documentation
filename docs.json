@@ -22,7 +22,117 @@
           {
             "group": "Lists",
             "pages": [
-              "api-reference/lists/list-all"
+              "api-reference/lists/list-all",
+              "api-reference/lists/add-new",
+              "api-reference/lists/show",
+              "api-reference/lists/update",
+              "api-reference/lists/get-subscribers",
+              "api-reference/lists/get-subscriber",
+              "api-reference/lists/get-subscriber-by-phone",
+              "api-reference/lists/subscribe",
+              "api-reference/lists/unsubscribe",
+              "api-reference/lists/update-subscriber",
+              "api-reference/lists/subscribe-bulk",
+              "api-reference/lists/get-segments"
+            ]
+          },
+          {
+            "group": "Subscribers",
+            "pages": [
+              "api-reference/subscribers/get",
+              "api-reference/subscribers/delete"
+            ]
+          },
+          {
+            "group": "Campaigns",
+            "pages": [
+              "api-reference/campaigns/list-all",
+              "api-reference/campaigns/add-new",
+              "api-reference/campaigns/get-detail",
+              "api-reference/campaigns/update",
+              "api-reference/campaigns/send",
+              "api-reference/campaigns/get-stats",
+              "api-reference/campaigns/get-stats-detail",
+              "api-reference/campaigns/get-segment-stats"
+            ]
+          },
+          {
+            "group": "Automations",
+            "pages": [
+              "api-reference/automations/list-all",
+              "api-reference/automations/trigger",
+              "api-reference/automations/get-stats",
+              "api-reference/automations/get-stats-detail",
+              "api-reference/automations/get-stats-emails"
+            ]
+          },
+          {
+            "group": "Templates",
+            "pages": [
+              "api-reference/templates/create",
+              "api-reference/templates/get"
+            ]
+          },
+          {
+            "group": "Domains",
+            "pages": [
+              "api-reference/domains/list-all",
+              "api-reference/domains/create",
+              "api-reference/domains/delete"
+            ]
+          },
+          {
+            "group": "Transactional emails",
+            "pages": [
+              "api-reference/transactional/send-message",
+              "api-reference/transactional/send-template",
+              "api-reference/transactional/stats",
+              "api-reference/transactional/doi-stats"
+            ]
+          },
+          {
+            "group": "Transactions",
+            "pages": [
+              "api-reference/transactions/create",
+              "api-reference/transactions/create-bulk",
+              "api-reference/transactions/get",
+              "api-reference/transactions/update",
+              "api-reference/transactions/delete",
+              "api-reference/transactions/delete-bulk"
+            ]
+          },
+          {
+            "group": "Feeds",
+            "pages": [
+              "api-reference/feeds/refresh-product",
+              "api-reference/feeds/refresh-data"
+            ]
+          },
+          {
+            "group": "Tracker events",
+            "pages": [
+              "api-reference/tracker/create-event"
+            ]
+          },
+          {
+            "group": "Search",
+            "pages": [
+              "api-reference/search/find-contact"
+            ]
+          },
+          {
+            "group": "Discount coupons",
+            "pages": [
+              "api-reference/coupons/import",
+              "api-reference/coupons/delete"
+            ]
+          },
+          {
+            "group": "Webhooks",
+            "pages": [
+              "api-reference/webhooks/set-url",
+              "api-reference/webhooks/get-url",
+              "api-reference/webhooks/delete-url"
             ]
           }
         ]

@@ -3,27 +3,57 @@ title: 'Ecomail API'
 description: 'API documentation for Ecomail — email marketing platform'
 ---
 
-## Welcome
-
 The Ecomail API v2.0 gives you full programmatic access to your Ecomail account. Manage lists, subscribers, campaigns, automations, and more.
 
 <Card
-  title="API reference"
-  icon="code"
+  title="Getting started"
+  icon="rocket"
   href="/api-reference/introduction"
   horizontal
 >
-  Authentication, base URL, and getting started with the API.
+  Authentication, base URL, rate limiting, and everything you need to start using the API.
 </Card>
 
 ## Resources
 
-<Columns cols={2}>
-  <Card
-    title="Lists"
-    icon="list"
-    href="/api-reference/lists/list-all"
-  >
+<Columns cols={3}>
+  <Card title="Lists" icon="list" href="/api-reference/lists/list-all">
     Create and manage subscriber lists.
+  </Card>
+  <Card title="Subscribers" icon="users" href="/api-reference/subscribers/get">
+    Look up and manage subscribers globally.
+  </Card>
+  <Card title="Campaigns" icon="envelope" href="/api-reference/campaigns/list-all">
+    Create, send, and track email campaigns.
+  </Card>
+  <Card title="Automations" icon="robot" href="/api-reference/automations/list-all">
+    Manage and trigger automated workflows.
+  </Card>
+  <Card title="Transactional emails" icon="paper-plane" href="/api-reference/transactional/send-message">
+    Send and track transactional emails.
+  </Card>
+  <Card title="Transactions" icon="cart-shopping" href="/api-reference/transactions/create">
+    Track e-commerce transactions and orders.
+  </Card>
+  <Card title="Templates" icon="palette" href="/api-reference/templates/create">
+    Create and retrieve email templates.
+  </Card>
+  <Card title="Domains" icon="globe" href="/api-reference/domains/list-all">
+    Manage sending domains.
+  </Card>
+  <Card title="Feeds" icon="rss" href="/api-reference/feeds/refresh-product">
+    Refresh product and data feeds.
+  </Card>
+  <Card title="Tracker events" icon="bullseye" href="/api-reference/tracker/create-event">
+    Track custom subscriber events.
+  </Card>
+  <Card title="Search" icon="magnifying-glass" href="/api-reference/search/find-contact">
+    Search for subscribers across the account.
+  </Card>
+  <Card title="Discount coupons" icon="ticket" href="/api-reference/coupons/import">
+    Import and manage discount coupons.
+  </Card>
+  <Card title="Webhooks" icon="webhook" href="/api-reference/webhooks/set-url">
+    Set up webhooks for campaign events.
   </Card>
 </Columns>

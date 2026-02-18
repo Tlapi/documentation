@@ -1,0 +1,65 @@
+---
+title: 'Find contact'
+api: 'POST https://api2.ecomailapp.cz/search'
+description: 'Search for a subscriber globally across the account by email address.'
+---
+
+<ParamField body="query" type="string" required>
+  Must be a valid email address.
+</ParamField>
+
+<RequestExample>
+```bash cURL
+curl -X POST https://api2.ecomailapp.cz/search \
+  -H "key: YOUR_API_KEY" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "query": "foo@bar.cz"
+  }'
+```
+
+```php PHP
+$ch = curl_init();
+curl_setopt($ch, CURLOPT_URL, 'https://api2.ecomailapp.cz/search');
+curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+curl_setopt($ch, CURLOPT_POST, true);
+curl_setopt($ch, CURLOPT_HTTPHEADER, [
+    'key: YOUR_API_KEY',
+    'Content-Type: application/json',
+]);
+curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode([
+    'query' => 'foo@bar.cz',
+]));
+$response = curl_exec($ch);
+curl_close($ch);
+```
+</RequestExample>
+
+<ResponseExample>
+```json 200
+[
+  {
+    "email": "foo@bar.cz",
+    "list_id": 1,
+    "status": 2,
+    "name": "Foo",
+    "surname": "Bar",
+    "custom_fields": {
+      "some_field": "text"
+    },
+    "tags": ["tags"],
+    "source": "app",
+    "subscribed_at": "2022-11-15T12:59:21.000000Z",
+    "unsubscribed_at": "2023-09-21T10:36:38.000000Z"
+  }
+]
+```
+
+```json 422
+{
+  "errors": {
+    "query": ["Invalid email address"]
+  }
+}
+```
+</ResponseExample>

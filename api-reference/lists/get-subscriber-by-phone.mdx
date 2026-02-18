@@ -1,0 +1,57 @@
+---
+title: 'Get subscriber by phone'
+api: 'GET https://api2.ecomailapp.cz/lists/{list_id}/subscriber-by-phone/{phone}'
+description: 'Retrieve a specific subscriber from a list by their phone number.'
+---
+
+<ParamField path="list_id" type="integer" required>
+  ID of the list.
+</ParamField>
+
+<ParamField path="phone" type="string" required>
+  Phone number of the subscriber. Must be a valid international phone number.
+</ParamField>
+
+<RequestExample>
+```bash cURL
+curl https://api2.ecomailapp.cz/lists/789/subscriber-by-phone/+420777888999 \
+  -H "key: YOUR_API_KEY" \
+  -H "Content-Type: application/json"
+```
+
+```php PHP
+$listId = 789;
+$phone = urlencode('+420777888999');
+$ch = curl_init();
+curl_setopt($ch, CURLOPT_URL, "https://api2.ecomailapp.cz/lists/{$listId}/subscriber-by-phone/{$phone}");
+curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+curl_setopt($ch, CURLOPT_HTTPHEADER, [
+    'key: YOUR_API_KEY',
+    'Content-Type: application/json',
+]);
+$response = curl_exec($ch);
+curl_close($ch);
+```
+</RequestExample>
+
+<ResponseExample>
+```json 200
+{
+  "subscriber": {
+    "id": 123456,
+    "list_id": 789,
+    "email": "foo@bar.cz",
+    "status": 1,
+    "subscribed_at": "2023-01-01T00:00:00.000000Z",
+    "custom_fields": { "ID": "123" },
+    "source": "API"
+  }
+}
+```
+
+```json 422
+{
+  "errors": { "phone": ["Invalid phone number"] }
+}
+```
+</ResponseExample>

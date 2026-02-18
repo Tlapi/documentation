@@ -1,0 +1,67 @@
+---
+title: 'Get campaign detail'
+api: 'GET https://api2.ecomailapp.cz/campaigns/{id}'
+description: 'Returns detailed campaign information including statistics for sent campaigns.'
+---
+
+<ParamField path="id" type="integer" required>
+  Campaign ID.
+</ParamField>
+
+<RequestExample>
+```bash cURL
+curl https://api2.ecomailapp.cz/campaigns/1 \
+  -H "key: YOUR_API_KEY" \
+  -H "Content-Type: application/json"
+```
+
+```php PHP
+$campaignId = 1;
+$ch = curl_init();
+curl_setopt($ch, CURLOPT_URL, "https://api2.ecomailapp.cz/campaigns/{$campaignId}");
+curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+curl_setopt($ch, CURLOPT_HTTPHEADER, [
+    'key: YOUR_API_KEY',
+    'Content-Type: application/json',
+]);
+$response = curl_exec($ch);
+curl_close($ch);
+```
+</RequestExample>
+
+<ResponseExample>
+```json 200
+{
+  "id": 1,
+  "from_name": "From name",
+  "from_email": "from@foo.cz",
+  "reply_to": "reply@bar.cz",
+  "title": "My first campaign",
+  "subject": "First hello",
+  "recepient_lists": {
+    "segments": [
+      { "id": "segment_abc123", "list": 1 }
+    ]
+  },
+  "sent_at": "2025-01-10 08:30:00",
+  "recipients": 100,
+  "status": 3,
+  "archive_url": "https://foo.ecomailapp.cz/campaigns/render/1/randomhashhere",
+  "stats": {
+    "inject": 100,
+    "send": 99,
+    "delivered": 99,
+    "open": 40,
+    "total_open": 45,
+    "click": 12,
+    "total_click": 15,
+    "hard_bounce": 1,
+    "spam": 0,
+    "unsub": 2,
+    "openrate": 40.4,
+    "clickrate": 12.12,
+    "delivery_rate": 99
+  }
+}
+```
+</ResponseExample>

@@ -1,0 +1,56 @@
+---
+title: 'Get segment stats'
+api: 'GET https://api2.ecomailapp.cz/campaigns/segment/{segmentId}/stats'
+description: 'Retrieves performance statistics for a specific segment across all campaigns it was sent to.'
+---
+
+<ParamField path="segmentId" type="string" required>
+  Segment ID. Can be retrieved from the [Show list detail](/api-reference/lists/show) endpoint.
+</ParamField>
+
+<RequestExample>
+```bash cURL
+curl https://api2.ecomailapp.cz/campaigns/segment/5c36008811e45/stats \
+  -H "key: YOUR_API_KEY" \
+  -H "Content-Type: application/json"
+```
+
+```php PHP
+$segmentId = '5c36008811e45';
+$ch = curl_init();
+curl_setopt($ch, CURLOPT_URL, "https://api2.ecomailapp.cz/campaigns/segment/{$segmentId}/stats");
+curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+curl_setopt($ch, CURLOPT_HTTPHEADER, [
+    'key: YOUR_API_KEY',
+    'Content-Type: application/json',
+]);
+$response = curl_exec($ch);
+curl_close($ch);
+```
+</RequestExample>
+
+<ResponseExample>
+```json 200
+{
+  "stats": {
+    "810": {
+      "bounce": 0,
+      "bounce_rate": 0,
+      "click": 3,
+      "click_rate": 75,
+      "conversions": 2,
+      "conversions_value": 2500,
+      "delivery": 4,
+      "delivery_rate": 100,
+      "inject": 4,
+      "open": 4,
+      "open_rate": 100,
+      "spam": 0,
+      "spam_rate": 0,
+      "unsub": 1,
+      "unsub_rate": 25
+    }
+  }
+}
+```
+</ResponseExample>

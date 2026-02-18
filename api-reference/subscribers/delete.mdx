@@ -1,0 +1,39 @@
+---
+title: 'Delete subscriber'
+api: 'DELETE https://api2.ecomailapp.cz/subscribers/{email}/delete'
+description: 'Permanently delete a subscriber from the database.'
+---
+
+<ParamField path="email" type="string" required>
+  Subscriber's email address.
+</ParamField>
+
+<RequestExample>
+```bash cURL
+curl -X DELETE https://api2.ecomailapp.cz/subscribers/foo@bar.cz/delete \
+  -H "key: YOUR_API_KEY" \
+  -H "Content-Type: application/json"
+```
+
+```php PHP
+$email = 'foo@bar.cz';
+$ch = curl_init();
+curl_setopt($ch, CURLOPT_URL, "https://api2.ecomailapp.cz/subscribers/{$email}/delete");
+curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+curl_setopt($ch, CURLOPT_CUSTOMREQUEST, 'DELETE');
+curl_setopt($ch, CURLOPT_HTTPHEADER, [
+    'key: YOUR_API_KEY',
+    'Content-Type: application/json',
+]);
+$response = curl_exec($ch);
+curl_close($ch);
+```
+</RequestExample>
+
+<ResponseExample>
+```json 200
+{
+  "deleted": true
+}
+```
+</ResponseExample>

@@ -1,0 +1,70 @@
+---
+title: 'Get subscriber from list'
+api: 'GET https://api2.ecomailapp.cz/lists/{list_id}/subscriber/{email}'
+description: 'Retrieve a specific subscriber from a list by their email address.'
+---
+
+<ParamField path="list_id" type="integer" required>
+  ID of the list.
+</ParamField>
+
+<ParamField path="email" type="string" required>
+  Email of the subscriber.
+</ParamField>
+
+<Note>
+  Status values in the response: `1` = subscribed, `2` = unsubscribed, `4` = hard bounce, `5` = spam complaint, `6` = unconfirmed.
+</Note>
+
+<RequestExample>
+```bash cURL
+curl https://api2.ecomailapp.cz/lists/42/subscriber/john.doe@example.com \
+  -H "key: YOUR_API_KEY" \
+  -H "Content-Type: application/json"
+```
+
+```php PHP
+$listId = 42;
+$email = 'john.doe@example.com';
+$ch = curl_init();
+curl_setopt($ch, CURLOPT_URL, "https://api2.ecomailapp.cz/lists/{$listId}/subscriber/{$email}");
+curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+curl_setopt($ch, CURLOPT_HTTPHEADER, [
+    'key: YOUR_API_KEY',
+    'Content-Type: application/json',
+]);
+$response = curl_exec($ch);
+curl_close($ch);
+```
+</RequestExample>
+
+<ResponseExample>
+```json 200
+{
+  "subscriber": {
+    "id": 12345,
+    "name": "John",
+    "surname": "Doe",
+    "email": "john.doe@example.com",
+    "company": "Acme Corporation",
+    "city": "New York",
+    "country": "US",
+    "phone": "+1 (555) 123-4567",
+    "gender": "male",
+    "tags": ["tag1", "tag2"],
+    "rating": 4.5,
+    "list_id": 42,
+    "status": 1,
+    "subscribed_at": "2022-01-01T12:00:00.000000Z",
+    "custom_fields": { "field1": "Value 1" },
+    "groups": { "grp_60ddec46df422": ["a", "b"] }
+  }
+}
+```
+
+```json 404
+{
+  "errors": ["Subscriber with email foo@bar.cz was not found in the list"]
+}
+```
+</ResponseExample>

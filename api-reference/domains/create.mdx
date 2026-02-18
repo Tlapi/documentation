@@ -1,0 +1,46 @@
+---
+title: 'Create a new domain'
+api: 'POST https://api2.ecomailapp.cz/domains'
+description: 'Add a new domain to your account.'
+---
+
+<ParamField body="name" type="string" required>
+  Domain name.
+</ParamField>
+
+<RequestExample>
+```bash cURL
+curl -X POST https://api2.ecomailapp.cz/domains \
+  -H "key: YOUR_API_KEY" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "name": "newdomain.cz"
+  }'
+```
+
+```php PHP
+$ch = curl_init();
+curl_setopt($ch, CURLOPT_URL, 'https://api2.ecomailapp.cz/domains');
+curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+curl_setopt($ch, CURLOPT_POST, true);
+curl_setopt($ch, CURLOPT_HTTPHEADER, [
+    'key: YOUR_API_KEY',
+    'Content-Type: application/json',
+]);
+curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode([
+    'name' => 'newdomain.cz',
+]));
+$response = curl_exec($ch);
+curl_close($ch);
+```
+</RequestExample>
+
+<ResponseExample>
+```json 201
+{
+  "id": 1,
+  "name": "newdomain.cz",
+  "valid": 0
+}
+```
+</ResponseExample>

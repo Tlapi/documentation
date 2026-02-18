@@ -1,0 +1,50 @@
+---
+title: 'Send campaign'
+api: 'GET https://api2.ecomailapp.cz/campaign/{campaign_id}/send'
+description: 'Puts the campaign in the sending queue immediately.'
+---
+
+<Warning>This action is irreversible. Only campaigns in draft status can be sent.</Warning>
+
+<ParamField path="campaign_id" type="integer" required>
+  Campaign ID.
+</ParamField>
+
+<RequestExample>
+```bash cURL
+curl https://api2.ecomailapp.cz/campaign/1/send \
+  -H "key: YOUR_API_KEY" \
+  -H "Content-Type: application/json"
+```
+
+```php PHP
+$campaignId = 1;
+$ch = curl_init();
+curl_setopt($ch, CURLOPT_URL, "https://api2.ecomailapp.cz/campaign/{$campaignId}/send");
+curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+curl_setopt($ch, CURLOPT_HTTPHEADER, [
+    'key: YOUR_API_KEY',
+    'Content-Type: application/json',
+]);
+$response = curl_exec($ch);
+curl_close($ch);
+```
+</RequestExample>
+
+<ResponseExample>
+```json 200
+[
+  {
+    "id": 1,
+    "title": "My first campaign",
+    "from_name": "From name",
+    "from_email": "from@foo.cz",
+    "reply_to": "reply@bar.cz",
+    "subject": "First hello",
+    "recepient_lists": [1, 2],
+    "template_type": "html",
+    "campaign_type": "email"
+  }
+]
+```
+</ResponseExample>

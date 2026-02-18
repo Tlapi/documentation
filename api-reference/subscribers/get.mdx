@@ -1,0 +1,59 @@
+---
+title: 'Get subscriber'
+api: 'GET https://api2.ecomailapp.cz/subscribers/{email}'
+description: 'Get subscriber details globally across all lists in the account.'
+---
+
+<ParamField path="email" type="string" required>
+  Subscriber's email address.
+</ParamField>
+
+<RequestExample>
+```bash cURL
+curl https://api2.ecomailapp.cz/subscribers/foo@bar.cz \
+  -H "key: YOUR_API_KEY" \
+  -H "Content-Type: application/json"
+```
+
+```php PHP
+$email = 'foo@bar.cz';
+$ch = curl_init();
+curl_setopt($ch, CURLOPT_URL, "https://api2.ecomailapp.cz/subscribers/{$email}");
+curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+curl_setopt($ch, CURLOPT_HTTPHEADER, [
+    'key: YOUR_API_KEY',
+    'Content-Type: application/json',
+]);
+$response = curl_exec($ch);
+curl_close($ch);
+```
+</RequestExample>
+
+<ResponseExample>
+```json 200
+{
+  "subscriber": {
+    "name": "Foo",
+    "surname": "Bar",
+    "email": "foo@bar.cz",
+    "gender": "male",
+    "bounce_soft": 0,
+    "bounced_hard": 0,
+    "inserted_at": "2018-11-15 13:59:21",
+    "rating": 2.5,
+    "country": "CZ",
+    "tags": ["Completed", "SomeTag"],
+    "lists": {
+      "1": {
+        "id": 407704,
+        "list_id": 1,
+        "email": "foo@bar.cz",
+        "status": 1,
+        "subscribed_at": "2018-11-15T12:59:21.000000Z",
+        "source": "app"
+      }
+    }
+  }
+}
+```
+</ResponseExample>
