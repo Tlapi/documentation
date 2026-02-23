@@ -11,6 +11,17 @@
   "navigation": {
     "tabs": [
       {
+        "tab": "Ecomail AI",
+        "groups": [
+          {
+            "group": "Ecomail AI",
+            "pages": [
+              "ecomail-ai/mcp"
+            ]
+          }
+        ]
+      },
+      {
         "tab": "API reference",
         "groups": [
           {

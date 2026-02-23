@@ -1,0 +1,82 @@
+---
+title: 'MCP server'
+description: 'Use the Ecomail API directly from AI tools like Claude, Cursor, and more via the Model Context Protocol.'
+---
+
+The [Ecomail MCP server](https://github.com/Ecomailcz/ecomail-public-mcp) lets you manage lists, subscribers, campaigns, automations, transactional emails, e-commerce transactions, templates, domains, and more — directly from any MCP-compatible client like Claude Desktop, Cursor, or Claude Code.
+
+## Setup
+
+Before you start, obtain your API key:
+
+1. Log in to your Ecomail account
+2. Go to **Manage your account** → **For developers**
+3. Click **Copy API Key**
+
+## Claude Code
+
+```bash
+claude mcp add ecomail -e ECOMAIL_API_KEY=your_api_key -- npx -y ecomail-mcp
+```
+
+## Cursor
+
+Open the command palette and choose **Cursor Settings** > **MCP** > **Add new global MCP server**.
+
+```json
+{
+  "mcpServers": {
+    "ecomail": {
+      "command": "npx",
+      "args": ["-y", "ecomail-mcp"],
+      "env": {
+        "ECOMAIL_API_KEY": "your_api_key"
+      }
+    }
+  }
+}
+```
+
+## Claude Desktop
+
+Open Claude Desktop settings > **Developer** tab > **Edit Config**.
+
+```json
+{
+  "mcpServers": {
+    "ecomail": {
+      "command": "npx",
+      "args": ["-y", "ecomail-mcp"],
+      "env": {
+        "ECOMAIL_API_KEY": "your_api_key"
+      }
+    }
+  }
+}
+```
+
+## Options
+
+| Option | Description |
+| --- | --- |
+| `ECOMAIL_API_KEY` | Your Ecomail API key (environment variable, required) |
+| `--key` | Your Ecomail API key (CLI argument, alternative to env var) |
+
+## Available tools
+
+The MCP server exposes all Ecomail API endpoints as tools:
+
+| Category | Tools |
+| --- | --- |
+| **Lists** | `list-lists`, `create-list`, `get-list`, `update-list`, `get-subscribers`, `get-subscriber-from-list`, `get-subscriber-by-phone`, `subscribe`, `subscribe-bulk`, `unsubscribe`, `update-subscriber`, `get-segments` |
+| **Subscribers** | `get-subscriber`, `delete-subscriber`, `find-contact` |
+| **Campaigns** | `list-campaigns`, `create-campaign`, `get-campaign`, `update-campaign`, `send-campaign`, `get-campaign-stats`, `get-campaign-stats-detail`, `get-segment-stats` |
+| **Automations** | `list-automations`, `trigger-automation`, `get-automation-stats`, `get-automation-stats-detail`, `get-automation-stats-emails` |
+| **Transactional emails** | `send-transactional-email`, `send-transactional-template`, `get-transactional-stats`, `get-doi-stats` |
+| **Transactions** | `create-transaction`, `create-bulk-transactions`, `get-transactions`, `update-transaction`, `delete-transaction`, `delete-bulk-transactions` |
+| **Templates** | `create-template`, `get-template` |
+| **Domains** | `list-domains`, `create-domain`, `delete-domain` |
+| **Feeds** | `refresh-product-feed`, `refresh-data-feed` |
+| **Tracker events** | `create-event` |
+| **Discount coupons** | `import-coupons`, `delete-coupons` |
+| **Webhooks** | `set-webhook-url`, `get-webhook-url`, `delete-webhook-url` |
