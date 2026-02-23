@@ -11,17 +11,6 @@
   "navigation": {
     "tabs": [
       {
-        "tab": "Ecomail AI",
-        "groups": [
-          {
-            "group": "Ecomail AI",
-            "pages": [
-              "ecomail-ai/mcp"
-            ]
-          }
-        ]
-      },
-      {
         "tab": "API reference",
         "groups": [
           {
@@ -144,6 +133,17 @@
               "api-reference/webhooks/set-url",
               "api-reference/webhooks/get-url",
               "api-reference/webhooks/delete-url"
+            ]
+          }
+        ]
+      },
+      {
+        "tab": "Ecomail AI",
+        "groups": [
+          {
+            "group": "Ecomail AI",
+            "pages": [
+              "ecomail-ai/mcp"
             ]
           }
         ]
