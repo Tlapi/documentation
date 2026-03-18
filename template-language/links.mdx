@@ -1,0 +1,36 @@
+---
+title: 'Link handling'
+description: 'Control unsubscribe behavior and click tracking on individual links in your email templates.'
+---
+
+## Unsubscribe Links
+
+You can designate a link in your email content to generate a `link_unsubscribe` event when clicked using the `data-msys-unsubscribe` custom attribute.
+
+```html
+<a href="http://www.example.com/unsub_handler?id=1234" data-msys-unsubscribe="1">
+  Unsubscribe
+</a>
+```
+
+<Warning>
+  Click tracking must be enabled for the `link_unsubscribe` event to be generated.
+</Warning>
+
+## Per-link Disabling of Click Tracking
+
+When click tracking is enabled at the transmission level, you can selectively disable it for individual links using the `data-msys-clicktrack` custom attribute set to `"0"`:
+
+```html
+<a href="http://www.example.com/" data-msys-clicktrack="0">
+  Click here
+</a>
+```
+
+This is useful when you want click tracking active for most links in your email, but need specific links (such as unsubscribe URLs or legal links) to remain untracked.
+
+### App deep linking
+
+Disabling click tracking on specific links is essential for **app deep links**. Mobile platforms like iOS and Android verify deep links by checking verification files hosted on the link's domain (e.g. `apple-app-site-association` or `assetlinks.json`). When click tracking is enabled, the link is rewritten to go through a tracking domain that doesn't host these verification files, causing the deep link to fail and open in the browser instead of the app.
+
+By adding `data-msys-clicktrack="0"` to your deep links, the original URL is preserved, allowing the operating system to verify the domain and open the link directly in your app.

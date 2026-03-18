@@ -138,6 +138,17 @@
         ]
       },
       {
+        "tab": "Template language",
+        "groups": [
+          {
+            "group": "Template language",
+            "pages": [
+              "template-language/links"
+            ]
+          }
+        ]
+      },
+      {
         "tab": "Ecomail AI",
         "groups": [
           {
