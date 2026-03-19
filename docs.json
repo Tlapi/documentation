@@ -40,6 +40,7 @@
             "group": "Subscribers",
             "pages": [
               "api-reference/subscribers/get",
+              "api-reference/subscribers/email-log",
               "api-reference/subscribers/delete"
             ]
           },
@@ -111,7 +112,8 @@
           {
             "group": "Tracker events",
             "pages": [
-              "api-reference/tracker/create-event"
+              "api-reference/tracker/create-event",
+              "api-reference/tracker/get-events"
             ]
           },
           {

@@ -1,0 +1,78 @@
+---
+title: 'Get email log'
+api: 'GET https://api2.ecomailapp.cz/subscribers/{email}/email-log'
+description: 'Retrieve a paginated list of campaign log entries for a given subscriber email address, sorted by occurrence date descending.'
+---
+
+<ParamField path="email" type="string" required>
+  Subscriber's email address.
+</ParamField>
+
+<ParamField query="per_page" type="integer">
+  Number of results per page. Default `20`, maximum `100`.
+</ParamField>
+
+<ParamField query="page" type="integer">
+  Page number.
+</ParamField>
+
+<ParamField query="events[]" type="string">
+  Filter by event types. Can be specified multiple times. Possible values: `send`, `open`, `click`, `hard_bounce`, `soft_bounce`, `out_of_band`, `unsub`, `spam`, `spam_complaint`.
+</ParamField>
+
+<RequestExample>
+```bash cURL
+curl "https://api2.ecomailapp.cz/subscribers/foo@bar.cz/email-log?per_page=10&events[]=open&events[]=click" \
+  -H "key: YOUR_API_KEY" \
+  -H "Content-Type: application/json"
+```
+
+```php PHP
+$email = 'foo@bar.cz';
+$ch = curl_init();
+curl_setopt($ch, CURLOPT_URL, "https://api2.ecomailapp.cz/subscribers/{$email}/email-log?per_page=10&events[]=open&events[]=click");
+curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+curl_setopt($ch, CURLOPT_HTTPHEADER, [
+    'key: YOUR_API_KEY',
+    'Content-Type: application/json',
+]);
+$response = curl_exec($ch);
+curl_close($ch);
+```
+</RequestExample>
+
+<ResponseExample>
+```json 200
+{
+  "current_page": 1,
+  "data": [
+    {
+      "id": 12345,
+      "campaign_id": 100,
+      "autoresponder_id": null,
+      "action_id": null,
+      "event": "open",
+      "msg": null,
+      "url": null,
+      "email": "foo@bar.cz",
+      "occured_at": "2025-03-15T14:30:00.000000Z",
+      "mail_name": null
+    },
+    {
+      "id": 12340,
+      "campaign_id": 100,
+      "autoresponder_id": null,
+      "action_id": null,
+      "event": "click",
+      "msg": null,
+      "url": "https://example.com/offer",
+      "email": "foo@bar.cz",
+      "occured_at": "2025-03-15T14:25:00.000000Z",
+      "mail_name": null
+    }
+  ],
+  "per_page": 10,
+  "total": 2
+}
+```
+</ResponseExample>
