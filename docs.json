@@ -134,7 +134,8 @@
             "pages": [
               "api-reference/webhooks/set-url",
               "api-reference/webhooks/get-url",
-              "api-reference/webhooks/delete-url"
+              "api-reference/webhooks/delete-url",
+              "api-reference/webhooks/events"
             ]
           }
         ]
