@@ -1,0 +1,81 @@
+---
+title: 'Get automation actions'
+api: 'GET https://api2.ecomailapp.cz/pipelines/{id}/actions'
+description: 'Retrieve all actions (nodes) within a given automation.'
+---
+
+<ParamField path="id" type="integer" required>
+  Automation ID.
+</ParamField>
+
+<RequestExample>
+```bash cURL
+curl "https://api2.ecomailapp.cz/pipelines/42/actions" \
+  -H "key: YOUR_API_KEY" \
+  -H "Content-Type: application/json"
+```
+
+```php PHP
+$pipelineId = 42;
+$ch = curl_init();
+curl_setopt($ch, CURLOPT_URL, "https://api2.ecomailapp.cz/pipelines/{$pipelineId}/actions");
+curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+curl_setopt($ch, CURLOPT_HTTPHEADER, [
+    'key: YOUR_API_KEY',
+    'Content-Type: application/json',
+]);
+$response = curl_exec($ch);
+curl_close($ch);
+```
+</RequestExample>
+
+<ResponseExample>
+```json 200
+{
+  "data": [
+    {
+      "id": "abc-123",
+      "type": "mail",
+      "properties": {
+        "name": "Welcome email",
+        "template": 42
+      }
+    },
+    {
+      "id": "def-456",
+      "type": "wait",
+      "properties": {
+        "days": 3
+      }
+    },
+    {
+      "id": "ghi-789",
+      "type": "tag",
+      "properties": {
+        "tag": "engaged"
+      }
+    }
+  ]
+}
+```
+</ResponseExample>
+
+### Action types
+
+| Type | Description |
+|---|---|
+| `mail` | Send an email. |
+| `sms` | Send an SMS. |
+| `wait` | Wait for a specified duration. |
+| `check` | Conditional branch (if/else). |
+| `split` | A/B split test. |
+| `tag` | Add a tag to the subscriber. |
+| `untag` | Remove a tag from the subscriber. |
+| `subscribe` | Subscribe to a list. |
+| `unsubscribe` | Unsubscribe from a list. |
+| `edit` | Edit subscriber fields. |
+| `webhook` | Send a webhook. |
+| `trigger` | Trigger another automation. |
+| `goal` | Goal (wait for condition). |
+| `end` | End of automation. |
+| `note` | Internal note. |
