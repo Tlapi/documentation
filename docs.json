@@ -62,6 +62,7 @@
             "pages": [
               "api-reference/automations/list-all",
               "api-reference/automations/get-actions",
+              "api-reference/automations/get-action-detail",
               "api-reference/automations/trigger",
               "api-reference/automations/get-stats",
               "api-reference/automations/get-stats-detail",
