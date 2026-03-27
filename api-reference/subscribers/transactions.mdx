@@ -1,0 +1,81 @@
+---
+title: 'Get transactions'
+api: 'GET https://api2.ecomailapp.cz/subscribers/{email}/transactions'
+description: 'Retrieve a paginated list of transactions (purchases) for a given subscriber email address, sorted by timestamp descending. Each transaction includes its items.'
+---
+
+<Note>
+  Timestamps are saved and returned in UTC+0.
+</Note>
+
+<ParamField path="email" type="string" required>
+  Subscriber's email address.
+</ParamField>
+
+<ParamField query="per_page" type="integer">
+  Number of results per page. Default `100`, maximum `500`.
+</ParamField>
+
+<ParamField query="page" type="integer">
+  Page number.
+</ParamField>
+
+<RequestExample>
+```bash cURL
+curl "https://api2.ecomailapp.cz/subscribers/foo@bar.cz/transactions?per_page=50&page=1" \
+  -H "key: YOUR_API_KEY" \
+  -H "Content-Type: application/json"
+```
+
+```php PHP
+$email = 'foo@bar.cz';
+$ch = curl_init();
+curl_setopt($ch, CURLOPT_URL, "https://api2.ecomailapp.cz/subscribers/{$email}/transactions?per_page=50&page=1");
+curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+curl_setopt($ch, CURLOPT_HTTPHEADER, [
+    'key: YOUR_API_KEY',
+    'Content-Type: application/json',
+]);
+$response = curl_exec($ch);
+curl_close($ch);
+```
+</RequestExample>
+
+<ResponseExample>
+```json 200
+{
+  "transactions": [
+    {
+      "id": 2220,
+      "order_id": "5301",
+      "email": "foo@bar.cz",
+      "shop": "mujshop.cz",
+      "amount": 2000,
+      "tax": 420,
+      "shipping": 99,
+      "city": "Praha",
+      "county": null,
+      "country": "CZ",
+      "timestamp": "2025-03-15 14:30:00",
+      "props": null,
+      "status": "completed",
+      "items": [
+        {
+          "order_id": "5301",
+          "code": "SKU-001",
+          "title": "Product name",
+          "category": "Electronics",
+          "price": 1901,
+          "amount": 1,
+          "categories": ["Electronics", "Gadgets"]
+        }
+      ]
+    }
+  ],
+  "current_page": 1,
+  "per_page": 50,
+  "total": 128,
+  "last_page": 3
+}
+```
+</ResponseExample>

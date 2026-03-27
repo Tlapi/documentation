@@ -1,0 +1,54 @@
+---
+title: 'Get event by ID'
+api: 'GET https://api2.ecomailapp.cz/tracker/events/{id}'
+description: 'Retrieve a single tracker event by its ID.'
+---
+
+<ParamField path="id" type="integer" required>
+  Event ID.
+</ParamField>
+
+<RequestExample>
+```bash cURL
+curl "https://api2.ecomailapp.cz/tracker/events/1234" \
+  -H "key: YOUR_API_KEY" \
+  -H "Content-Type: application/json"
+```
+
+```php PHP
+$id = 1234;
+$ch = curl_init();
+curl_setopt($ch, CURLOPT_URL, "https://api2.ecomailapp.cz/tracker/events/{$id}");
+curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+curl_setopt($ch, CURLOPT_HTTPHEADER, [
+    'key: YOUR_API_KEY',
+    'Content-Type: application/json',
+]);
+$response = curl_exec($ch);
+curl_close($ch);
+```
+</RequestExample>
+
+<ResponseExample>
+```json 200
+{
+  "id": 1234,
+  "duid": null,
+  "email": "foo@bar.cz",
+  "category": "ue",
+  "action": "Basket",
+  "label": "Basket",
+  "property": null,
+  "value": "{\"data\":{\"data\":{\"action\":\"Basket\",\"products\":[]}}}",
+  "timestamp": "2025-03-15T14:30:00.000000Z",
+  "campaign_attr": null,
+  "pipeline_attr": null
+}
+```
+
+```json 404
+{
+  "message": "Event not found"
+}
+```
+</ResponseExample>

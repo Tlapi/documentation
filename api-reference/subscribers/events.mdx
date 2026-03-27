@@ -1,7 +1,7 @@
 ---
 title: 'Get events for subscriber'
-api: 'GET https://api2.ecomailapp.cz/tracker/events/{email}'
-description: 'Retrieve a paginated list of tracker events for a given subscriber email address, sorted by timestamp descending.'
+api: 'GET https://api2.ecomailapp.cz/subscribers/{email}/events'
+description: 'Retrieve a paginated list of tracker events for a given subscriber email address, sorted by ID descending.'
 ---
 
 <ParamField path="email" type="string" required>
@@ -18,7 +18,7 @@ description: 'Retrieve a paginated list of tracker events for a given subscriber
 
 <RequestExample>
 ```bash cURL
-curl "https://api2.ecomailapp.cz/tracker/events/foo@bar.cz?per_page=10" \
+curl "https://api2.ecomailapp.cz/subscribers/foo@bar.cz/events?per_page=10" \
   -H "key: YOUR_API_KEY" \
   -H "Content-Type: application/json"
 ```
@@ -26,7 +26,7 @@ curl "https://api2.ecomailapp.cz/tracker/events/foo@bar.cz?per_page=10" \
 ```php PHP
 $email = 'foo@bar.cz';
 $ch = curl_init();
-curl_setopt($ch, CURLOPT_URL, "https://api2.ecomailapp.cz/tracker/events/{$email}?per_page=10");
+curl_setopt($ch, CURLOPT_URL, "https://api2.ecomailapp.cz/subscribers/{$email}/events?per_page=10");
 curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
 curl_setopt($ch, CURLOPT_HTTPHEADER, [
     'key: YOUR_API_KEY',
@@ -43,6 +43,7 @@ curl_close($ch);
   "current_page": 1,
   "data": [
     {
+      "id": 1234,
       "email": "foo@bar.cz",
       "category": "ue",
       "action": "Basket",
