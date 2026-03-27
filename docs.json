@@ -57,7 +57,8 @@
               "api-reference/campaigns/send",
               "api-reference/campaigns/get-stats",
               "api-reference/campaigns/get-stats-detail",
-              "api-reference/campaigns/get-segment-stats"
+              "api-reference/campaigns/get-segment-stats",
+              "api-reference/campaigns/get-log"
             ]
           },
           {
