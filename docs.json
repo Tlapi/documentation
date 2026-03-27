@@ -43,6 +43,7 @@
               "api-reference/subscribers/transactions",
               "api-reference/subscribers/events",
               "api-reference/subscribers/email-log",
+              "api-reference/subscribers/automation-log",
               "api-reference/subscribers/delete"
             ]
           },

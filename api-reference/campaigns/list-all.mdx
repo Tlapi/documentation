@@ -46,16 +46,24 @@ description: 'Returns all campaigns with pagination and filtering.'
   Filter by campaign ID.
 </ParamField>
 
+<ParamField query="sort_by" type="string" default="id">
+  Column to sort results by. Allowed values: `id`, `sent_at`, `changed_at`, `title`, `status`.
+</ParamField>
+
+<ParamField query="sort_dir" type="string" default="desc">
+  Sort direction. Allowed values: `asc`, `desc`.
+</ParamField>
+
 <RequestExample>
 ```bash cURL
-curl https://api2.ecomailapp.cz/campaigns \
+curl 'https://api2.ecomailapp.cz/campaigns?sort_by=sent_at&sort_dir=desc' \
   -H "key: YOUR_API_KEY" \
   -H "Content-Type: application/json"
 ```
 
 ```php PHP
 $ch = curl_init();
-curl_setopt($ch, CURLOPT_URL, 'https://api2.ecomailapp.cz/campaigns');
+curl_setopt($ch, CURLOPT_URL, 'https://api2.ecomailapp.cz/campaigns?sort_by=sent_at&sort_dir=desc');
 curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
 curl_setopt($ch, CURLOPT_HTTPHEADER, [
     'key: YOUR_API_KEY',

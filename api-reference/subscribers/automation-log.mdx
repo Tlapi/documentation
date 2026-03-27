@@ -1,0 +1,70 @@
+---
+title: 'Get automation log'
+api: 'GET https://api2.ecomailapp.cz/subscribers/{email}/automation-log'
+description: 'Retrieve a paginated list of automation (pipeline) log entries for a given subscriber email address, sorted by timestamp descending by default.'
+---
+
+<ParamField path="email" type="string" required>
+  Subscriber's email address.
+</ParamField>
+
+<ParamField query="per_page" type="integer">
+  Number of results per page. Default `20`, maximum `100`.
+</ParamField>
+
+<ParamField query="page" type="integer">
+  Page number.
+</ParamField>
+
+<ParamField query="sort_by" type="string">
+  Column to sort by. Possible values: `timestamp`, `id`, `pipeline_id`. Default `timestamp`.
+</ParamField>
+
+<ParamField query="sort_dir" type="string">
+  Sort direction. Possible values: `asc`, `desc`. Default `desc`.
+</ParamField>
+
+<RequestExample>
+```bash cURL
+curl "https://api2.ecomailapp.cz/subscribers/foo@bar.cz/automation-log?per_page=10" \
+  -H "key: YOUR_API_KEY" \
+  -H "Content-Type: application/json"
+```
+
+```php PHP
+$email = 'foo@bar.cz';
+$ch = curl_init();
+curl_setopt($ch, CURLOPT_URL, "https://api2.ecomailapp.cz/subscribers/{$email}/automation-log?per_page=10");
+curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+curl_setopt($ch, CURLOPT_HTTPHEADER, [
+    'key: YOUR_API_KEY',
+    'Content-Type: application/json',
+]);
+$response = curl_exec($ch);
+curl_close($ch);
+```
+</RequestExample>
+
+<ResponseExample>
+```json 200
+{
+  "automation_log": [
+    {
+      "id": 5678,
+      "user_id": 1,
+      "pipeline_id": 42,
+      "action_id": "node_abc123",
+      "trigger_id": "trigger_xyz",
+      "email": "foo@bar.cz",
+      "props": {"key": "value"},
+      "next": null,
+      "timestamp": "2025-03-15T14:30:00.000000Z"
+    }
+  ],
+  "current_page": 1,
+  "per_page": 10,
+  "total": 1,
+  "last_page": 1
+}
+```
+</ResponseExample>
