@@ -1,0 +1,64 @@
+---
+title: 'Remote MCP server'
+description: 'Connect Ecomail directly to Claude.ai or ChatGPT via the hosted remote MCP server — no installation required.'
+---
+
+The Ecomail remote MCP server lets you connect your Ecomail account to **Claude.ai** or **ChatGPT** with just a few clicks. No local installation or API keys needed — authentication is handled via OAuth.
+
+<Info>
+  Looking for the local MCP server for developer tools like Claude Code or Cursor? See the [Local MCP server](/ecomail-ai/mcp) guide instead.
+</Info>
+
+## Claude.ai
+
+<Steps>
+  <Step title="Open MCP integrations">
+    In any Claude.ai conversation, click the **Search and tools** icon (magnifying glass) at the bottom of the chat input, then click **Add integrations**.
+  </Step>
+  <Step title="Add the Ecomail server">
+    Click **Add custom MCP server**. Enter the server URL:
+
+    ```
+    https://app.ecomailapp.cz/mcp
+    ```
+
+    Give it a name (e.g. `Ecomail`) and click **Add**.
+  </Step>
+  <Step title="Authorize your account">
+    Claude.ai will redirect you to the Ecomail login page. Sign in with your Ecomail credentials and authorize the connection.
+  </Step>
+  <Step title="Start using it">
+    Once connected, Ecomail tools will appear in the **Search and tools** panel. You can now ask Claude questions like *"Show me my latest campaigns"* or *"Find subscriber john@example.com"*.
+  </Step>
+</Steps>
+
+## ChatGPT
+
+<Steps>
+  <Step title="Open MCP settings">
+    Go to **Settings** > **Connected apps** > **Add MCP server**.
+  </Step>
+  <Step title="Add the Ecomail server">
+    Enter the server URL:
+
+    ```
+    https://app.ecomailapp.cz/mcp
+    ```
+
+    Click **Connect**.
+  </Step>
+  <Step title="Authorize your account">
+    ChatGPT will redirect you to the Ecomail login page. Sign in and authorize the connection.
+  </Step>
+  <Step title="Start using it">
+    Ecomail tools are now available in your conversations. Ask ChatGPT things like *"What are my active automations?"* or *"Show deliverability stats for the last 30 days"*.
+  </Step>
+</Steps>
+
+## Feedback
+
+Have ideas or ran into issues with the MCP integration? You can send feedback directly from your AI conversation using the built-in **MCP Feedback** tool. Just ask:
+
+> *"Send feedback to Ecomail: I'd love to see a tool for managing contact lists."*
+
+Your message will be delivered to the Ecomail team via Slack. See the full list of available tools in the [MCP tools reference](/ecomail-ai/mcp-tools).

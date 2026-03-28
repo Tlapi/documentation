@@ -163,7 +163,9 @@
           {
             "group": "Ecomail AI",
             "pages": [
-              "ecomail-ai/mcp"
+              "ecomail-ai/remote-mcp",
+              "ecomail-ai/mcp",
+              "ecomail-ai/mcp-tools"
             ]
           }
         ]
