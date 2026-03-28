@@ -20,31 +20,15 @@
             ]
           },
           {
-            "group": "Lists",
+            "group": "Automations",
             "pages": [
-              "api-reference/lists/list-all",
-              "api-reference/lists/add-new",
-              "api-reference/lists/show",
-              "api-reference/lists/update",
-              "api-reference/lists/get-subscribers",
-              "api-reference/lists/get-subscriber",
-              "api-reference/lists/get-subscriber-by-phone",
-              "api-reference/lists/subscribe",
-              "api-reference/lists/unsubscribe",
-              "api-reference/lists/update-subscriber",
-              "api-reference/lists/subscribe-bulk",
-              "api-reference/lists/get-segments"
-            ]
-          },
-          {
-            "group": "Subscribers",
-            "pages": [
-              "api-reference/subscribers/get",
-              "api-reference/subscribers/transactions",
-              "api-reference/subscribers/events",
-              "api-reference/subscribers/email-log",
-              "api-reference/subscribers/automation-log",
-              "api-reference/subscribers/delete"
+              "api-reference/automations/list-all",
+              "api-reference/automations/get-actions",
+              "api-reference/automations/get-action-detail",
+              "api-reference/automations/trigger",
+              "api-reference/automations/get-stats",
+              "api-reference/automations/get-stats-detail",
+              "api-reference/automations/get-stats-emails"
             ]
           },
           {
@@ -62,15 +46,59 @@
             ]
           },
           {
-            "group": "Automations",
+            "group": "Discount coupons",
             "pages": [
-              "api-reference/automations/list-all",
-              "api-reference/automations/get-actions",
-              "api-reference/automations/get-action-detail",
-              "api-reference/automations/trigger",
-              "api-reference/automations/get-stats",
-              "api-reference/automations/get-stats-detail",
-              "api-reference/automations/get-stats-emails"
+              "api-reference/coupons/import",
+              "api-reference/coupons/delete"
+            ]
+          },
+          {
+            "group": "Domains",
+            "pages": [
+              "api-reference/domains/list-all",
+              "api-reference/domains/create",
+              "api-reference/domains/delete"
+            ]
+          },
+          {
+            "group": "Feeds",
+            "pages": [
+              "api-reference/feeds/refresh-product",
+              "api-reference/feeds/refresh-data"
+            ]
+          },
+          {
+            "group": "Lists",
+            "pages": [
+              "api-reference/lists/list-all",
+              "api-reference/lists/add-new",
+              "api-reference/lists/show",
+              "api-reference/lists/update",
+              "api-reference/lists/get-subscribers",
+              "api-reference/lists/get-subscriber",
+              "api-reference/lists/get-subscriber-by-phone",
+              "api-reference/lists/subscribe",
+              "api-reference/lists/unsubscribe",
+              "api-reference/lists/update-subscriber",
+              "api-reference/lists/subscribe-bulk",
+              "api-reference/lists/get-segments"
+            ]
+          },
+          {
+            "group": "Search",
+            "pages": [
+              "api-reference/search/find-contact"
+            ]
+          },
+          {
+            "group": "Subscribers",
+            "pages": [
+              "api-reference/subscribers/get",
+              "api-reference/subscribers/transactions",
+              "api-reference/subscribers/events",
+              "api-reference/subscribers/email-log",
+              "api-reference/subscribers/automation-log",
+              "api-reference/subscribers/delete"
             ]
           },
           {
@@ -81,11 +109,10 @@
             ]
           },
           {
-            "group": "Domains",
+            "group": "Tracker events",
             "pages": [
-              "api-reference/domains/list-all",
-              "api-reference/domains/create",
-              "api-reference/domains/delete"
+              "api-reference/tracker/create-event",
+              "api-reference/tracker/get-event"
             ]
           },
           {
@@ -106,33 +133,6 @@
               "api-reference/transactions/update",
               "api-reference/transactions/delete",
               "api-reference/transactions/delete-bulk"
-            ]
-          },
-          {
-            "group": "Feeds",
-            "pages": [
-              "api-reference/feeds/refresh-product",
-              "api-reference/feeds/refresh-data"
-            ]
-          },
-          {
-            "group": "Tracker events",
-            "pages": [
-              "api-reference/tracker/create-event",
-              "api-reference/tracker/get-event"
-            ]
-          },
-          {
-            "group": "Search",
-            "pages": [
-              "api-reference/search/find-contact"
-            ]
-          },
-          {
-            "group": "Discount coupons",
-            "pages": [
-              "api-reference/coupons/import",
-              "api-reference/coupons/delete"
             ]
           },
           {
