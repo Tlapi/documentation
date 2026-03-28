@@ -1,0 +1,71 @@
+---
+title: 'Ecomail AI'
+description: 'Connect your Ecomail account to AI assistants and developer tools via the Model Context Protocol (MCP).'
+---
+
+Ecomail MCP lets you talk to your email marketing data using natural language. Ask questions, analyze performance, manage templates and more — all from your favorite AI tool.
+
+We offer two ways to connect, depending on how you work.
+
+## Choose your server
+
+<CardGroup cols={2}>
+  <Card title="Remote MCP server" icon="cloud" href="/ecomail-ai/remote-mcp">
+    **For marketers and business users**
+
+    Connect directly from Claude.ai or ChatGPT — no installation, no API keys, no terminal. Just click, authorize and start chatting with your data.
+
+    - One-click OAuth setup
+    - Works in the browser
+    - CDP analytics (RFM, CLV, conversions, products)
+    - Ideal for day-to-day insights
+  </Card>
+  <Card title="Local MCP server" icon="terminal" href="/ecomail-ai/mcp">
+    **For developers and power users**
+
+    Run the MCP server locally via `npx` in Claude Code, Cursor, or Claude Desktop. Full API coverage with your API key.
+
+    - All Ecomail API endpoints as tools
+    - Works in any MCP-compatible client
+    - Write and send campaigns programmatically
+    - Ideal for building workflows and integrations
+  </Card>
+</CardGroup>
+
+## What can you do?
+
+<CardGroup cols={3}>
+  <Card title="Analyze campaigns" icon="chart-line">
+    Review open rates, click rates and delivery stats for any campaign. Compare performance across time periods.
+  </Card>
+  <Card title="Explore subscribers" icon="users">
+    Look up any subscriber by email. See their tags, lists, engagement history, purchases and automation log.
+  </Card>
+  <Card title="Manage templates" icon="palette">
+    Browse, create, duplicate or delete email templates directly from the conversation.
+  </Card>
+  <Card title="Monitor automations" icon="robot">
+    Check automation stats, inspect individual steps, or trigger an automation for a specific subscriber.
+  </Card>
+  <Card title="CDP analytics" icon="chart-pie">
+    Dive into RFM segmentation, customer lifetime value, conversion analytics and product performance. *(Remote server only, requires CDP)*
+  </Card>
+  <Card title="Track deliverability" icon="inbox">
+    Monitor inbox placement, bounce rates and spam complaints across mailbox providers.
+  </Card>
+</CardGroup>
+
+## Quick comparison
+
+| | Remote server | Local server |
+| --- | --- | --- |
+| **Best for** | Marketers, analysts | Developers, power users |
+| **Setup** | Click + OAuth in browser | `npx` + API key in terminal |
+| **Clients** | Claude.ai, ChatGPT | Claude Code, Cursor, Claude Desktop |
+| **CDP analytics** | Yes | No |
+| **Full API access** | Read + templates + triggers | All endpoints (read/write) |
+| **Installation** | None | Node.js required |
+
+<Tip>
+  Not sure which one to pick? If you're a marketer who wants quick answers about campaign performance and customer data, start with the **Remote server**. If you're a developer building automations or integrations, go with the **Local server**.
+</Tip>

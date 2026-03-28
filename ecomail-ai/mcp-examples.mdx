@@ -1,0 +1,207 @@
+---
+title: 'Example prompts'
+description: 'Ready-to-use prompts to get the most out of Ecomail MCP in Claude.ai or ChatGPT.'
+---
+
+Once you have the [remote MCP server](/ecomail-ai/remote-mcp) connected, you can talk to your Ecomail account in natural language. Here are some examples to get you started.
+
+## Subscribers
+
+<AccordionGroup>
+  <Accordion title="Look up a subscriber">
+    ```
+    Find subscriber john@example.com and show me their tags, list memberships and last activity.
+    ```
+  </Accordion>
+  <Accordion title="Check email engagement">
+    ```
+    Show me the email log for anna@example.com — which campaigns did she open or click in the last 30 days?
+    ```
+  </Accordion>
+  <Accordion title="View purchase history">
+    ```
+    What are the last 5 orders for customer david@example.com? Include order amounts and dates.
+    ```
+  </Accordion>
+  <Accordion title="Search across contacts">
+    ```
+    Search for all subscribers with "company.com" in their email and show me how many are subscribed vs unsubscribed.
+    ```
+  </Accordion>
+</AccordionGroup>
+
+## Campaigns
+
+<AccordionGroup>
+  <Accordion title="Review recent campaigns">
+    ```
+    List my last 5 sent campaigns with their open rates and click rates.
+    ```
+  </Accordion>
+  <Accordion title="Compare campaign performance">
+    ```
+    Compare the open rate and click rate of my last 3 campaigns. Which one performed best?
+    ```
+  </Accordion>
+  <Accordion title="Find a specific campaign">
+    ```
+    Find the campaign with "Black Friday" in its title and show me the full delivery stats.
+    ```
+  </Accordion>
+</AccordionGroup>
+
+## Automations
+
+<AccordionGroup>
+  <Accordion title="List active automations">
+    ```
+    Show me all active automations with their triggered counts.
+    ```
+  </Accordion>
+  <Accordion title="Automation performance">
+    ```
+    What are the stats for my welcome email automation? Show opens, clicks and unsubscribes.
+    ```
+  </Accordion>
+  <Accordion title="Inspect automation steps">
+    ```
+    List all steps in my abandoned cart automation and show me the configuration of each step.
+    ```
+  </Accordion>
+</AccordionGroup>
+
+## Templates
+
+<AccordionGroup>
+  <Accordion title="Browse templates">
+    ```
+    List my email templates and find any that contain "newsletter" in the name.
+    ```
+  </Accordion>
+  <Accordion title="Create a template">
+    ```
+    Create a new HTML email template called "March Newsletter" with a clean, responsive layout
+    that includes a header image, intro paragraph, 3 content blocks and a footer with social links.
+    ```
+  </Accordion>
+  <Accordion title="Duplicate and modify">
+    ```
+    Duplicate my "Welcome Email" template so I can use it as a starting point for a new version.
+    ```
+  </Accordion>
+</AccordionGroup>
+
+## CDP Analytics
+
+<Note>
+  The following examples require CDP (Customer Data Platform) to be enabled on your account.
+</Note>
+
+<AccordionGroup>
+  <Accordion title="RFM overview">
+    ```
+    Show me the current RFM analysis. How many customers are champions vs at risk?
+    What percentage of revenue comes from loyal customers?
+    ```
+  </Accordion>
+  <Accordion title="Customer lifetime value">
+    ```
+    Show me the CLV dashboard — what is the average customer lifetime value
+    and how does churn rate look?
+    ```
+  </Accordion>
+  <Accordion title="CLV for a specific customer">
+    ```
+    What is the predicted lifetime value for subscriber anna@example.com?
+    What is their churn probability?
+    ```
+  </Accordion>
+  <Accordion title="Conversion analytics">
+    ```
+    Show me conversion analytics for the last 90 days.
+    How many purchases came from campaigns vs automations?
+    ```
+  </Accordion>
+  <Accordion title="Compare conversion periods">
+    ```
+    Compare conversion stats for January vs February this year.
+    Did revenue from campaigns grow or decline?
+    ```
+  </Accordion>
+  <Accordion title="Top products">
+    ```
+    What are my top 10 products by revenue in the last year?
+    ```
+  </Accordion>
+  <Accordion title="Product deep-dive">
+    ```
+    Show me the product analytics for product PS1000 —
+    total revenue, repeat purchase timing and what customers buy next.
+    ```
+  </Accordion>
+  <Accordion title="CLV segments">
+    ```
+    Show me CLV segments — how many customers are in each value tier
+    and what is the average CLV per segment?
+    ```
+  </Accordion>
+</AccordionGroup>
+
+## Deliverability
+
+<AccordionGroup>
+  <Accordion title="Deliverability overview">
+    ```
+    What does my deliverability look like for the last 30 days?
+    Show inbox rate, bounce rate and spam complaints.
+    ```
+  </Accordion>
+  <Accordion title="Provider-specific">
+    ```
+    How is my deliverability at Gmail specifically? Are there any issues I should be aware of?
+    ```
+  </Accordion>
+</AccordionGroup>
+
+## Multi-step analysis
+
+These examples combine multiple tools in a single conversation to get deeper insights.
+
+<AccordionGroup>
+  <Accordion title="Campaign ROI analysis">
+    ```
+    I want to understand ROI of my email campaigns.
+    1. Show me the conversion analytics for campaigns only, last 90 days
+    2. List the top 5 campaigns by send date in that period
+    3. For each campaign, show the open rate and click rate
+    Summarize which campaign drove the most revenue.
+    ```
+  </Accordion>
+  <Accordion title="Customer health check">
+    ```
+    Do a health check for subscriber john@example.com:
+    - What lists are they on and what are their tags?
+    - Show their recent email engagement (opens, clicks)
+    - What automations have they been through?
+    - What are their recent purchases?
+    Give me an overall summary of this customer's engagement.
+    ```
+  </Accordion>
+  <Accordion title="Monthly performance report">
+    ```
+    Create a monthly performance summary for February 2026:
+    - How many campaigns were sent and what were the average open/click rates?
+    - What were the conversion numbers (purchases, revenue, avg order value)?
+    - How does deliverability look?
+    - What are the top 5 products by revenue?
+    Format it as a report I can share with my team.
+    ```
+  </Accordion>
+</AccordionGroup>
+
+## Feedback
+
+```
+Send feedback to Ecomail: The MCP integration is great!
+I'd love to see a tool for managing contact list segments.
+```
