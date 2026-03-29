@@ -11,44 +11,23 @@ The Ecomail [remote MCP server](/ecomail-ai/remote-mcp) exposes the following to
 | --- | --- |
 | `account-info-tool` | Returns the current authenticated user's account name. |
 
-## Subscribers
+## Automations
 
 | Tool | Description |
 | --- | --- |
-| `search-subscriber-tool` | Search for subscribers by email, name or other query. Supports filtering by contact list and subscriber status. |
-| `subscriber-detail-tool` | Get detailed information about a subscriber by email, including personal data, tags, list memberships and last activity. |
-| `subscriber-email-log-tool` | Retrieve the email log (campaign history) for a subscriber — sent emails, opens, clicks, bounces and unsubscribes. |
-| `subscriber-automation-log-tool` | Retrieve the automation log (pipeline history) for a subscriber — all automation events, triggers and actions. |
-| `subscriber-events-tool` | Retrieve tracked web events (category, action, label, value, product) for a subscriber. |
-| `subscriber-transactions-tool` | Retrieve purchase transactions (orders) for a subscriber, including order details, items and amounts. |
+| `automation-action-detail-tool` | Get detail of a specific action (node/step) in an automation, including its type and configuration. |
+| `automation-actions-tool` | List all actions (nodes/steps) in an automation with their types and properties. |
+| `automation-detail-tool` | Get detailed information about a specific automation, including name, list, type, status and configuration. |
+| `automation-list-tool` | List all automations (pipelines) with optional filtering by active/inactive status. |
+| `automation-stats-tool` | Get statistics for an automation — triggered count, sent, opens, clicks, bounces, unsubscribes, conversions and more. Optionally grouped by action nodes. |
+| `automation-trigger-tool` | Trigger an automation for a specific subscriber by email address. |
 
 ## Campaigns
 
 | Tool | Description |
 | --- | --- |
-| `campaign-list-tool` | List campaigns with optional filtering by status, title or date range, and sorting. |
 | `campaign-detail-tool` | Get detailed information about a specific campaign, including configuration, recipient lists and delivery statistics. |
-
-## Automations
-
-| Tool | Description |
-| --- | --- |
-| `automation-list-tool` | List all automations (pipelines) with optional filtering by active/inactive status. |
-| `automation-detail-tool` | Get detailed information about a specific automation, including name, list, type, status and configuration. |
-| `automation-actions-tool` | List all actions (nodes/steps) in an automation with their types and properties. |
-| `automation-action-detail-tool` | Get detail of a specific action (node/step) in an automation, including its type and configuration. |
-| `automation-stats-tool` | Get statistics for an automation — triggered count, sent, opens, clicks, bounces, unsubscribes, conversions and more. Optionally grouped by action nodes. |
-| `automation-trigger-tool` | Trigger an automation for a specific subscriber by email address. |
-
-## Templates
-
-| Tool | Description |
-| --- | --- |
-| `template-list-tool` | List saved email templates with optional search filtering. |
-| `template-detail-tool` | Get the content and details of a specific email template by ID. |
-| `template-create-tool` | Create a new HTML email template with a name and HTML content. |
-| `template-duplicate-tool` | Create a copy of an existing email template. |
-| `template-delete-tool` | Delete an email template by ID. |
+| `campaign-list-tool` | List campaigns with optional filtering by status, title or date range, and sorting. |
 
 ## CDP Analytics
 
@@ -58,10 +37,10 @@ The Ecomail [remote MCP server](/ecomail-ai/remote-mcp) exposes the following to
 
 | Tool | Description |
 | --- | --- |
-| `rfm-analysis-tool` | Get the current RFM (Recency, Frequency, Monetary) analysis — customer segments (champions, loyal, at risk, etc.) with counts, revenue and average R/F/M scores. |
 | `clv-analysis-tool` | Get Customer Lifetime Value analysis. Supports multiple sections: dashboard (key metrics), distribution (CLV buckets), segments, timeline (monthly trend), churn rate, or individual subscriber CLV by email. |
 | `conversion-analytics-tool` | Get conversion analytics — purchases, conversions, total revenue, revenue from conversions, average order value and growth percentages. Filter by scope (all, campaigns or automations) and date range. |
 | `product-analytics-tool` | Get product analytics — list top products by revenue or customers, or get detail for a specific product including revenue and repeat purchase timing. Supports date range and search filtering. |
+| `rfm-analysis-tool` | Get the current RFM (Recency, Frequency, Monetary) analysis — customer segments (champions, loyal, at risk, etc.) with counts, revenue and average R/F/M scores. |
 
 ## Deliverability
 
@@ -74,6 +53,27 @@ The Ecomail [remote MCP server](/ecomail-ai/remote-mcp) exposes the following to
 | Tool | Description |
 | --- | --- |
 | `mcp-feedback-tool` | Send feedback about the MCP tools experience directly to the Ecomail team. |
+
+## Subscribers
+
+| Tool | Description |
+| --- | --- |
+| `search-subscriber-tool` | Search for subscribers by email, name or other query. Supports filtering by contact list and subscriber status. |
+| `subscriber-automation-log-tool` | Retrieve the automation log (pipeline history) for a subscriber — all automation events, triggers and actions. |
+| `subscriber-detail-tool` | Get detailed information about a subscriber by email, including personal data, tags, list memberships and last activity. |
+| `subscriber-email-log-tool` | Retrieve the email log (campaign history) for a subscriber — sent emails, opens, clicks, bounces and unsubscribes. |
+| `subscriber-events-tool` | Retrieve tracked web events (category, action, label, value, product) for a subscriber. |
+| `subscriber-transactions-tool` | Retrieve purchase transactions (orders) for a subscriber, including order details, items and amounts. |
+
+## Templates
+
+| Tool | Description |
+| --- | --- |
+| `template-create-tool` | Create a new HTML email template with a name and HTML content. |
+| `template-delete-tool` | Delete an email template by ID. |
+| `template-detail-tool` | Get the content and details of a specific email template by ID. |
+| `template-duplicate-tool` | Create a copy of an existing email template. |
+| `template-list-tool` | List saved email templates with optional search filtering. |
 
 <Tip>
   You don't need to remember tool names. Just describe what you want in natural language and the AI assistant will pick the right tool automatically. For example, ask *"Show me the open rate for my last campaign"* and it will use `campaign-list-tool` and `campaign-detail-tool` behind the scenes.
