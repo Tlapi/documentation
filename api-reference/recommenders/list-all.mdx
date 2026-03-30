@@ -1,0 +1,50 @@
+---
+title: 'List all recommenders'
+api: 'GET https://api2.ecomailapp.cz/recommenders'
+description: 'Retrieve all Spark recommenders configured for your account.'
+---
+
+Returns a list of recommender objects, each containing the recommender ID, associated shop and feed, training status and settings.
+
+<Note>
+  Recommender status values: `created` (just created, waiting to train), `training` (currently training on EMR), `ready` (trained and serving recommendations).
+</Note>
+
+<RequestExample>
+```bash cURL
+curl https://api2.ecomailapp.cz/recommenders \
+  -H "key: YOUR_API_KEY" \
+  -H "Content-Type: application/json"
+```
+
+```php PHP
+$ch = curl_init();
+curl_setopt($ch, CURLOPT_URL, 'https://api2.ecomailapp.cz/recommenders');
+curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+curl_setopt($ch, CURLOPT_HTTPHEADER, [
+    'key: YOUR_API_KEY',
+    'Content-Type: application/json',
+]);
+$response = curl_exec($ch);
+curl_close($ch);
+```
+</RequestExample>
+
+<ResponseExample>
+```json 200
+[
+  {
+    "recommender_id": "6789abc123def",
+    "feed_id": 1,
+    "shop_id": "my-shop",
+    "last_trained_timestamp": 1710000000,
+    "status": "ready",
+    "settings": {
+      "filtered_products": [],
+      "filtered_categories": [],
+      "included_months": []
+    }
+  }
+]
+```
+</ResponseExample>

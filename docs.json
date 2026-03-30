@@ -85,6 +85,14 @@
             ]
           },
           {
+            "group": "Recommenders",
+            "pages": [
+              "api-reference/recommenders/list-all",
+              "api-reference/recommenders/create",
+              "api-reference/recommenders/delete"
+            ]
+          },
+          {
             "group": "Search",
             "pages": [
               "api-reference/search/find-contact"

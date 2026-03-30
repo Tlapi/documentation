@@ -4,32 +4,36 @@ api: 'POST https://api2.ecomailapp.cz/tracker/events'
 description: 'Track a custom event for a subscriber. Supplements the JavaScript tracker.'
 ---
 
+Only the `email` field is required. All other fields (`category`, `action`, `label`, `property`, `value`) are optional — include only what makes sense for your use case.
+
+The `value` field accepts a plain string, a JSON-encoded string, or a JSON object/array. If you pass an object or array, we will automatically JSON-encode it on our side.
+
 <ParamField body="event" type="object" required>
   Event details.
 
   <Expandable title="event properties">
     <ParamField body="event.email" type="string" required>
-      Subscriber's email address.
+      Subscriber's email address. The subscriber must already exist in your contact list.
     </ParamField>
 
     <ParamField body="event.category" type="string">
-      Event category.
+      Event category (e.g. `"shopping"`, `"engagement"`, `"support"`).
     </ParamField>
 
     <ParamField body="event.action" type="string">
-      Event action.
+      Event action (e.g. `"product_viewed"`, `"form_submitted"`, `"review_left"`).
     </ParamField>
 
     <ParamField body="event.label" type="string">
-      Event label.
+      Event label — a human-readable name or identifier (e.g. a product name, page title).
     </ParamField>
 
     <ParamField body="event.property" type="string">
-      Event property.
+      Event property — a custom key or identifier (e.g. a product SKU, category slug).
     </ParamField>
 
-    <ParamField body="event.value" type="string">
-      Event value.
+    <ParamField body="event.value" type="string | object | array">
+      Event value. Can be a plain string, a JSON-encoded string, or a JSON object/array (objects and arrays will be JSON-encoded automatically on our side). Maximum length is **20,000 characters** (after JSON encoding, if applicable).
     </ParamField>
   </Expandable>
 </ParamField>
@@ -41,12 +45,18 @@ curl -X POST https://api2.ecomailapp.cz/tracker/events \
   -H "Content-Type: application/json" \
   -d '{
     "event": {
-      "email": "foo@bar.cz",
-      "category": "category",
-      "action": "action",
-      "label": "label",
-      "property": "property",
-      "value": "value"
+      "email": "john@example.com",
+      "category": "shopping",
+      "action": "product_viewed",
+      "label": "Nike Air Max 90",
+      "property": "nike-air-max-90",
+      "value": {
+        "product_id": 12345,
+        "price": 139.99,
+        "currency": "EUR",
+        "variant": "Black/White",
+        "url": "https://example.com/products/nike-air-max-90"
+      }
     }
   }'
 ```
@@ -62,12 +72,18 @@ curl_setopt($ch, CURLOPT_HTTPHEADER, [
 ]);
 curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode([
     'event' => [
-        'email' => 'foo@bar.cz',
-        'category' => 'category',
-        'action' => 'action',
-        'label' => 'label',
-        'property' => 'property',
-        'value' => 'value',
+        'email' => 'john@example.com',
+        'category' => 'shopping',
+        'action' => 'product_viewed',
+        'label' => 'Nike Air Max 90',
+        'property' => 'nike-air-max-90',
+        'value' => [
+            'product_id' => 12345,
+            'price' => 139.99,
+            'currency' => 'EUR',
+            'variant' => 'Black/White',
+            'url' => 'https://example.com/products/nike-air-max-90',
+        ],
     ],
 ]));
 $response = curl_exec($ch);
@@ -79,12 +95,12 @@ curl_close($ch);
 ```json 200
 {
   "id": 1234,
-  "email": "foo@bar.cz",
-  "category": "category",
-  "action": "action",
-  "label": "label",
-  "property": "property",
-  "value": "value"
+  "email": "john@example.com",
+  "category": "shopping",
+  "action": "product_viewed",
+  "label": "Nike Air Max 90",
+  "property": "nike-air-max-90",
+  "value": "{\"product_id\":12345,\"price\":139.99,\"currency\":\"EUR\",\"variant\":\"Black/White\",\"url\":\"https://example.com/products/nike-air-max-90\"}"
 }
 ```
 </ResponseExample>

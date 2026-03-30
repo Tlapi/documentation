@@ -1,0 +1,36 @@
+---
+title: 'Delete recommender'
+api: 'DELETE https://api2.ecomailapp.cz/recommenders/{recommender_id}'
+description: 'Remove a Spark recommender by its ID. Returns the updated list of remaining recommenders.'
+---
+
+<ParamField path="recommender_id" type="string" required>
+  The unique identifier of the recommender to delete.
+</ParamField>
+
+<RequestExample>
+```bash cURL
+curl -X DELETE https://api2.ecomailapp.cz/recommenders/6789abc123def \
+  -H "key: YOUR_API_KEY" \
+  -H "Content-Type: application/json"
+```
+
+```php PHP
+$ch = curl_init();
+curl_setopt($ch, CURLOPT_URL, 'https://api2.ecomailapp.cz/recommenders/6789abc123def');
+curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+curl_setopt($ch, CURLOPT_CUSTOMREQUEST, 'DELETE');
+curl_setopt($ch, CURLOPT_HTTPHEADER, [
+    'key: YOUR_API_KEY',
+    'Content-Type: application/json',
+]);
+$response = curl_exec($ch);
+curl_close($ch);
+```
+</RequestExample>
+
+<ResponseExample>
+```json 200
+[]
+```
+</ResponseExample>

@@ -1,0 +1,72 @@
+---
+title: 'Create recommender'
+api: 'POST https://api2.ecomailapp.cz/recommenders'
+description: 'Create a new Spark recommender for a specific shop and product feed. Training starts automatically after creation.'
+---
+
+<ParamField body="shop_id" type="string" required>
+  The shop (e-commerce platform) identifier.
+</ParamField>
+
+<ParamField body="feed_id" type="integer" required>
+  The product feed ID to use for recommendations.
+</ParamField>
+
+<Note>
+  Each shop + feed combination can only have one recommender. Attempting to create a duplicate returns a `422` error.
+  After creation the recommender status will be `created` and training will start automatically in the background.
+</Note>
+
+<RequestExample>
+```bash cURL
+curl -X POST https://api2.ecomailapp.cz/recommenders \
+  -H "key: YOUR_API_KEY" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "shop_id": "my-shop",
+    "feed_id": 1
+  }'
+```
+
+```php PHP
+$ch = curl_init();
+curl_setopt($ch, CURLOPT_URL, 'https://api2.ecomailapp.cz/recommenders');
+curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+curl_setopt($ch, CURLOPT_POST, true);
+curl_setopt($ch, CURLOPT_HTTPHEADER, [
+    'key: YOUR_API_KEY',
+    'Content-Type: application/json',
+]);
+curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode([
+    'shop_id' => 'my-shop',
+    'feed_id' => 1,
+]));
+$response = curl_exec($ch);
+curl_close($ch);
+```
+</RequestExample>
+
+<ResponseExample>
+```json 200
+[
+  {
+    "recommender_id": "6789abc123def",
+    "feed_id": 1,
+    "shop_id": "my-shop",
+    "last_trained_timestamp": null,
+    "status": "created",
+    "settings": {
+      "filtered_products": [],
+      "filtered_categories": [],
+      "included_months": []
+    }
+  }
+]
+```
+
+```json 422
+{
+  "errors": ["Recommender for this shop and feed already exists."]
+}
+```
+</ResponseExample>
