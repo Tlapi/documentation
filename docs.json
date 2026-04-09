@@ -113,7 +113,8 @@
             "group": "Templates",
             "pages": [
               "api-reference/templates/create",
-              "api-reference/templates/get"
+              "api-reference/templates/get",
+              "api-reference/templates/"
             ]
           },
           {
