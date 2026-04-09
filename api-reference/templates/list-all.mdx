@@ -1,0 +1,76 @@
+---
+title: 'List all templates'
+api: 'GET https://api2.ecomailapp.cz/templates'
+description: 'Returns all templates with pagination and filtering.'
+---
+
+<ParamField query="campaign_id" type="integer">
+  Filter by campaign ID.
+</ParamField>
+
+<ParamField query="page" type="integer">
+  Page number.
+</ParamField>
+
+<ParamField query="per_page" type="integer" default="50">
+  Number of items per page.
+</ParamField>
+
+<ParamField query="updated_from" type="string">
+  Filter templates updated from this date (`YYYY-MM-DD`).
+</ParamField>
+
+<ParamField query="updated_to" type="string">
+  Filter templates updated up to this date (`YYYY-MM-DD`).
+</ParamField>
+
+<RequestExample>
+```bash cURL
+curl 'https://api2.ecomailapp.cz/templates?page=1&per_page=50' \
+  -H "key: YOUR_API_KEY" \
+  -H "Content-Type: application/json"
+```
+
+```php PHP
+$ch = curl_init();
+curl_setopt($ch, CURLOPT_URL, 'https://api2.ecomailapp.cz/templates?page=1&per_page=50');
+curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+curl_setopt($ch, CURLOPT_HTTPHEADER, [
+    'key: YOUR_API_KEY',
+    'Content-Type: application/json',
+]);
+$response = curl_exec($ch);
+curl_close($ch);
+```
+</RequestExample>
+
+<ResponseExample>
+```json 200
+{
+  "templates": [
+    {
+      "id": 15,
+      "name": "Testing mailer",
+      "folder": null,
+      "campaign_id": 2,
+      "screenshot": 0,
+      "created_at": "2023-07-25 14:21:14",
+      "updated_at": "2023-07-25 14:21:27"
+    },
+    {
+      "id": 16,
+      "name": "Testing mailer",
+      "folder": null,
+      "campaign_id": 3,
+      "screenshot": 0,
+      "created_at": "2023-08-08 15:27:25",
+      "updated_at": "2023-08-08 15:27:25"
+    }
+  ],
+  "current_page": 1,
+  "per_page": 50,
+  "total": 50,
+  "last_page": 1
+}
+```
+</ResponseExample>
