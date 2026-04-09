@@ -1,0 +1,66 @@
+---
+title: 'Update template'
+api: 'PUT https://api2.ecomailapp.cz/template/{template_id}'
+description: 'Update an existing email template by its ID.'
+---
+
+<ParamField path="template_id" type="integer" required>
+  Template ID.
+</ParamField>
+
+<ParamField body="html" type="string" required>
+  Template HTML content.
+</ParamField>
+
+<ParamField body="name" type="string">
+  Template name.
+</ParamField>
+
+<ParamField body="inline_css" type="boolean">
+  Whether to inline CSS styles into the HTML.
+</ParamField>
+
+<RequestExample>
+```bash cURL
+curl -X PUT https://api2.ecomailapp.cz/template/1234 \
+  -H "key: YOUR_API_KEY" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "name": "Update Template",
+    "inline_css": true,
+    "html": "<b>Template HTML</b>"
+  }'
+```
+
+```php PHP
+$ch = curl_init();
+curl_setopt($ch, CURLOPT_URL, 'https://api2.ecomailapp.cz/template/1234');
+curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+curl_setopt($ch, CURLOPT_CUSTOMREQUEST, 'PUT');
+curl_setopt($ch, CURLOPT_HTTPHEADER, [
+    'key: YOUR_API_KEY',
+    'Content-Type: application/json',
+]);
+curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode([
+    'name' => 'Update Template',
+    'inline_css' => true,
+    'html' => '<b>Template HTML</b>',
+]));
+$response = curl_exec($ch);
+curl_close($ch);
+```
+</RequestExample>
+
+<ResponseExample>
+```json 200
+{
+  "id": 1234,
+  "name": "Update Template",
+  "html": "<b>Template HTML</b>",
+  "folder": 0,
+  "campaign_id": null,
+  "created_at": "2024-02-12 15:13:16",
+  "updated_at": "2024-02-12 16:45:30"
+}
+```
+</ResponseExample>
