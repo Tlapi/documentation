@@ -1,6 +1,6 @@
 ---
 title: 'Get template'
-api: 'GET https://api2.ecomailapp.cz/template/{id}'
+api: 'GET https://api2.ecomailapp.cz/templates/{id}'
 description: 'Retrieve a specific template by its ID.'
 ---
 
@@ -10,14 +10,14 @@ description: 'Retrieve a specific template by its ID.'
 
 <RequestExample>
 ```bash cURL
-curl https://api2.ecomailapp.cz/template/1234 \
+curl https://api2.ecomailapp.cz/templates/1234 \
   -H "key: YOUR_API_KEY" \
   -H "Content-Type: application/json"
 ```
 
 ```php PHP
 $ch = curl_init();
-curl_setopt($ch, CURLOPT_URL, 'https://api2.ecomailapp.cz/template/1234');
+curl_setopt($ch, CURLOPT_URL, 'https://api2.ecomailapp.cz/templates/1234');
 curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
 curl_setopt($ch, CURLOPT_HTTPHEADER, [
     'key: YOUR_API_KEY',
