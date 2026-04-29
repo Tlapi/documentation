@@ -1,19 +1,15 @@
 ---
 title: 'Get campaign log'
-api: 'GET https://api2.ecomailapp.cz/campaigns/log'
-description: 'Search and browse the campaign log — sends, opens, clicks, bounces, unsubscribes, complaints and other events. Filter by subscriber email, campaign ID, event types, and date range.'
+api: 'GET https://api2.ecomailapp.cz/campaigns/{campaignId}/log'
+description: 'Search and browse the campaign log — sends, opens, clicks, bounces, unsubscribes, complaints, and other events. Filter by subscriber email, event types, and date range.'
 ---
 
 <ParamField query="email" type="string">
   Filter by subscriber email address.
 </ParamField>
 
-<ParamField query="campaign_id" type="integer">
-  Filter by campaign ID.
-</ParamField>
-
 <ParamField query="events[]" type="string">
-  Filter by event types. Can be specified multiple times. Possible values: `send`, `open`, `click`, `hard_bounce`, `soft_bounce`, `out_of_band`, `unsub`, `spam`, `spam_complaint`.
+  Filter by event types. Can be specified multiple times. Possible values: `send`, `open`, `click`, `bounce`, `hard_bounce`, `soft_bounce`, `out_of_band`, `unsub`, `spam`, `spam_complaint`, `not_opened`, `not_clicked`, `open_no_click`, `sms_sent`, `sms_inv_nr`, `sms_accepted`, `whatsapp_sent`, `whatsapp_failed`.
 </ParamField>
 
 <ParamField query="date_from" type="string">
@@ -21,7 +17,7 @@ description: 'Search and browse the campaign log — sends, opens, clicks, bounc
 </ParamField>
 
 <ParamField query="date_to" type="string">
-  Filter events up to this date (inclusive, ISO format e.g. `2025-12-31`).
+  Filter events up to this date (inclusive, ISO format e.g. `2025-12-31`). Must be after `date_from` if provided.
 </ParamField>
 
 <ParamField query="per_page" type="integer">
@@ -33,7 +29,7 @@ description: 'Search and browse the campaign log — sends, opens, clicks, bounc
 </ParamField>
 
 <ParamField query="sort_by" type="string">
-  Column to sort by. Possible values: `occured_at`, `id`, `campaign_id`, `event`. Default `occured_at`.
+  Column to sort by. Possible values: `occured_at`, `id`, `event`. Default `occured_at`.
 </ParamField>
 
 <ParamField query="sort_dir" type="string">
@@ -42,14 +38,14 @@ description: 'Search and browse the campaign log — sends, opens, clicks, bounc
 
 <RequestExample>
 ```bash cURL
-curl "https://api2.ecomailapp.cz/campaigns/log?email=foo@bar.cz&per_page=10&events[]=open&events[]=click" \
+curl "https://api2.ecomailapp.cz/campaigns/1/log?email=foo@bar.cz&per_page=10&events[]=open&events[]=click" \
   -H "key: YOUR_API_KEY" \
   -H "Content-Type: application/json"
 ```
 
 ```php PHP
 $ch = curl_init();
-curl_setopt($ch, CURLOPT_URL, "https://api2.ecomailapp.cz/campaigns/log?email=foo@bar.cz&per_page=10&events[]=open&events[]=click");
+curl_setopt($ch, CURLOPT_URL, "https://api2.ecomailapp.cz/campaigns/1/log?email=foo@bar.cz&per_page=10&events[]=open&events[]=click");
 curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
 curl_setopt($ch, CURLOPT_HTTPHEADER, [
     'key: YOUR_API_KEY',
@@ -66,7 +62,7 @@ curl_close($ch);
   "campaign_log": [
     {
       "id": 5678,
-      "campaign_id": 100,
+      "campaign_id": 1,
       "autoresponder_id": null,
       "action_id": null,
       "event": "open",
@@ -78,7 +74,7 @@ curl_close($ch);
     },
     {
       "id": 5677,
-      "campaign_id": 100,
+      "campaign_id": 1,
       "autoresponder_id": null,
       "action_id": null,
       "event": "click",
