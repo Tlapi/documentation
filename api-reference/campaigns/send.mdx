@@ -1,6 +1,6 @@
 ---
 title: 'Send campaign'
-api: 'GET https://api2.ecomailapp.cz/campaign/{campaign_id}/send'
+api: 'POST https://api2.ecomailapp.cz/campaigns/{campaign_id}/send'
 description: 'Puts the campaign in the sending queue immediately.'
 ---
 
@@ -12,7 +12,7 @@ description: 'Puts the campaign in the sending queue immediately.'
 
 <RequestExample>
 ```bash cURL
-curl https://api2.ecomailapp.cz/campaign/1/send \
+curl -X POST https://api2.ecomailapp.cz/campaigns/1/send \
   -H "key: YOUR_API_KEY" \
   -H "Content-Type: application/json"
 ```
@@ -20,8 +20,9 @@ curl https://api2.ecomailapp.cz/campaign/1/send \
 ```php PHP
 $campaignId = 1;
 $ch = curl_init();
-curl_setopt($ch, CURLOPT_URL, "https://api2.ecomailapp.cz/campaign/{$campaignId}/send");
+curl_setopt($ch, CURLOPT_URL, "https://api2.ecomailapp.cz/campaigns/{$campaignId}/send");
 curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+curl_setopt($ch, CURLOPT_POST, true);
 curl_setopt($ch, CURLOPT_HTTPHEADER, [
     'key: YOUR_API_KEY',
     'Content-Type: application/json',
