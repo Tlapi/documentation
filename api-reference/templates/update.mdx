@@ -1,6 +1,6 @@
 ---
 title: 'Update template'
-api: 'PUT https://api2.ecomailapp.cz/template/{template_id}'
+api: 'PUT https://api2.ecomailapp.cz/templates/{template_id}'
 description: 'Update an existing email template by its ID.'
 ---
 
@@ -22,7 +22,7 @@ description: 'Update an existing email template by its ID.'
 
 <RequestExample>
 ```bash cURL
-curl -X PUT https://api2.ecomailapp.cz/template/1234 \
+curl -X PUT https://api2.ecomailapp.cz/templates/1234 \
   -H "key: YOUR_API_KEY" \
   -H "Content-Type: application/json" \
   -d '{
@@ -34,7 +34,7 @@ curl -X PUT https://api2.ecomailapp.cz/template/1234 \
 
 ```php PHP
 $ch = curl_init();
-curl_setopt($ch, CURLOPT_URL, 'https://api2.ecomailapp.cz/template/1234');
+curl_setopt($ch, CURLOPT_URL, 'https://api2.ecomailapp.cz/templates/1234');
 curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
 curl_setopt($ch, CURLOPT_CUSTOMREQUEST, 'PUT');
 curl_setopt($ch, CURLOPT_HTTPHEADER, [
