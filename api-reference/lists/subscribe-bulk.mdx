@@ -39,7 +39,7 @@ description: 'Subscribe multiple contacts to a specific list in a single request
 </Warning>
 
 <Note>
-  Subscribers added via bulk subscribe always skip double opt-in confirmation. Custom fields are limited to 5000 characters total. Tags are limited to 2000 characters total and 50 characters per tag — tag content only updates when the `tags` parameter is present and `update_existing` is `true`.
+  Subscribers added via bulk subscribe always skip double opt-in confirmation. Custom fields are limited to 5000 characters total. Custom field keys are case-insensitive — they are trimmed and lowercased on input, so `SHOP`, `shop` and ` Shop ` are treated as the same field; two keys that differ only in case or whitespace within the same subscriber are rejected as duplicates. Tags are limited to 2000 characters total and 50 characters per tag — tag content only updates when the `tags` parameter is present and `update_existing` is `true`.
 </Note>
 
 <RequestExample>
