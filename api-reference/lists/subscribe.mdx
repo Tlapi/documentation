@@ -78,6 +78,8 @@ description: 'Subscribe a new contact to a specific list.'
 
     <ParamField body="subscriber_data[custom_fields]" type="object">
       Custom field values. Limited to 5000 characters total. Reserved system merge tags are ignored. If a field doesn't exist, a new field is created. Supported types: `string`, `date`, `json`, `int`, `float`, `url`. Float precision is limited to 3 decimal places.
+
+      Keys are case-insensitive — they are trimmed and lowercased on input, so `SHOP`, `shop` and ` Shop ` are treated as the same field. Two keys that differ only in case or whitespace in the same request are rejected as duplicates.
     </ParamField>
 
     <ParamField body="subscriber_data[tags]" type="array">
@@ -135,8 +137,8 @@ curl -X POST https://api2.ecomailapp.cz/lists/1/subscribe \
       "phone": "+420777888999",
       "birthday": "1984-01-01",
       "custom_fields": {
-        "SHOP": "myshop.cz",
-        "BIRTHDAY": { "value": "2022-01-20", "type": "date" }
+        "shop": "myshop.cz",
+        "birthday": { "value": "2022-01-20", "type": "date" }
       },
       "tags": ["tags"],
       "groups": { "grp_5a145ee75780f": ["Category 1", "Category 2"] }
@@ -169,8 +171,8 @@ curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode([
         'phone' => '+420777888999',
         'birthday' => '1984-01-01',
         'custom_fields' => [
-            'SHOP' => 'myshop.cz',
-            'BIRTHDAY' => ['value' => '2022-01-20', 'type' => 'date'],
+            'shop' => 'myshop.cz',
+            'birthday' => ['value' => '2022-01-20', 'type' => 'date'],
         ],
         'tags' => ['tags'],
         'groups' => ['grp_5a145ee75780f' => ['Category 1', 'Category 2']],

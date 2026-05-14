@@ -74,6 +74,8 @@ description: 'Update an existing subscriber in a specific list.'
 
     <ParamField body="subscriber_data[custom_fields]" type="object">
       Custom field values. Limited to 5000 characters total.
+
+      Keys are case-insensitive — they are trimmed and lowercased on input, so `SHOP`, `shop` and ` Shop ` are treated as the same field. Two keys that differ only in case or whitespace in the same request are rejected as duplicates.
     </ParamField>
 
     <ParamField body="subscriber_data[tags]" type="array">
@@ -99,7 +101,7 @@ curl -X PUT https://api2.ecomailapp.cz/lists/1/update-subscriber \
       "gender": "male",
       "company": "Company name",
       "city": "Praha",
-      "custom_fields": { "SHOP": "myshop.cz" },
+      "custom_fields": { "shop": "myshop.cz" },
       "tags": ["tags"],
       "groups": { "grp_5a145ee75780f": ["Category 1", "Category 2"] }
     }
@@ -124,7 +126,7 @@ curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode([
         'gender' => 'male',
         'company' => 'Company name',
         'city' => 'Praha',
-        'custom_fields' => ['SHOP' => 'myshop.cz'],
+        'custom_fields' => ['shop' => 'myshop.cz'],
         'tags' => ['tags'],
         'groups' => ['grp_5a145ee75780f' => ['Category 1', 'Category 2']],
     ],
