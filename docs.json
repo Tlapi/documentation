@@ -27,7 +27,8 @@
               "api-reference/automations/get-action-detail",
               "api-reference/automations/trigger",
               "api-reference/automations/get-stats",
-              "api-reference/automations/get-stats-detail"
+              "api-reference/automations/get-stats-detail",
+              "api-reference/automations/get-action-stats-detail"
             ]
           },
           {
