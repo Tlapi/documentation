@@ -81,7 +81,7 @@
               "api-reference/lists/subscribe-bulk",
               "api-reference/lists/unsubscribe",
               "api-reference/lists/update-subscriber",
-              "api-reference/lists/update-subscriber-bulk"
+              "api-reference/lists/update-subscribers-bulk"
             ]
           },
           {

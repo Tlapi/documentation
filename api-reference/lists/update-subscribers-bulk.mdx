@@ -1,6 +1,6 @@
 ---
 title: 'Update bulk subscribers'
-api: 'PUT https://api2.ecomailapp.cz/lists/{list_id}/update-subscriber-bulk'
+api: 'PUT https://api2.ecomailapp.cz/lists/{list_id}/update-subscribers-bulk'
 description: 'Update multiple existing subscribers in a specific list in a single request.'
 ---
 
@@ -50,7 +50,7 @@ description: 'Update multiple existing subscribers in a specific list in a singl
 
 <RequestExample>
 ```bash cURL
-curl -X PUT https://api2.ecomailapp.cz/lists/1/update-subscriber-bulk \
+curl -X PUT https://api2.ecomailapp.cz/lists/1/update-subscribers-bulk \
   -H "key: YOUR_API_KEY" \
   -H "Content-Type: application/json" \
   -d '{
@@ -74,7 +74,7 @@ curl -X PUT https://api2.ecomailapp.cz/lists/1/update-subscriber-bulk \
 ```php PHP
 $listId = 1;
 $ch = curl_init();
-curl_setopt($ch, CURLOPT_URL, "https://api2.ecomailapp.cz/lists/{$listId}/update-subscriber-bulk");
+curl_setopt($ch, CURLOPT_URL, "https://api2.ecomailapp.cz/lists/{$listId}/update-subscribers-bulk");
 curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
 curl_setopt($ch, CURLOPT_CUSTOMREQUEST, 'PUT');
 curl_setopt($ch, CURLOPT_HTTPHEADER, [
