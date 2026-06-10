@@ -112,7 +112,11 @@ curl_close($ch);
 ```json 400
 {
   "errors": {
-    "subscriber_data.0": { "email": ["Invalid email address"] }
+    "subscriber_data.0.email": ["Invalid email address"],
+    "subscriber_data.0.custom_fields": [
+      "Custom fields must be an array with unique keys (case-insensitive)",
+      "Subscriber custom fields must be an array with max 5000 bytes"
+    ]
   }
 }
 ```

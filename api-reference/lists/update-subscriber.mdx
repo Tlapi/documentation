@@ -150,4 +150,15 @@ curl_close($ch);
   "inserted_at": "2022-11-15 13:59:21"
 }
 ```
+
+```json 422
+{
+  "errors": {
+    "subscriber_data.custom_fields": [
+      "Custom fields must be an array with unique keys (case-insensitive)",
+      "Subscriber custom fields must be an array with max 5000 bytes"
+    ]
+  }
+}
+```
 </ResponseExample>
