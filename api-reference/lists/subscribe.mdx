@@ -89,6 +89,18 @@ description: 'Subscribe a new contact to a specific list.'
     <ParamField body="subscriber_data[groups]" type="object">
       Group assignments. Overwrites current values. To keep existing selections, send the current values together with new ones.
     </ParamField>
+
+    <ParamField body="subscriber_data[fcm_token]" type="string">
+      Firebase Cloud Messaging (FCM) registration token used to deliver push notifications. Max 255 characters.
+    </ParamField>
+
+    <ParamField body="subscriber_data[platform]" type="string">
+      Device platform for push notifications. Must be `android`, `ios`, or `web`.
+    </ParamField>
+
+    <ParamField body="subscriber_data[firebase_app_id]" type="string">
+      Firebase application ID associated with the FCM token. Max 150 characters.
+    </ParamField>
   </Expandable>
 </ParamField>
 
@@ -141,7 +153,10 @@ curl -X POST https://api2.ecomailapp.cz/lists/1/subscribe \
         "birthday": { "value": "2022-01-20", "type": "date" }
       },
       "tags": ["tags"],
-      "groups": { "grp_5a145ee75780f": ["Category 1", "Category 2"] }
+      "groups": { "grp_5a145ee75780f": ["Category 1", "Category 2"] },
+      "fcm_token": "fcmExampleToken:APA91bExampleRegistrationToken",
+      "platform": "android",
+      "firebase_app_id": "1:1234567890:android:abc123def456"
     },
     "trigger_autoresponders": false,
     "update_existing": false,
@@ -176,6 +191,9 @@ curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode([
         ],
         'tags' => ['tags'],
         'groups' => ['grp_5a145ee75780f' => ['Category 1', 'Category 2']],
+        'fcm_token' => 'fcmExampleToken:APA91bExampleRegistrationToken',
+        'platform' => 'android',
+        'firebase_app_id' => '1:1234567890:android:abc123def456',
     ],
     'trigger_autoresponders' => false,
     'update_existing' => false,

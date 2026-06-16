@@ -19,6 +19,18 @@ description: 'Subscribe multiple contacts to a specific list in a single request
     <ParamField body="subscriber_data[][status]" type="integer" default="1">
       Subscriber status. `1` = subscribed, `2` = unsubscribed, `4` = hard bounce.
     </ParamField>
+
+    <ParamField body="subscriber_data[][fcm_token]" type="string">
+      Firebase Cloud Messaging (FCM) registration token used to deliver push notifications. Max 255 characters.
+    </ParamField>
+
+    <ParamField body="subscriber_data[][platform]" type="string">
+      Device platform for push notifications. Must be `android`, `ios`, or `web`.
+    </ParamField>
+
+    <ParamField body="subscriber_data[][firebase_app_id]" type="string">
+      Firebase application ID associated with the FCM token. Max 150 characters.
+    </ParamField>
   </Expandable>
 </ParamField>
 
@@ -53,7 +65,10 @@ curl -X POST https://api2.ecomailapp.cz/lists/1/subscribe-bulk \
         "name": "Foo",
         "surname": "Bar",
         "email": "foo@bar.cz",
-        "custom_fields": { "category": "customer" }
+        "custom_fields": { "category": "customer" },
+        "fcm_token": "fcmExampleToken:APA91bExampleRegistrationToken",
+        "platform": "ios",
+        "firebase_app_id": "1:1234567890:ios:abc123def456"
       },
       {
         "name": "Foo 2",
@@ -83,6 +98,9 @@ curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode([
             'surname' => 'Bar',
             'email' => 'foo@bar.cz',
             'custom_fields' => ['category' => 'customer'],
+            'fcm_token' => 'fcmExampleToken:APA91bExampleRegistrationToken',
+            'platform' => 'ios',
+            'firebase_app_id' => '1:1234567890:ios:abc123def456',
         ],
         [
             'name' => 'Foo 2',
