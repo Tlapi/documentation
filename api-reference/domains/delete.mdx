@@ -1,23 +1,23 @@
 ---
 title: 'Delete a domain'
-api: 'DELETE https://api2.ecomailapp.cz/domains/{domain_id}'
+api: 'DELETE https://api2.ecomailapp.cz/domains/{domain}'
 description: 'Remove a domain from your account.'
 ---
 
-<ParamField path="domain_id" type="integer" required>
-  Domain ID.
+<ParamField path="domain" type="string" required>
+  Domain name.
 </ParamField>
 
 <RequestExample>
 ```bash cURL
-curl -X DELETE https://api2.ecomailapp.cz/domains/1 \
+curl -X DELETE https://api2.ecomailapp.cz/domains/foo.cz \
   -H "key: YOUR_API_KEY" \
   -H "Content-Type: application/json"
 ```
 
 ```php PHP
 $ch = curl_init();
-curl_setopt($ch, CURLOPT_URL, 'https://api2.ecomailapp.cz/domains/1');
+curl_setopt($ch, CURLOPT_URL, 'https://api2.ecomailapp.cz/domains/foo.cz');
 curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
 curl_setopt($ch, CURLOPT_CUSTOMREQUEST, 'DELETE');
 curl_setopt($ch, CURLOPT_HTTPHEADER, [
@@ -32,9 +32,9 @@ curl_close($ch);
 <ResponseExample>
 ```json 200
 {
-  "id": 1,
-  "name": "newdomain.cz",
-  "valid": 0
+  "name": "foo.cz",
+  "valid": true,
+  "blocked": false
 }
 ```
 </ResponseExample>

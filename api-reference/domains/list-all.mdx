@@ -28,14 +28,14 @@ curl_close($ch);
 ```json 200
 [
   {
-    "id": 1,
     "name": "foo.cz",
-    "valid": 1
+    "valid": true,
+    "blocked": false
   },
   {
-    "id": 2,
     "name": "bar.cz",
-    "valid": 0
+    "valid": false,
+    "blocked": false
   }
 ]
 ```
