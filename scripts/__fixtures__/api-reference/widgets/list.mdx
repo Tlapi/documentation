@@ -1,0 +1,38 @@
+---
+title: 'List widgets'
+api: 'GET https://api.example.test/widgets'
+description: 'List all widgets.'
+---
+
+## Query parameters
+
+<ParamField query="page" type="integer" default="1">
+  Page number.
+</ParamField>
+
+<ParamField query="active" type="boolean">
+  Filter by active state.
+</ParamField>
+
+<ParamField body="ignored_on_get" type="string">
+  GET has no request body — this must be dropped from the spec.
+</ParamField>
+
+<RequestExample>
+```bash cURL
+curl https://api.example.test/widgets \
+  -H "key: YOUR_API_KEY"
+```
+</RequestExample>
+
+<ResponseExample>
+```json 200
+[
+  {
+    "id": 1,
+    "name": "Widget A",
+    "active": true
+  }
+]
+```
+</ResponseExample>
