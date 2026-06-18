@@ -1,0 +1,65 @@
+---
+title: 'Create widget'
+api: 'POST https://api.example.test/widgets'
+description: 'Create a widget.'
+---
+
+<ParamField body="name" type="string" required>
+  Widget name.
+</ParamField>
+
+<ParamField body="active" type="boolean" default="true">
+  Whether the widget is active.
+</ParamField>
+
+<ParamField body="tags" type="array">
+  List of tags.
+</ParamField>
+
+<ParamField body="meta" type="object">
+  Metadata.
+</ParamField>
+
+<ParamField body="meta.color" type="string">
+  Primary color.
+</ParamField>
+
+<ParamField body="parts" type="array" required>
+  Component parts.
+</ParamField>
+
+<ParamField body="parts[].sku" type="string" required>
+  Part SKU.
+</ParamField>
+
+<ParamField body="parts[].qty" type="integer" default="1">
+  Quantity.
+</ParamField>
+
+<ParamField body="labels" type="array|object">
+  A list of labels, or a labels object — union type that must still get `items`.
+</ParamField>
+
+<RequestExample>
+```bash cURL
+curl https://api.example.test/widgets \
+  -H "key: YOUR_API_KEY" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "name": "Widget A",
+    "active": true,
+    "parts": [
+      { "sku": "AAA", "qty": 2 }
+    ]
+  }'
+```
+</RequestExample>
+
+<ResponseExample>
+```json 201
+{
+  "id": 1,
+  "name": "Widget A"
+}
+```
+</ResponseExample>
