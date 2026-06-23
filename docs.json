@@ -8,6 +8,13 @@
     "dark": "#0D6B52"
   },
   "favicon": "/favicon-32x32.png",
+  "redirects": [
+    {
+      "source": "/api-reference/openapi.json",
+      "destination": "/openapi.json",
+      "permanent": true
+    }
+  ],
   "navigation": {
     "tabs": [
       {
