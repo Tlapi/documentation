@@ -40,38 +40,6 @@ mint dev
 
 View your local preview at `http://localhost:3000`.
 
-## API reference (OpenAPI spec)
-
-`openapi.json` is **generated** from the MDX files under `api-reference/` — it is the source of truth for the OpenAPI 3.1 spec, but it is not edited by hand.
-
-The generator and its tests run on **Node.js (20 or newer)** with no extra dependencies. If you don't have Node installed, get it from [nodejs.org](https://nodejs.org/) (or via a version manager like [nvm](https://github.com/nvm-sh/nvm)); check with `node --version`.
-
-Whenever you change anything in an `api-reference/*.mdx` endpoint file (frontmatter `api:`/`title`/`description`, `<ParamField>`, `<RequestExample>`, or `<ResponseExample>`), regenerate the spec and commit it together with your MDX change:
-
-```bash
-node scripts/generate-openapi.mjs
-```
-
-This rewrites `openapi.json` in place. To verify nothing else drifted, the regenerated file should diff cleanly against what's committed:
-
-```bash
-node scripts/generate-openapi.mjs --out /tmp/openapi.json && diff openapi.json /tmp/openapi.json
-```
-
-To sanity-check your changes end to end, import the regenerated `openapi.json` into Postman (**Import** → select the file) and confirm the affected endpoints — paths, parameters, request body, and examples — look the way you expect.
-
-The generator has a test suite (fixtures under `scripts/__fixtures__/`, no dependencies) that asserts an MDX edit produces exactly the expected change in the spec. Run it after touching `scripts/generate-openapi.mjs`:
-
-```bash
-node --test scripts/generate-openapi.test.mjs
-```
-
-Notes:
-- The generator only includes endpoints listed in the `API reference` tab of `docs.json`. A new endpoint MDX must be added to `docs.json` navigation, otherwise it is silently omitted from both the docs and the spec.
-- Use a consistent path-parameter name for the same resource across files (e.g. always `{id}` or always `{template_id}`) — mismatched names produce an invalid spec (duplicate paths).
-- **Production serves `openapi.json` from the public repo via the jsDelivr CDN (`cdn.jsdelivr.net`), which caches branch-based URLs for ~12 hours.** So after your change lands on the default branch it can take up to ~12 h to show up in production. To force it immediately, purge the file — either at <https://www.jsdelivr.com/tools/purge> or by requesting the matching `https://purge.jsdelivr.net/gh/...` URL. (Commit- or tag-pinned URLs are immutable and never need purging.)
-- **The download links pin the spec to a branch via `@<branch>`.** In `index.mdx` and `api-reference/introduction.mdx` the spec is referenced as `https://cdn.jsdelivr.net/gh/Tlapi/documentation@main/openapi.json` — production points at `@main`. To preview the spec from your feature branch before it's merged, temporarily rewrite `@main` to `@<your-feature-branch>` in that URL (jsDelivr serves any branch the same way; the ~12 h cache / purge above applies). Switch it back to `@main` before merging.
-
 ## Publishing changes
 
 Install our GitHub app from your [dashboard](https://dashboard.mintlify.com/settings/organization/github-app) to propagate changes from your repo to your deployment. Changes are deployed to production automatically after pushing to the default branch.
