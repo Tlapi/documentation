@@ -1324,6 +1324,183 @@
         }
       }
     },
+    "/campaigns/{campaign_id}/send-test": {
+      "post": {
+        "operationId": "campaignsSendTest",
+        "summary": "Send test campaign",
+        "description": "Sends a test version of a draft campaign to up to 5 recipients.",
+        "tags": [
+          "Campaigns"
+        ],
+        "parameters": [
+          {
+            "name": "campaign_id",
+            "in": "path",
+            "required": true,
+            "description": "Campaign ID.",
+            "schema": {
+              "type": "integer"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "emails": {
+                    "type": "array",
+                    "description": "Recipients of the test email. At least 1 and at most 5 email addresses.",
+                    "items": {}
+                  },
+                  "merge": {
+                    "type": "object",
+                    "description": "Optional map of merge-tag values used to personalize the test email. Keys are merge-tag names, values are their replacements; empty values are ignored."
+                  }
+                },
+                "required": [
+                  "emails"
+                ]
+              },
+              "example": {
+                "emails": [
+                  "test@foo.cz",
+                  "qa@foo.cz"
+                ],
+                "merge": {
+                  "first_name": "Foo"
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "campaign_id": {
+                      "type": "integer"
+                    },
+                    "sent_emails_count": {
+                      "type": "integer"
+                    }
+                  }
+                },
+                "example": {
+                  "campaign_id": 1,
+                  "sent_emails_count": 2
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "errors": {
+                      "type": "array",
+                      "items": {
+                        "type": "string"
+                      }
+                    }
+                  }
+                },
+                "example": {
+                  "errors": [
+                    "You can not do this because you have a blocked account"
+                  ]
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "Conflict",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "errors": {
+                      "type": "array",
+                      "items": {
+                        "type": "string"
+                      }
+                    }
+                  }
+                },
+                "example": {
+                  "errors": [
+                    "Only draft campaigns can be tested."
+                  ]
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Unprocessable Entity",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "errors": {
+                      "type": "object",
+                      "properties": {
+                        "emails": {
+                          "type": "array",
+                          "items": {
+                            "type": "string"
+                          }
+                        }
+                      }
+                    }
+                  }
+                },
+                "example": {
+                  "errors": {
+                    "emails": [
+                      "The emails field is required."
+                    ]
+                  }
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "Too Many Requests",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "errors": {
+                      "type": "array",
+                      "items": {
+                        "type": "string"
+                      }
+                    }
+                  }
+                },
+                "example": {
+                  "errors": [
+                    "You have exceeded daily limit of sent test emails of 50."
+                  ]
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/campaigns/{campaign_id}/stats": {
       "get": {
         "operationId": "campaignsGetStats",
@@ -2091,16 +2268,13 @@
           }
         },
         "responses": {
-          "201": {
-            "description": "Created",
+          "200": {
+            "description": "OK",
             "content": {
               "application/json": {
                 "schema": {
                   "type": "object",
                   "properties": {
-                    "id": {
-                      "type": "integer"
-                    },
                     "name": {
                       "type": "string"
                     },
@@ -2110,7 +2284,6 @@
                   }
                 },
                 "example": {
-                  "id": 1,
                   "name": "newdomain.cz",
                   "valid": 0
                 }
