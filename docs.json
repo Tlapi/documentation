@@ -45,6 +45,7 @@
               "api-reference/campaigns/get-detail",
               "api-reference/campaigns/update",
               "api-reference/campaigns/send",
+              "api-reference/campaigns/send-test",
               "api-reference/campaigns/get-stats",
               "api-reference/campaigns/get-stats-detail",
               "api-reference/campaigns/get-segment-stats",
