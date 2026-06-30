@@ -37,6 +37,18 @@ description: 'Update multiple existing subscribers in a specific list in a singl
     <ParamField body="subscriber_data[][tags]" type="array">
       Subscriber tags. Limited to 2000 characters total and 50 characters per tag. Content overwrites current tags.
     </ParamField>
+
+    <ParamField body="subscriber_data[][fcm_token]" type="string">
+      Firebase Cloud Messaging (FCM) registration token used to deliver push notifications. Max 255 characters.
+    </ParamField>
+
+    <ParamField body="subscriber_data[][platform]" type="string">
+      Device platform for push notifications. Must be `android`, `ios`, or `web`.
+    </ParamField>
+
+    <ParamField body="subscriber_data[][firebase_app_id]" type="string">
+      Firebase application ID associated with the FCM token. Max 150 characters.
+    </ParamField>
   </Expandable>
 </ParamField>
 
@@ -60,7 +72,10 @@ curl -X PUT https://api2.ecomailapp.cz/lists/1/update-subscribers-bulk \
         "name": "Jan",
         "surname": "Novak",
         "custom_fields": { "shop": "myshop.cz" },
-        "tags": ["vip"]
+        "tags": ["vip"],
+        "fcm_token": "fcmExampleToken:APA91bExampleRegistrationToken",
+        "platform": "android",
+        "firebase_app_id": "1:1234567890:android:abc123def456"
       },
       {
         "email": "foo2@bar.cz",
@@ -89,6 +104,9 @@ curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode([
             'surname' => 'Novak',
             'custom_fields' => ['shop' => 'myshop.cz'],
             'tags' => ['vip'],
+            'fcm_token' => 'fcmExampleToken:APA91bExampleRegistrationToken',
+            'platform' => 'android',
+            'firebase_app_id' => '1:1234567890:android:abc123def456',
         ],
         [
             'email' => 'foo2@bar.cz',
