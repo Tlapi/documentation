@@ -8,32 +8,38 @@ Only the `email` field is required. All other fields (`category`, `action`, `lab
 
 The `value` field accepts a plain string, a JSON-encoded string, or a JSON object/array. If you pass an object or array, we will automatically JSON-encode it on our side.
 
+<Note>
+  `category`, `action`, `label` and `property` are each capped in length. If you send a longer value, it is **automatically truncated** to fit — the request still succeeds and the response reflects the truncated value. `email` and `value` work differently: exceeding their limit fails the whole request with a `422` validation error instead of truncating.
+
+  Length caps on `category`, `action`, `label` and `property` are measured in **bytes** of the UTF-8-encoded value, not characters — accented characters, emoji, and other multi-byte characters count as more than one byte each and may be cut off earlier than the byte count suggests.
+</Note>
+
 <ParamField body="event" type="object" required>
   Event details.
 
   <Expandable title="event properties">
     <ParamField body="event.email" type="string" required>
-      Subscriber's email address. The subscriber must already exist in your contact list.
+      Subscriber's email address. The subscriber must already exist in your contact list. Maximum length is **150 characters** — longer values are rejected with a `422` error, not truncated.
     </ParamField>
 
     <ParamField body="event.category" type="string">
-      Event category (e.g. `"shopping"`, `"engagement"`, `"support"`).
+      Event category (e.g. `"shopping"`, `"engagement"`, `"support"`). Maximum length is **255 bytes**; longer values are truncated.
     </ParamField>
 
     <ParamField body="event.action" type="string">
-      Event action (e.g. `"product_viewed"`, `"form_submitted"`, `"review_left"`).
+      Event action (e.g. `"product_viewed"`, `"form_submitted"`, `"review_left"`). Maximum length is **255 bytes**; longer values are truncated.
     </ParamField>
 
     <ParamField body="event.label" type="string">
-      Event label — a human-readable name or identifier (e.g. a product name, page title).
+      Event label — a human-readable name or identifier (e.g. a product name, page title). Maximum length is **255 bytes**; longer values are truncated.
     </ParamField>
 
     <ParamField body="event.property" type="string">
-      Event property — a custom key or identifier (e.g. a product SKU, category slug).
+      Event property — a custom key or identifier (e.g. a product SKU, category slug). Maximum length is **300 bytes**; longer values are truncated.
     </ParamField>
 
     <ParamField body="event.value" type="string | object | array">
-      Event value. Can be a plain string, a JSON-encoded string, or a JSON object/array (objects and arrays will be JSON-encoded automatically on our side). Maximum length is **20,000 characters** (after JSON encoding, if applicable).
+      Event value. Can be a plain string, a JSON-encoded string, or a JSON object/array (objects and arrays will be JSON-encoded automatically on our side). Maximum length is **20,000 characters** (after JSON encoding, if applicable) — longer values are rejected with a `422` error, not truncated.
     </ParamField>
   </Expandable>
 </ParamField>
