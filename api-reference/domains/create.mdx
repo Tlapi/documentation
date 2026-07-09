@@ -42,4 +42,24 @@ curl_close($ch);
   "valid": 0
 }
 ```
+
+```json 422 Domain exists
+{
+  "error": "Domain already exists.",
+  "domain": "newdomain.cz"
+}
+```
+
+```json 422 Freemail domain
+{
+  "error": "Freemail domain is not allowed.",
+  "domain": "newdomain.cz"
+}
+```
+
+```json 422 Invalid domain
+{
+  "error": "Invalid URL address"
+}
+```
 </ResponseExample>
