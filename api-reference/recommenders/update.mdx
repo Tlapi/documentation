@@ -1,0 +1,89 @@
+---
+title: 'Update recommender'
+api: 'PUT https://api2.ecomailapp.cz/recommenders/{recommender_id}'
+description: 'Update the name and settings (filters) of an existing Spark recommender. Returns the updated list of recommenders.'
+---
+
+<ParamField path="recommender_id" type="string" required>
+  The unique identifier of the recommender to update.
+</ParamField>
+
+<ParamField body="name" type="string">
+  Optional human-readable name of the recommender. Max 191 characters.
+</ParamField>
+
+<ParamField body="filtered_products" type="string[]">
+  List of product identifiers (SKUs) to exclude from the recommendations. Max 1000 items, each unique and max 255 characters. Omit the field for no product filter.
+</ParamField>
+
+<ParamField body="filtered_categories" type="string[]">
+  List of category names to exclude from the recommendations. Max 1000 items, each unique and max 255 characters. Omit the field for no category filter.
+</ParamField>
+
+<ParamField body="included_months" type="integer[]">
+  List of calendar month numbers (`1`–`12`) that restrict which purchase history is used for training. Values must be unique, max 12 items. Omit the field to use the full purchase history.
+</ParamField>
+
+<Note>
+  Only `name` and the settings filters can be changed. `recommender_id`, `sequence_number`, `shop_id` and `feed_id` are immutable, and `status` / `last_trained_timestamp` are managed by the training pipeline. An unknown `recommender_id` returns a `404` error.
+</Note>
+
+<RequestExample>
+```bash cURL
+curl -X PUT https://api2.ecomailapp.cz/recommenders/6789abc123def \
+  -H "key: YOUR_API_KEY" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "name": "Christmas 2026",
+    "filtered_products": ["SKU-A"],
+    "filtered_categories": ["Sale"],
+    "included_months": [11, 12]
+  }'
+```
+
+```php PHP
+$ch = curl_init();
+curl_setopt($ch, CURLOPT_URL, 'https://api2.ecomailapp.cz/recommenders/6789abc123def');
+curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+curl_setopt($ch, CURLOPT_CUSTOMREQUEST, 'PUT');
+curl_setopt($ch, CURLOPT_HTTPHEADER, [
+    'key: YOUR_API_KEY',
+    'Content-Type: application/json',
+]);
+curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode([
+    'name' => 'Christmas 2026',
+    'filtered_products' => ['SKU-A'],
+    'filtered_categories' => ['Sale'],
+    'included_months' => [11, 12],
+]));
+$response = curl_exec($ch);
+curl_close($ch);
+```
+</RequestExample>
+
+<ResponseExample>
+```json 200
+[
+  {
+    "recommender_id": "6789abc123def",
+    "feed_id": 1,
+    "shop_id": "my-shop",
+    "last_trained_timestamp": 1710000000,
+    "status": "ready",
+    "settings": {
+      "filtered_products": ["SKU-A"],
+      "filtered_categories": ["Sale"],
+      "included_months": [11, 12]
+    },
+    "sequence_number": 1,
+    "name": "Christmas 2026"
+  }
+]
+```
+
+```json 404
+{
+  "message": "Recommender not found."
+}
+```
+</ResponseExample>

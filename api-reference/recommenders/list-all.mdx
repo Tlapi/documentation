@@ -4,10 +4,14 @@ api: 'GET https://api2.ecomailapp.cz/recommenders'
 description: 'Retrieve all Spark recommenders configured for your account.'
 ---
 
-Returns a list of recommender objects, each containing the recommender ID, associated shop and feed, training status and settings.
+Returns a list of recommender objects, each containing the recommender ID, sequence number, optional name, associated shop and feed, training status and settings.
 
 <Note>
   Recommender status values: `created` (just created, waiting to train), `training` (currently training on EMR), `ready` (trained and serving recommendations).
+</Note>
+
+<Note>
+  `sequence_number` is a stable, per-account identifier that is never reused, even after a recommender is deleted. It is the number referenced by the merge tag `*|ECM_SPARK_REC_{sequence_number}_{limit}[N].{field}|*` in templates and automations.
 </Note>
 
 <RequestExample>
@@ -43,7 +47,9 @@ curl_close($ch);
       "filtered_products": [],
       "filtered_categories": [],
       "included_months": []
-    }
+    },
+    "sequence_number": 1,
+    "name": "Christmas 2026"
   }
 ]
 ```

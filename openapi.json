@@ -2091,16 +2091,13 @@
           }
         },
         "responses": {
-          "201": {
-            "description": "Created",
+          "200": {
+            "description": "OK",
             "content": {
               "application/json": {
                 "schema": {
                   "type": "object",
                   "properties": {
-                    "id": {
-                      "type": "integer"
-                    },
                     "name": {
                       "type": "string"
                     },
@@ -2110,7 +2107,6 @@
                   }
                 },
                 "example": {
-                  "id": 1,
                   "name": "newdomain.cz",
                   "valid": 0
                 }
@@ -4329,6 +4325,12 @@
                             "items": {}
                           }
                         }
+                      },
+                      "sequence_number": {
+                        "type": "integer"
+                      },
+                      "name": {
+                        "type": "string"
                       }
                     }
                   }
@@ -4344,7 +4346,9 @@
                       "filtered_products": [],
                       "filtered_categories": [],
                       "included_months": []
-                    }
+                    },
+                    "sequence_number": 1,
+                    "name": "Christmas 2026"
                   }
                 ]
               }
@@ -4368,11 +4372,27 @@
                 "properties": {
                   "shop_id": {
                     "type": "string",
-                    "description": "The shop (e-commerce platform) identifier."
+                    "description": "The shop (e-commerce platform) identifier. Max 64 characters, allowed characters: letters, digits, `.`, `_`, `-`."
                   },
                   "feed_id": {
                     "type": "integer",
                     "description": "The product feed ID to use for recommendations."
+                  },
+                  "name": {
+                    "type": "string",
+                    "description": "Optional human-readable name of the recommender. Max 191 characters."
+                  },
+                  "filtered_products": {
+                    "type": "string",
+                    "description": "Optional list of product identifiers (SKUs) to exclude from the recommendations. Max 1000 items, each unique and max 255 characters. Omit the field for no product filter."
+                  },
+                  "filtered_categories": {
+                    "type": "string",
+                    "description": "Optional list of category names to exclude from the recommendations. Max 1000 items, each unique and max 255 characters. Omit the field for no category filter."
+                  },
+                  "included_months": {
+                    "type": "string",
+                    "description": "Optional list of calendar month numbers (`1`–`12`) that restrict which purchase history is used for training. Values must be unique, max 12 items. Omit the field to use the full purchase history."
                   }
                 },
                 "required": [
@@ -4382,7 +4402,19 @@
               },
               "example": {
                 "shop_id": "my-shop",
-                "feed_id": 1
+                "feed_id": 1,
+                "name": "Christmas 2026",
+                "filtered_products": [
+                  "SKU-A",
+                  "SKU-B"
+                ],
+                "filtered_categories": [
+                  "Sale"
+                ],
+                "included_months": [
+                  11,
+                  12
+                ]
               }
             }
           }
@@ -4415,17 +4447,29 @@
                         "properties": {
                           "filtered_products": {
                             "type": "array",
-                            "items": {}
+                            "items": {
+                              "type": "string"
+                            }
                           },
                           "filtered_categories": {
                             "type": "array",
-                            "items": {}
+                            "items": {
+                              "type": "string"
+                            }
                           },
                           "included_months": {
                             "type": "array",
-                            "items": {}
+                            "items": {
+                              "type": "integer"
+                            }
                           }
                         }
+                      },
+                      "sequence_number": {
+                        "type": "integer"
+                      },
+                      "name": {
+                        "type": "string"
                       }
                     }
                   }
@@ -4438,10 +4482,20 @@
                     "last_trained_timestamp": null,
                     "status": "created",
                     "settings": {
-                      "filtered_products": [],
-                      "filtered_categories": [],
-                      "included_months": []
-                    }
+                      "filtered_products": [
+                        "SKU-A",
+                        "SKU-B"
+                      ],
+                      "filtered_categories": [
+                        "Sale"
+                      ],
+                      "included_months": [
+                        11,
+                        12
+                      ]
+                    },
+                    "sequence_number": 1,
+                    "name": "Christmas 2026"
                   }
                 ]
               }
@@ -4455,17 +4509,24 @@
                   "type": "object",
                   "properties": {
                     "errors": {
-                      "type": "array",
-                      "items": {
-                        "type": "string"
+                      "type": "object",
+                      "properties": {
+                        "recommender": {
+                          "type": "array",
+                          "items": {
+                            "type": "string"
+                          }
+                        }
                       }
                     }
                   }
                 },
                 "example": {
-                  "errors": [
-                    "Recommender for this shop and feed already exists."
-                  ]
+                  "errors": {
+                    "recommender": [
+                      "There is not enough purchase data to train a recommender yet."
+                    ]
+                  }
                 }
               }
             }
@@ -4474,6 +4535,285 @@
       }
     },
     "/recommenders/{recommender_id}": {
+      "get": {
+        "operationId": "recommendersShow",
+        "summary": "Get recommender",
+        "description": "Retrieve a single Spark recommender by its ID.",
+        "tags": [
+          "Recommenders"
+        ],
+        "parameters": [
+          {
+            "name": "recommender_id",
+            "in": "path",
+            "required": true,
+            "description": "The unique identifier of the recommender to retrieve.",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "recommender_id": {
+                      "type": "string"
+                    },
+                    "feed_id": {
+                      "type": "integer"
+                    },
+                    "shop_id": {
+                      "type": "string"
+                    },
+                    "last_trained_timestamp": {
+                      "type": "integer"
+                    },
+                    "status": {
+                      "type": "string"
+                    },
+                    "settings": {
+                      "type": "object",
+                      "properties": {
+                        "filtered_products": {
+                          "type": "array",
+                          "items": {
+                            "type": "string"
+                          }
+                        },
+                        "filtered_categories": {
+                          "type": "array",
+                          "items": {
+                            "type": "string"
+                          }
+                        },
+                        "included_months": {
+                          "type": "array",
+                          "items": {
+                            "type": "integer"
+                          }
+                        }
+                      }
+                    },
+                    "sequence_number": {
+                      "type": "integer"
+                    },
+                    "name": {
+                      "type": "string"
+                    }
+                  }
+                },
+                "example": {
+                  "recommender_id": "6789abc123def",
+                  "feed_id": 1,
+                  "shop_id": "my-shop",
+                  "last_trained_timestamp": 1710000000,
+                  "status": "ready",
+                  "settings": {
+                    "filtered_products": [
+                      "SKU-A",
+                      "SKU-B"
+                    ],
+                    "filtered_categories": [
+                      "Sale"
+                    ],
+                    "included_months": [
+                      11,
+                      12
+                    ]
+                  },
+                  "sequence_number": 1,
+                  "name": "Christmas 2026"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string"
+                    }
+                  }
+                },
+                "example": {
+                  "message": "Recommender not found."
+                }
+              }
+            }
+          }
+        }
+      },
+      "put": {
+        "operationId": "recommendersUpdate",
+        "summary": "Update recommender",
+        "description": "Update the name and settings (filters) of an existing Spark recommender. Returns the updated list of recommenders.",
+        "tags": [
+          "Recommenders"
+        ],
+        "parameters": [
+          {
+            "name": "recommender_id",
+            "in": "path",
+            "required": true,
+            "description": "The unique identifier of the recommender to update.",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": false,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "name": {
+                    "type": "string",
+                    "description": "Optional human-readable name of the recommender. Max 191 characters."
+                  },
+                  "filtered_products": {
+                    "type": "string",
+                    "description": "List of product identifiers (SKUs) to exclude from the recommendations. Max 1000 items, each unique and max 255 characters. Omit the field for no product filter."
+                  },
+                  "filtered_categories": {
+                    "type": "string",
+                    "description": "List of category names to exclude from the recommendations. Max 1000 items, each unique and max 255 characters. Omit the field for no category filter."
+                  },
+                  "included_months": {
+                    "type": "string",
+                    "description": "List of calendar month numbers (`1`–`12`) that restrict which purchase history is used for training. Values must be unique, max 12 items. Omit the field to use the full purchase history."
+                  }
+                }
+              },
+              "example": {
+                "name": "Christmas 2026",
+                "filtered_products": [
+                  "SKU-A"
+                ],
+                "filtered_categories": [
+                  "Sale"
+                ],
+                "included_months": [
+                  11,
+                  12
+                ]
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "recommender_id": {
+                        "type": "string"
+                      },
+                      "feed_id": {
+                        "type": "integer"
+                      },
+                      "shop_id": {
+                        "type": "string"
+                      },
+                      "last_trained_timestamp": {
+                        "type": "integer"
+                      },
+                      "status": {
+                        "type": "string"
+                      },
+                      "settings": {
+                        "type": "object",
+                        "properties": {
+                          "filtered_products": {
+                            "type": "array",
+                            "items": {
+                              "type": "string"
+                            }
+                          },
+                          "filtered_categories": {
+                            "type": "array",
+                            "items": {
+                              "type": "string"
+                            }
+                          },
+                          "included_months": {
+                            "type": "array",
+                            "items": {
+                              "type": "integer"
+                            }
+                          }
+                        }
+                      },
+                      "sequence_number": {
+                        "type": "integer"
+                      },
+                      "name": {
+                        "type": "string"
+                      }
+                    }
+                  }
+                },
+                "example": [
+                  {
+                    "recommender_id": "6789abc123def",
+                    "feed_id": 1,
+                    "shop_id": "my-shop",
+                    "last_trained_timestamp": 1710000000,
+                    "status": "ready",
+                    "settings": {
+                      "filtered_products": [
+                        "SKU-A"
+                      ],
+                      "filtered_categories": [
+                        "Sale"
+                      ],
+                      "included_months": [
+                        11,
+                        12
+                      ]
+                    },
+                    "sequence_number": 1,
+                    "name": "Christmas 2026"
+                  }
+                ]
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string"
+                    }
+                  }
+                },
+                "example": {
+                  "message": "Recommender not found."
+                }
+              }
+            }
+          }
+        }
+      },
       "delete": {
         "operationId": "recommendersDelete",
         "summary": "Delete recommender",
@@ -4499,9 +4839,82 @@
               "application/json": {
                 "schema": {
                   "type": "array",
-                  "items": {}
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "recommender_id": {
+                        "type": "string"
+                      },
+                      "feed_id": {
+                        "type": "integer"
+                      },
+                      "shop_id": {
+                        "type": "string"
+                      },
+                      "last_trained_timestamp": {
+                        "type": "integer"
+                      },
+                      "status": {
+                        "type": "string"
+                      },
+                      "settings": {
+                        "type": "object",
+                        "properties": {
+                          "filtered_products": {
+                            "type": "array",
+                            "items": {}
+                          },
+                          "filtered_categories": {
+                            "type": "array",
+                            "items": {}
+                          },
+                          "included_months": {
+                            "type": "array",
+                            "items": {}
+                          }
+                        }
+                      },
+                      "sequence_number": {
+                        "type": "integer"
+                      },
+                      "name": {}
+                    }
+                  }
                 },
-                "example": []
+                "example": [
+                  {
+                    "recommender_id": "abcd1234ef5678",
+                    "feed_id": 2,
+                    "shop_id": "my-shop",
+                    "last_trained_timestamp": 1710000000,
+                    "status": "ready",
+                    "settings": {
+                      "filtered_products": [],
+                      "filtered_categories": [],
+                      "included_months": []
+                    },
+                    "sequence_number": 2,
+                    "name": null
+                  }
+                ]
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string"
+                    }
+                  }
+                },
+                "example": {
+                  "message": "Recommender not found."
+                }
               }
             }
           }
@@ -5667,23 +6080,23 @@
                     "properties": {
                       "email": {
                         "type": "string",
-                        "description": "Subscriber's email address. The subscriber must already exist in your contact list."
+                        "description": "Subscriber's email address. The subscriber must already exist in your contact list. Maximum length is **150 characters** — longer values are rejected with a `422` error, not truncated."
                       },
                       "category": {
                         "type": "string",
-                        "description": "Event category (e.g. `\"shopping\"`, `\"engagement\"`, `\"support\"`)."
+                        "description": "Event category (e.g. `\"shopping\"`, `\"engagement\"`, `\"support\"`). Maximum length is **255 bytes**; longer values are truncated."
                       },
                       "action": {
                         "type": "string",
-                        "description": "Event action (e.g. `\"product_viewed\"`, `\"form_submitted\"`, `\"review_left\"`)."
+                        "description": "Event action (e.g. `\"product_viewed\"`, `\"form_submitted\"`, `\"review_left\"`). Maximum length is **255 bytes**; longer values are truncated."
                       },
                       "label": {
                         "type": "string",
-                        "description": "Event label — a human-readable name or identifier (e.g. a product name, page title)."
+                        "description": "Event label — a human-readable name or identifier (e.g. a product name, page title). Maximum length is **255 bytes**; longer values are truncated."
                       },
                       "property": {
                         "type": "string",
-                        "description": "Event property — a custom key or identifier (e.g. a product SKU, category slug)."
+                        "description": "Event property — a custom key or identifier (e.g. a product SKU, category slug). Maximum length is **300 bytes**; longer values are truncated."
                       },
                       "value": {
                         "type": [
@@ -5691,7 +6104,7 @@
                           "object",
                           "array"
                         ],
-                        "description": "Event value. Can be a plain string, a JSON-encoded string, or a JSON object/array (objects and arrays will be JSON-encoded automatically on our side). Maximum length is **20,000 characters** (after JSON encoding, if applicable).",
+                        "description": "Event value. Can be a plain string, a JSON-encoded string, or a JSON object/array (objects and arrays will be JSON-encoded automatically on our side). Maximum length is **20,000 characters** (after JSON encoding, if applicable) — longer values are rejected with a `422` error, not truncated.",
                         "items": {}
                       }
                     },

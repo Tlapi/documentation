@@ -5,16 +5,33 @@ description: 'Create a new Spark recommender for a specific shop and product fee
 ---
 
 <ParamField body="shop_id" type="string" required>
-  The shop (e-commerce platform) identifier.
+  The shop (e-commerce platform) identifier. Max 64 characters, allowed characters: letters, digits, `.`, `_`, `-`.
 </ParamField>
 
 <ParamField body="feed_id" type="integer" required>
   The product feed ID to use for recommendations.
 </ParamField>
 
+<ParamField body="name" type="string">
+  Optional human-readable name of the recommender. Max 191 characters.
+</ParamField>
+
+<ParamField body="filtered_products" type="string[]">
+  Optional list of product identifiers (SKUs) to exclude from the recommendations. Max 1000 items, each unique and max 255 characters. Omit the field for no product filter.
+</ParamField>
+
+<ParamField body="filtered_categories" type="string[]">
+  Optional list of category names to exclude from the recommendations. Max 1000 items, each unique and max 255 characters. Omit the field for no category filter.
+</ParamField>
+
+<ParamField body="included_months" type="integer[]">
+  Optional list of calendar month numbers (`1`–`12`) that restrict which purchase history is used for training. Values must be unique, max 12 items. Omit the field to use the full purchase history.
+</ParamField>
+
 <Note>
-  Each shop + feed combination can only have one recommender. Attempting to create a duplicate returns a `422` error.
   After creation the recommender status will be `created` and training will start automatically in the background.
+  Each account can have at most 5 recommenders; creating a 6th returns a `422` error. Deleting a recommender never recycles its `sequence_number`.
+  This endpoint is rate limited to 2 requests per minute.
 </Note>
 
 <RequestExample>
@@ -24,7 +41,11 @@ curl -X POST https://api2.ecomailapp.cz/recommenders \
   -H "Content-Type: application/json" \
   -d '{
     "shop_id": "my-shop",
-    "feed_id": 1
+    "feed_id": 1,
+    "name": "Christmas 2026",
+    "filtered_products": ["SKU-A", "SKU-B"],
+    "filtered_categories": ["Sale"],
+    "included_months": [11, 12]
   }'
 ```
 
@@ -40,6 +61,10 @@ curl_setopt($ch, CURLOPT_HTTPHEADER, [
 curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode([
     'shop_id' => 'my-shop',
     'feed_id' => 1,
+    'name' => 'Christmas 2026',
+    'filtered_products' => ['SKU-A', 'SKU-B'],
+    'filtered_categories' => ['Sale'],
+    'included_months' => [11, 12],
 ]));
 $response = curl_exec($ch);
 curl_close($ch);
@@ -56,17 +81,29 @@ curl_close($ch);
     "last_trained_timestamp": null,
     "status": "created",
     "settings": {
-      "filtered_products": [],
-      "filtered_categories": [],
-      "included_months": []
-    }
+      "filtered_products": ["SKU-A", "SKU-B"],
+      "filtered_categories": ["Sale"],
+      "included_months": [11, 12]
+    },
+    "sequence_number": 1,
+    "name": "Christmas 2026"
   }
 ]
 ```
 
 ```json 422
 {
-  "errors": ["Recommender for this shop and feed already exists."]
+  "errors": {
+    "recommender": ["You have reached the maximum number of recommenders."]
+  }
+}
+```
+
+```json 422
+{
+  "errors": {
+    "recommender": ["There is not enough purchase data to train a recommender yet."]
+  }
 }
 ```
 </ResponseExample>
