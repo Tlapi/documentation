@@ -8,6 +8,10 @@ description: 'Remove a Spark recommender by its ID. Returns the updated list of 
   The unique identifier of the recommender to delete.
 </ParamField>
 
+<Note>
+  Deleting a recommender does not recycle its `sequence_number` — the account's counter keeps growing so merge tags in existing templates never collide with a future recommender.
+</Note>
+
 <RequestExample>
 ```bash cURL
 curl -X DELETE https://api2.ecomailapp.cz/recommenders/6789abc123def \
@@ -31,6 +35,27 @@ curl_close($ch);
 
 <ResponseExample>
 ```json 200
-[]
+[
+  {
+    "recommender_id": "abcd1234ef5678",
+    "feed_id": 2,
+    "shop_id": "my-shop",
+    "last_trained_timestamp": 1710000000,
+    "status": "ready",
+    "settings": {
+      "filtered_products": [],
+      "filtered_categories": [],
+      "included_months": []
+    },
+    "sequence_number": 2,
+    "name": null
+  }
+]
+```
+
+```json 404
+{
+  "message": "Recommender not found."
+}
 ```
 </ResponseExample>

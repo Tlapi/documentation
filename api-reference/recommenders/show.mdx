@@ -1,0 +1,58 @@
+---
+title: 'Get recommender'
+api: 'GET https://api2.ecomailapp.cz/recommenders/{recommender_id}'
+description: 'Retrieve a single Spark recommender by its ID.'
+---
+
+<ParamField path="recommender_id" type="string" required>
+  The unique identifier of the recommender to retrieve.
+</ParamField>
+
+<Note>
+  Unlike the list endpoint, this returns a single recommender object (not an array). An unknown `recommender_id` returns a `404` error.
+</Note>
+
+<RequestExample>
+```bash cURL
+curl https://api2.ecomailapp.cz/recommenders/6789abc123def \
+  -H "key: YOUR_API_KEY" \
+  -H "Content-Type: application/json"
+```
+
+```php PHP
+$ch = curl_init();
+curl_setopt($ch, CURLOPT_URL, 'https://api2.ecomailapp.cz/recommenders/6789abc123def');
+curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+curl_setopt($ch, CURLOPT_HTTPHEADER, [
+    'key: YOUR_API_KEY',
+    'Content-Type: application/json',
+]);
+$response = curl_exec($ch);
+curl_close($ch);
+```
+</RequestExample>
+
+<ResponseExample>
+```json 200
+{
+  "recommender_id": "6789abc123def",
+  "feed_id": 1,
+  "shop_id": "my-shop",
+  "last_trained_timestamp": 1710000000,
+  "status": "ready",
+  "settings": {
+    "filtered_products": ["SKU-A", "SKU-B"],
+    "filtered_categories": ["Sale"],
+    "included_months": [11, 12]
+  },
+  "sequence_number": 1,
+  "name": "Christmas 2026"
+}
+```
+
+```json 404
+{
+  "message": "Recommender not found."
+}
+```
+</ResponseExample>

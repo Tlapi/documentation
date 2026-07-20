@@ -96,6 +96,8 @@
             "pages": [
               "api-reference/recommenders/list-all",
               "api-reference/recommenders/create",
+              "api-reference/recommenders/show",
+              "api-reference/recommenders/update",
               "api-reference/recommenders/delete"
             ]
           },
