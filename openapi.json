@@ -774,6 +774,12 @@
                       "sent_at": {
                         "type": "string"
                       },
+                      "created_at": {
+                        "type": "string"
+                      },
+                      "updated_at": {
+                        "type": "string"
+                      },
                       "recipients": {
                         "type": "integer"
                       },
@@ -799,6 +805,8 @@
                     "title": "My first campaign",
                     "subject": "First hello",
                     "sent_at": "2014-09-08 22:04:03",
+                    "created_at": "2014-09-01 10:15:00",
+                    "updated_at": "2014-09-08 22:04:03",
                     "recipients": 1,
                     "status": 3,
                     "scheduled_at": null,
