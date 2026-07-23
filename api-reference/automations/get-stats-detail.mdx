@@ -17,11 +17,19 @@ description: 'Return statistics for a specific automation with each subscriber a
 </ParamField>
 
 <ParamField query="from_date" type="string">
-  Filter from date onwards in `YYYY-MM-DD` format (UTC).
+  Filter events from this date onwards in `YYYY-MM-DD` format (UTC). Cannot be more than one year in the past.
+</ParamField>
+
+<ParamField query="to_date" type="string">
+  Filter events up to this date in `YYYY-MM-DD` format (UTC). Must be after `from_date`.
+</ParamField>
+
+<ParamField query="detail" type="string">
+  Set to `true` to return each individual event per subscriber instead of aggregated per-event counts. In detail mode every event row also carries the automation mail it belongs to — `action_id` and the resolved `mail_name` (see [Get actions](/api-reference/automations/get-actions)).
 </ParamField>
 
 <ParamField query="per_page" type="integer">
-  Number of results per page. Default is `100`, maximum is `5000`.
+  Number of results per page. Default and maximum is `100`.
 </ParamField>
 
 <ParamField query="page" type="integer">
@@ -67,6 +75,25 @@ curl_close($ch);
       "out_of_band": 0,
       "spam": 0
     }
+  }
+}
+```
+
+```json 200 (detail=true)
+{
+  "next_page_url": null,
+  "total": 3,
+  "per_page": 100,
+  "subscribers": {
+    "foo@bar.com": [
+      {
+        "url": "",
+        "event": "open",
+        "occured_at": "2026-03-22 10:15:03",
+        "action_id": "a1b2c3d4e5",
+        "mail_name": "Welcome email"
+      }
+    ]
   }
 }
 ```
