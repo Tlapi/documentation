@@ -17,7 +17,15 @@ description: 'Returns statistics for a specific campaign with each subscriber an
 </ParamField>
 
 <ParamField query="from_date" type="string">
-  Filter from date onwards (`YYYY-MM-DD` in UTC).
+  Filter events from this date onwards (`YYYY-MM-DD` in UTC).
+</ParamField>
+
+<ParamField query="to_date" type="string">
+  Filter events up to this date (`YYYY-MM-DD` in UTC). Must be after `from_date`.
+</ParamField>
+
+<ParamField query="detail" type="string">
+  Set to `true` to return each individual event per subscriber (with `event`, `url` and `occured_at`) instead of aggregated per-event counts.
 </ParamField>
 
 <ParamField query="per_page" type="integer">
@@ -69,6 +77,23 @@ curl_close($ch);
       "out_of_band": 0,
       "spam": 0
     }
+  }
+}
+```
+
+```json 200 (detail=true)
+{
+  "next_page_url": null,
+  "total": 3,
+  "per_page": 100,
+  "subscribers": {
+    "foo@bar.com": [
+      {
+        "url": "https://example.com/landing",
+        "event": "click",
+        "occured_at": "2026-03-22 10:15:03"
+      }
+    ]
   }
 }
 ```
