@@ -24,18 +24,42 @@ curl_close($ch);
 ```
 </RequestExample>
 
+<ResponseField name="name" type="string">
+  Domain name. A name held as both a sending and a transactional domain is listed once per variant.
+</ResponseField>
+
+<ResponseField name="valid" type="boolean">
+  Whether the domain passed verification.
+</ResponseField>
+
+<ResponseField name="blocked" type="boolean">
+  Whether sending from the domain is blocked.
+</ResponseField>
+
+<ResponseField name="type" type="string">
+  Variant of the domain — `sending` or `transactional`.
+</ResponseField>
+
 <ResponseExample>
 ```json 200
 [
   {
     "name": "foo.cz",
     "valid": true,
-    "blocked": false
+    "blocked": false,
+    "type": "sending"
+  },
+  {
+    "name": "foo.cz",
+    "valid": true,
+    "blocked": false,
+    "type": "transactional"
   },
   {
     "name": "bar.cz",
     "valid": false,
-    "blocked": false
+    "blocked": false,
+    "type": "sending"
   }
 ]
 ```

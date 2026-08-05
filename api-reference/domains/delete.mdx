@@ -8,9 +8,26 @@ description: 'Remove a domain from your account.'
   Domain name.
 </ParamField>
 
+<ParamField query="type" type="string">
+  Which variant to delete — `sending` or `transactional`. Omit it while the account holds the name under a
+  single variant; that one is deleted whichever type it is.
+</ParamField>
+
+<Warning>
+  One domain name can be held as both a sending and a transactional domain. When the account holds both and the
+  request carries no `type`, nothing is deleted and the API answers `409 Conflict` — repeat the request with
+  `?type=sending` or `?type=transactional` to pick the variant.
+</Warning>
+
 <RequestExample>
 ```bash cURL
 curl -X DELETE https://api2.ecomailapp.cz/domains/foo.cz \
+  -H "key: YOUR_API_KEY" \
+  -H "Content-Type: application/json"
+```
+
+```bash cURL (pick the variant)
+curl -X DELETE "https://api2.ecomailapp.cz/domains/foo.cz?type=transactional" \
   -H "key: YOUR_API_KEY" \
   -H "Content-Type: application/json"
 ```
@@ -35,6 +52,21 @@ curl_close($ch);
   "name": "foo.cz",
   "valid": true,
   "blocked": false
+}
+```
+
+```json 409
+{
+  "error": "Domain exists as both a sending and a transactional domain, specify which type to delete.",
+  "domain": "foo.cz"
+}
+```
+
+```json 422 Invalid type
+{
+  "errors": {
+    "type": ["type contains invalid value."]
+  }
 }
 ```
 </ResponseExample>
