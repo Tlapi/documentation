@@ -8,6 +8,11 @@ description: 'Add a new domain to your account.'
   Domain name.
 </ParamField>
 
+<ParamField body="type" type="string" default="sending">
+  Which variant to create — `sending` or `transactional`. One domain name can be held as both variants at the
+  same time, and each of them is created separately. Omit the field to create a sending domain.
+</ParamField>
+
 <RequestExample>
 ```bash cURL
 curl -X POST https://api2.ecomailapp.cz/domains \
@@ -15,6 +20,16 @@ curl -X POST https://api2.ecomailapp.cz/domains \
   -H "Content-Type: application/json" \
   -d '{
     "name": "newdomain.cz"
+  }'
+```
+
+```bash cURL (transactional)
+curl -X POST https://api2.ecomailapp.cz/domains \
+  -H "key: YOUR_API_KEY" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "name": "newdomain.cz",
+    "type": "transactional"
   }'
 ```
 
@@ -60,6 +75,14 @@ curl_close($ch);
 ```json 422 Invalid domain
 {
   "error": "Invalid URL address"
+}
+```
+
+```json 422 Invalid type
+{
+  "errors": {
+    "type": ["type contains invalid value."]
+  }
 }
 ```
 </ResponseExample>
