@@ -422,6 +422,18 @@
                         "total_open": {
                           "type": "integer"
                         },
+                        "prefetched": {
+                          "type": "integer"
+                        },
+                        "proxy": {
+                          "type": "integer"
+                        },
+                        "machine_open": {
+                          "type": "integer"
+                        },
+                        "total_user_open": {
+                          "type": "integer"
+                        },
                         "not_opened": {
                           "type": "integer"
                         },
@@ -478,6 +490,10 @@
                     "open": 0,
                     "open_rate": 0,
                     "total_open": 0,
+                    "prefetched": 0,
+                    "proxy": 0,
+                    "machine_open": 0,
+                    "total_user_open": 0,
                     "not_opened": 2,
                     "send": 2,
                     "click": 1,
@@ -1039,6 +1055,18 @@
                         "total_open": {
                           "type": "integer"
                         },
+                        "prefetched": {
+                          "type": "integer"
+                        },
+                        "proxy": {
+                          "type": "integer"
+                        },
+                        "machine_open": {
+                          "type": "integer"
+                        },
+                        "total_user_open": {
+                          "type": "integer"
+                        },
                         "click": {
                           "type": "integer"
                         },
@@ -1092,6 +1120,10 @@
                     "delivered": 99,
                     "open": 40,
                     "total_open": 45,
+                    "prefetched": 8,
+                    "proxy": 3,
+                    "machine_open": 9,
+                    "total_user_open": 36,
                     "click": 12,
                     "total_click": 15,
                     "hard_bounce": 1,
@@ -1372,6 +1404,18 @@
                         "open_rate": {
                           "type": "integer"
                         },
+                        "prefetched": {
+                          "type": "integer"
+                        },
+                        "proxy": {
+                          "type": "integer"
+                        },
+                        "machine_open": {
+                          "type": "integer"
+                        },
+                        "total_user_open": {
+                          "type": "integer"
+                        },
                         "click": {
                           "type": "integer"
                         },
@@ -1417,6 +1461,10 @@
                     "open": 5,
                     "total_open": 10,
                     "open_rate": 10,
+                    "prefetched": 3,
+                    "proxy": 1,
+                    "machine_open": 3,
+                    "total_user_open": 7,
                     "click": 2,
                     "total_click": 4,
                     "click_rate": 4,
@@ -1642,6 +1690,18 @@
                             "open_rate": {
                               "type": "integer"
                             },
+                            "prefetched": {
+                              "type": "integer"
+                            },
+                            "proxy": {
+                              "type": "integer"
+                            },
+                            "machine_open": {
+                              "type": "integer"
+                            },
+                            "total_user_open": {
+                              "type": "integer"
+                            },
                             "spam": {
                               "type": "integer"
                             },
@@ -1674,6 +1734,10 @@
                       "inject": 4,
                       "open": 4,
                       "open_rate": 100,
+                      "prefetched": 0,
+                      "proxy": 0,
+                      "machine_open": 0,
+                      "total_user_open": 4,
                       "spam": 0,
                       "spam_rate": 0,
                       "unsub": 1,
