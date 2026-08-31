@@ -182,6 +182,27 @@
                                 "type": "integer"
                               }
                             }
+                          },
+                          "next": {
+                            "description": "Ids of the follow-up nodes: an array of node ids on most node types, or an object with one array of node ids per output port on branching node types (`yes`/`no` on a check node, the variant keys on a split node, `default`/`quarantine_skip` on a mail node). Empty or null at the end of a branch.",
+                            "nullable": true,
+                            "oneOf": [
+                              {
+                                "type": "array",
+                                "items": {
+                                  "type": "string"
+                                }
+                              },
+                              {
+                                "type": "object",
+                                "additionalProperties": {
+                                  "type": "array",
+                                  "items": {
+                                    "type": "string"
+                                  }
+                                }
+                              }
+                            ]
                           }
                         }
                       }
@@ -196,13 +217,18 @@
                       "properties": {
                         "name": "Welcome email",
                         "template": 42
-                      }
+                      },
+                      "next": ["def-456"]
                     },
                     {
                       "id": "def-456",
-                      "type": "wait",
+                      "type": "check",
                       "properties": {
-                        "days": 3
+                        "name": "Opened the welcome email?"
+                      },
+                      "next": {
+                        "yes": ["ghi-789"],
+                        "no": []
                       }
                     },
                     {
@@ -210,7 +236,8 @@
                       "type": "tag",
                       "properties": {
                         "tag": "engaged"
-                      }
+                      },
+                      "next": []
                     }
                   ]
                 }
@@ -275,6 +302,27 @@
                               "type": "integer"
                             }
                           }
+                        },
+                        "next": {
+                          "description": "Ids of the follow-up nodes: an array of node ids on most node types, or an object with one array of node ids per output port on branching node types (`yes`/`no` on a check node, the variant keys on a split node, `default`/`quarantine_skip` on a mail node). Empty or null at the end of a branch.",
+                          "nullable": true,
+                          "oneOf": [
+                            {
+                              "type": "array",
+                              "items": {
+                                "type": "string"
+                              }
+                            },
+                            {
+                              "type": "object",
+                              "additionalProperties": {
+                                "type": "array",
+                                "items": {
+                                  "type": "string"
+                                }
+                              }
+                            }
+                          ]
                         }
                       }
                     }
@@ -287,7 +335,8 @@
                     "properties": {
                       "name": "Welcome email",
                       "template": 42
-                    }
+                    },
+                    "next": ["def-456"]
                   }
                 }
               }

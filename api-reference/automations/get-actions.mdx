@@ -8,6 +8,11 @@ description: 'Retrieve all actions (nodes) within a given automation.'
   Automation ID.
 </ParamField>
 
+Each node carries `next` with the ids of its follow-up nodes, so the response describes the full automation graph:
+
+- On most node types `next` is an array of node ids — usually one id, empty or `null` at the end of a branch.
+- On branching node types `next` is an object with one array of node ids per output port — `yes` / `no` on a `check` node, the variant keys on a `split` node, and `default` / `quarantine_skip` on a `mail` node.
+
 <RequestExample>
 ```bash cURL
 curl "https://api2.ecomailapp.cz/pipelines/42/actions" \
@@ -39,13 +44,18 @@ curl_close($ch);
       "properties": {
         "name": "Welcome email",
         "template": 42
-      }
+      },
+      "next": ["def-456"]
     },
     {
       "id": "def-456",
-      "type": "wait",
+      "type": "check",
       "properties": {
-        "days": 3
+        "name": "Opened the welcome email?"
+      },
+      "next": {
+        "yes": ["ghi-789"],
+        "no": []
       }
     },
     {
@@ -53,7 +63,8 @@ curl_close($ch);
       "type": "tag",
       "properties": {
         "tag": "engaged"
-      }
+      },
+      "next": []
     }
   ]
 }

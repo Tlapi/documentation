@@ -12,6 +12,8 @@ description: 'Retrieve detail of a specific action (node) within a given automat
   Action ID.
 </ParamField>
 
+The response carries `next` with the ids of the node's follow-up nodes — an array of node ids on most node types, or an object with one array per output port on branching node types (`yes` / `no` on a `check` node, the variant keys on a `split` node, `default` / `quarantine_skip` on a `mail` node).
+
 <RequestExample>
 ```bash cURL
 curl "https://api2.ecomailapp.cz/pipelines/42/actions/abc-123" \
@@ -43,7 +45,8 @@ curl_close($ch);
     "properties": {
       "name": "Welcome email",
       "template": 42
-    }
+    },
+    "next": ["def-456"]
   }
 }
 ```
