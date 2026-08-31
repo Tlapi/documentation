@@ -6034,7 +6034,7 @@
       "post": {
         "operationId": "templatesCreate",
         "summary": "Create a new template",
-        "description": "Create a new email template.",
+        "description": "Create a new email template from raw HTML or from an MJML definition. Send exactly one of `html` and `mjml`. A template created from an MJML definition is compiled to HTML by Ecomail and stays editable in the drag-and-drop editor.",
         "tags": [
           "Templates"
         ],
@@ -6051,17 +6051,56 @@
                   },
                   "html": {
                     "type": "string",
-                    "description": "Template HTML content."
+                    "description": "Template HTML content. Required when `mjml` is not sent. Do not combine with `mjml`."
+                  },
+                  "mjml": {
+                    "type": "object",
+                    "description": "MJML definition of the template, in the same JSON format the Ecomail editor uses. Required when `html` is not sent. Each node has a `tagName` (an MJML component such as `mj-section`, `mj-column`, `mj-text`, `mj-image`, or `mj-button`), optional `attributes`, and either `children` or `content`.",
+                    "properties": {
+                      "tagName": {
+                        "type": "string"
+                      },
+                      "attributes": {
+                        "type": "object"
+                      },
+                      "children": {
+                        "type": "array",
+                        "items": {
+                          "type": "object"
+                        }
+                      }
+                    },
+                    "required": [
+                      "children"
+                    ]
                   }
                 },
                 "required": [
-                  "name",
-                  "html"
+                  "name"
                 ]
               },
               "example": {
-                "name": "New Template",
-                "html": "<b>Template HTML</b>"
+                "name": "New MJML Template",
+                "mjml": {
+                  "tagName": "mj-body",
+                  "attributes": {},
+                  "children": [
+                    {
+                      "tagName": "mj-section",
+                      "children": [
+                        {
+                          "tagName": "mj-column",
+                          "children": [
+                            {
+                              "tagName": "mj-text",
+                              "content": "Hello from the API"
+                            }
+                          ]
+                        }
+                      ]
+                    }
+                  ]
+                }
               }
             }
           }
@@ -6089,6 +6128,24 @@
                   "id": 1,
                   "name": "New Template",
                   "html": "<b>Template HTML</b>"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "The MJML definition could not be rendered to HTML.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "error": {
+                      "type": "string"
+                    }
+                  }
+                },
+                "example": {
+                  "error": "The mjml definition could not be rendered to html."
                 }
               }
             }
