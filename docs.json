@@ -70,6 +70,7 @@
           {
             "group": "Feeds",
             "pages": [
+              "api-reference/feeds/list-all",
               "api-reference/feeds/refresh-product",
               "api-reference/feeds/refresh-data"
             ]

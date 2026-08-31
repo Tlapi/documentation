@@ -2360,6 +2360,74 @@
         }
       }
     },
+    "/feeds": {
+      "get": {
+        "operationId": "feedsListAll",
+        "summary": "List all feeds",
+        "description": "Retrieve all product feeds in your account. Use the `id` values as `feed_id` for the refresh endpoint. Data feeds are not included.",
+        "tags": [
+          "Feeds"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "feeds": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "id": {
+                            "type": "integer"
+                          },
+                          "type": {
+                            "type": "string"
+                          },
+                          "url": {
+                            "type": "string"
+                          },
+                          "products_count": {
+                            "type": "integer",
+                            "nullable": true
+                          },
+                          "error": {
+                            "type": "string",
+                            "nullable": true
+                          },
+                          "created_at": {
+                            "type": "string"
+                          },
+                          "updated_at": {
+                            "type": "string"
+                          }
+                        }
+                      }
+                    }
+                  }
+                },
+                "example": {
+                  "feeds": [
+                    {
+                      "id": 1,
+                      "type": "heureka",
+                      "url": "https://www.example.com/feed.xml",
+                      "products_count": 250,
+                      "error": null,
+                      "created_at": "2026-08-01 10:00:00",
+                      "updated_at": "2026-08-31 06:30:00"
+                    }
+                  ]
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/feeds/{feed_id}/refresh": {
       "get": {
         "operationId": "feedsRefreshProduct",
