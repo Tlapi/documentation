@@ -26,6 +26,7 @@ const TAG_DESCRIPTIONS = {
   'Domains': 'Manage sending domains and their verification status.',
   'Feeds': 'Refresh product feed data used for personalization.',
   'Lists': 'Manage subscriber lists and the subscribers within them.',
+  'Push notifications': 'Report push notification clicks for attribution.',
   'Recommenders': 'Manage product recommendation engines.',
   'Search': 'Search for contacts across your account.',
   'Subscribers': 'Read subscriber profiles, events, and activity logs.',
