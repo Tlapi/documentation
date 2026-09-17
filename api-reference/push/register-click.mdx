@@ -1,0 +1,85 @@
+---
+title: 'Register a push click'
+api: 'POST https://api2.ecomailapp.cz/push/click'
+description: 'Report push notification click tokens so taps are attributed to the campaign or automation that sent them.'
+---
+
+When Ecomail sends a push notification, it adds a click token named `ecm_push_id` to the FCM message `data` payload, next to `deep_link`. Post that token back to this endpoint when the recipient taps the notification, and Ecomail attributes the click to the campaign or automation that sent it.
+
+<Note>
+  Ecomail only adds `ecm_push_id` when the notification has a deep link and the recipient is a known subscriber. A notification without a deep link carries no token, and there is nothing to report.
+</Note>
+
+Report each tap once — every token you send is counted as one click. You can batch up to 500 tokens in a single request.
+
+<ParamField body="ecm_push_id" type="array|string" required>
+  Click tokens read from the `ecm_push_id` value in the notification's `data` payload. Send an array of 1 to 500 tokens, or a single token as a plain string. Each token can be up to 2048 characters.
+</ParamField>
+
+## Responses
+
+The status code tells you how many of the tokens Ecomail accepted:
+
+- `204` — every token was accepted. The response has no body.
+- `200` — some tokens were rejected. The accepted ones are still registered, and `rejected` says how many were not.
+- `422` — none of the tokens were accepted, or the `ecm_push_id` field itself failed validation. Nothing was registered.
+
+A token is rejected when it is malformed, was not issued by Ecomail, or belongs to a different account than the API key you used.
+
+<RequestExample>
+```bash cURL
+curl -X POST https://api2.ecomailapp.cz/push/click \
+  -H "key: YOUR_API_KEY" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "ecm_push_id": [
+      "eyJpdiI6IkV4YW1wbGVJdiIsInZhbHVlIjoiRXhhbXBsZUVuY3J5cHRlZENsaWNrVG9rZW4ifQ=="
+    ]
+  }'
+```
+
+```php PHP
+$ch = curl_init();
+curl_setopt($ch, CURLOPT_URL, 'https://api2.ecomailapp.cz/push/click');
+curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+curl_setopt($ch, CURLOPT_POST, true);
+curl_setopt($ch, CURLOPT_HTTPHEADER, [
+    'key: YOUR_API_KEY',
+    'Content-Type: application/json',
+]);
+curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode([
+    'ecm_push_id' => [
+        'eyJpdiI6IkV4YW1wbGVJdiIsInZhbHVlIjoiRXhhbXBsZUVuY3J5cHRlZENsaWNrVG9rZW4ifQ==',
+    ],
+]));
+$response = curl_exec($ch);
+curl_close($ch);
+```
+</RequestExample>
+
+<ResponseExample>
+```json 204
+```
+
+```json 200 Some tokens rejected
+{
+  "rejected": 1
+}
+```
+
+```json 422 Missing field
+{
+  "errors": {
+    "ecm_push_id": ["The ecm push id field is required."]
+  }
+}
+```
+
+```json 422 Invalid token
+{
+  "errors": {
+    "ecm_push_id": ["The ecm_push_id is invalid."]
+  }
+}
+```
+</ResponseExample>

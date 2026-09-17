@@ -94,6 +94,12 @@
             ]
           },
           {
+            "group": "Push notifications",
+            "pages": [
+              "api-reference/push/register-click"
+            ]
+          },
+          {
             "group": "Recommenders",
             "pages": [
               "api-reference/recommenders/list-all",

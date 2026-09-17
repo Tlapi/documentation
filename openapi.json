@@ -50,6 +50,10 @@
       "description": "Manage subscriber lists and the subscribers within them."
     },
     {
+      "name": "Push notifications",
+      "description": "Report push notification clicks for attribution."
+    },
+    {
       "name": "Recommenders",
       "description": "Manage product recommendation engines."
     },
@@ -184,25 +188,10 @@
                             }
                           },
                           "next": {
-                            "description": "Ids of the follow-up nodes: an array of node ids on most node types, or an object with one array of node ids per output port on branching node types (`yes`/`no` on a check node, the variant keys on a split node, `default`/`quarantine_skip` on a mail node). Empty or null at the end of a branch.",
-                            "nullable": true,
-                            "oneOf": [
-                              {
-                                "type": "array",
-                                "items": {
-                                  "type": "string"
-                                }
-                              },
-                              {
-                                "type": "object",
-                                "additionalProperties": {
-                                  "type": "array",
-                                  "items": {
-                                    "type": "string"
-                                  }
-                                }
-                              }
-                            ]
+                            "type": "array",
+                            "items": {
+                              "type": "string"
+                            }
                           }
                         }
                       }
@@ -218,7 +207,9 @@
                         "name": "Welcome email",
                         "template": 42
                       },
-                      "next": ["def-456"]
+                      "next": [
+                        "def-456"
+                      ]
                     },
                     {
                       "id": "def-456",
@@ -227,7 +218,9 @@
                         "name": "Opened the welcome email?"
                       },
                       "next": {
-                        "yes": ["ghi-789"],
+                        "yes": [
+                          "ghi-789"
+                        ],
                         "no": []
                       }
                     },
@@ -304,25 +297,10 @@
                           }
                         },
                         "next": {
-                          "description": "Ids of the follow-up nodes: an array of node ids on most node types, or an object with one array of node ids per output port on branching node types (`yes`/`no` on a check node, the variant keys on a split node, `default`/`quarantine_skip` on a mail node). Empty or null at the end of a branch.",
-                          "nullable": true,
-                          "oneOf": [
-                            {
-                              "type": "array",
-                              "items": {
-                                "type": "string"
-                              }
-                            },
-                            {
-                              "type": "object",
-                              "additionalProperties": {
-                                "type": "array",
-                                "items": {
-                                  "type": "string"
-                                }
-                              }
-                            }
-                          ]
+                          "type": "array",
+                          "items": {
+                            "type": "string"
+                          }
                         }
                       }
                     }
@@ -336,7 +314,9 @@
                       "name": "Welcome email",
                       "template": 42
                     },
-                    "next": ["def-456"]
+                    "next": [
+                      "def-456"
+                    ]
                   }
                 }
               }
@@ -443,6 +423,24 @@
             "schema": {
               "type": "integer"
             }
+          },
+          {
+            "name": "from_date",
+            "in": "query",
+            "required": false,
+            "description": "Filter statistics from this date onwards (`YYYY-MM-DD`, UTC). Cannot be more than one year in the past.",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "to_date",
+            "in": "query",
+            "required": false,
+            "description": "Filter statistics up to this date (`YYYY-MM-DD`, UTC). Must be after `from_date`.",
+            "schema": {
+              "type": "string"
+            }
           }
         ],
         "responses": {
@@ -515,6 +513,15 @@
                         },
                         "delivery_rate": {
                           "type": "integer"
+                        },
+                        "open_in_range": {
+                          "type": "integer"
+                        },
+                        "click_in_range": {
+                          "type": "integer"
+                        },
+                        "inject_in_range": {
+                          "type": "integer"
                         }
                       }
                     }
@@ -541,7 +548,10 @@
                     "conversions_value": 0,
                     "spam": 0,
                     "unsub": 0,
-                    "delivery_rate": 100
+                    "delivery_rate": 100,
+                    "open_in_range": 1,
+                    "click_in_range": 1,
+                    "inject_in_range": 2
                   }
                 }
               }
@@ -590,7 +600,25 @@
             "name": "from_date",
             "in": "query",
             "required": false,
-            "description": "Filter from date onwards in `YYYY-MM-DD` format (UTC).",
+            "description": "Filter events from this date onwards in `YYYY-MM-DD` format (UTC). Cannot be more than one year in the past.",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "to_date",
+            "in": "query",
+            "required": false,
+            "description": "Filter events up to this date in `YYYY-MM-DD` format (UTC). Must be after `from_date`.",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "detail",
+            "in": "query",
+            "required": false,
+            "description": "Set to `true` to return each individual event per subscriber instead of aggregated per-event counts. In detail mode every event row also carries the automation mail it belongs to — `action_id` and the resolved `mail_name` (see [Get actions](/api-reference/automations/get-actions)).",
             "schema": {
               "type": "string"
             }
@@ -599,7 +627,7 @@
             "name": "per_page",
             "in": "query",
             "required": false,
-            "description": "Number of results per page. Default is `100`, maximum is `5000`.",
+            "description": "Number of results per page. Default and maximum is `100`.",
             "schema": {
               "type": "integer"
             }
@@ -622,9 +650,7 @@
                 "schema": {
                   "type": "object",
                   "properties": {
-                    "next_page_url": {
-                      "type": "string"
-                    },
+                    "next_page_url": {},
                     "total": {
                       "type": "integer"
                     },
@@ -635,31 +661,25 @@
                       "type": "object",
                       "properties": {
                         "foo@bar.com": {
-                          "type": "object",
-                          "properties": {
-                            "open": {
-                              "type": "integer"
-                            },
-                            "send": {
-                              "type": "integer"
-                            },
-                            "unsub": {
-                              "type": "integer"
-                            },
-                            "soft_bounce": {
-                              "type": "integer"
-                            },
-                            "click": {
-                              "type": "integer"
-                            },
-                            "hard_bounce": {
-                              "type": "integer"
-                            },
-                            "out_of_band": {
-                              "type": "integer"
-                            },
-                            "spam": {
-                              "type": "integer"
+                          "type": "array",
+                          "items": {
+                            "type": "object",
+                            "properties": {
+                              "url": {
+                                "type": "string"
+                              },
+                              "event": {
+                                "type": "string"
+                              },
+                              "occured_at": {
+                                "type": "string"
+                              },
+                              "action_id": {
+                                "type": "string"
+                              },
+                              "mail_name": {
+                                "type": "string"
+                              }
                             }
                           }
                         }
@@ -668,20 +688,19 @@
                   }
                 },
                 "example": {
-                  "next_page_url": "https://api2.ecomailapp.cz/pipelines/12345/stats-detail?page=2",
-                  "total": 2546,
+                  "next_page_url": null,
+                  "total": 3,
                   "per_page": 100,
                   "subscribers": {
-                    "foo@bar.com": {
-                      "open": 2,
-                      "send": 3,
-                      "unsub": 0,
-                      "soft_bounce": 0,
-                      "click": 0,
-                      "hard_bounce": 0,
-                      "out_of_band": 0,
-                      "spam": 0
-                    }
+                    "foo@bar.com": [
+                      {
+                        "url": "",
+                        "event": "open",
+                        "occured_at": "2026-03-22 10:15:03",
+                        "action_id": "a1b2c3d4e5",
+                        "mail_name": "Welcome email"
+                      }
+                    ]
                   }
                 }
               }
@@ -1567,6 +1586,24 @@
             "schema": {
               "type": "integer"
             }
+          },
+          {
+            "name": "from_date",
+            "in": "query",
+            "required": false,
+            "description": "Filter statistics from this date onwards (`YYYY-MM-DD`, UTC). Cannot be more than one year in the past.",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "to_date",
+            "in": "query",
+            "required": false,
+            "description": "Filter statistics up to this date (`YYYY-MM-DD`, UTC). Must be after `from_date`.",
+            "schema": {
+              "type": "string"
+            }
           }
         ],
         "responses": {
@@ -1630,6 +1667,12 @@
                         },
                         "conversions_value": {
                           "type": "integer"
+                        },
+                        "opened_in_range": {
+                          "type": "integer"
+                        },
+                        "clicked_in_range": {
+                          "type": "integer"
                         }
                       }
                     }
@@ -1653,7 +1696,9 @@
                     "unsub": 1,
                     "unsub_rate": 1,
                     "conversions": 0,
-                    "conversions_value": 0
+                    "conversions_value": 0,
+                    "opened_in_range": 3,
+                    "clicked_in_range": 1
                   }
                 }
               }
@@ -1702,7 +1747,25 @@
             "name": "from_date",
             "in": "query",
             "required": false,
-            "description": "Filter from date onwards (`YYYY-MM-DD` in UTC).",
+            "description": "Filter events from this date onwards (`YYYY-MM-DD` in UTC). Cannot be more than one year in the past.",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "to_date",
+            "in": "query",
+            "required": false,
+            "description": "Filter events up to this date (`YYYY-MM-DD` in UTC). Must be after `from_date`.",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "detail",
+            "in": "query",
+            "required": false,
+            "description": "Set to `true` to return each individual event per subscriber (with `event`, `url` and `occured_at`) instead of aggregated per-event counts.",
             "schema": {
               "type": "string"
             }
@@ -1734,9 +1797,7 @@
                 "schema": {
                   "type": "object",
                   "properties": {
-                    "next_page_url": {
-                      "type": "string"
-                    },
+                    "next_page_url": {},
                     "total": {
                       "type": "integer"
                     },
@@ -1747,31 +1808,19 @@
                       "type": "object",
                       "properties": {
                         "foo@bar.com": {
-                          "type": "object",
-                          "properties": {
-                            "open": {
-                              "type": "integer"
-                            },
-                            "send": {
-                              "type": "integer"
-                            },
-                            "unsub": {
-                              "type": "integer"
-                            },
-                            "soft_bounce": {
-                              "type": "integer"
-                            },
-                            "click": {
-                              "type": "integer"
-                            },
-                            "hard_bounce": {
-                              "type": "integer"
-                            },
-                            "out_of_band": {
-                              "type": "integer"
-                            },
-                            "spam": {
-                              "type": "integer"
+                          "type": "array",
+                          "items": {
+                            "type": "object",
+                            "properties": {
+                              "url": {
+                                "type": "string"
+                              },
+                              "event": {
+                                "type": "string"
+                              },
+                              "occured_at": {
+                                "type": "string"
+                              }
                             }
                           }
                         }
@@ -1780,20 +1829,17 @@
                   }
                 },
                 "example": {
-                  "next_page_url": "https://api2.ecomailapp.cz/campaigns/12345/stats-detail?page=2",
-                  "total": 4256,
+                  "next_page_url": null,
+                  "total": 3,
                   "per_page": 100,
                   "subscribers": {
-                    "foo@bar.com": {
-                      "open": 2,
-                      "send": 1,
-                      "unsub": 0,
-                      "soft_bounce": 0,
-                      "click": 1,
-                      "hard_bounce": 0,
-                      "out_of_band": 0,
-                      "spam": 0
-                    }
+                    "foo@bar.com": [
+                      {
+                        "url": "https://example.com/landing",
+                        "event": "click",
+                        "occured_at": "2026-03-22 10:15:03"
+                      }
+                    ]
                   }
                 }
               }
@@ -2266,6 +2312,9 @@
                       },
                       "blocked": {
                         "type": "boolean"
+                      },
+                      "type": {
+                        "type": "string"
                       }
                     }
                   }
@@ -2274,12 +2323,20 @@
                   {
                     "name": "foo.cz",
                     "valid": true,
-                    "blocked": false
+                    "blocked": false,
+                    "type": "sending"
+                  },
+                  {
+                    "name": "foo.cz",
+                    "valid": true,
+                    "blocked": false,
+                    "type": "transactional"
                   },
                   {
                     "name": "bar.cz",
                     "valid": false,
-                    "blocked": false
+                    "blocked": false,
+                    "type": "sending"
                   }
                 ]
               }
@@ -2304,6 +2361,11 @@
                   "name": {
                     "type": "string",
                     "description": "Domain name."
+                  },
+                  "type": {
+                    "type": "string",
+                    "description": "Which variant to create — `sending` or `transactional`. One domain name can be held as both variants at the same time, and each of them is created separately. Omit the field to create a sending domain.",
+                    "default": "sending"
                   }
                 },
                 "required": [
@@ -2346,13 +2408,25 @@
                 "schema": {
                   "type": "object",
                   "properties": {
-                    "error": {
-                      "type": "string"
+                    "errors": {
+                      "type": "object",
+                      "properties": {
+                        "type": {
+                          "type": "array",
+                          "items": {
+                            "type": "string"
+                          }
+                        }
+                      }
                     }
                   }
                 },
                 "example": {
-                  "error": "Invalid URL address"
+                  "errors": {
+                    "type": [
+                      "type contains invalid value."
+                    ]
+                  }
                 }
               }
             }
@@ -2374,6 +2448,15 @@
             "in": "path",
             "required": true,
             "description": "Domain name.",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "type",
+            "in": "query",
+            "required": false,
+            "description": "Which variant to delete — `sending` or `transactional`. Omit it while the account holds the name under a single variant; that one is deleted whichever type it is.",
             "schema": {
               "type": "string"
             }
@@ -2405,6 +2488,58 @@
                 }
               }
             }
+          },
+          "409": {
+            "description": "Conflict",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "error": {
+                      "type": "string"
+                    },
+                    "domain": {
+                      "type": "string"
+                    }
+                  }
+                },
+                "example": {
+                  "error": "Domain exists as both a sending and a transactional domain, specify which type to delete.",
+                  "domain": "foo.cz"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Unprocessable Entity",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "errors": {
+                      "type": "object",
+                      "properties": {
+                        "type": {
+                          "type": "array",
+                          "items": {
+                            "type": "string"
+                          }
+                        }
+                      }
+                    }
+                  }
+                },
+                "example": {
+                  "errors": {
+                    "type": [
+                      "type contains invalid value."
+                    ]
+                  }
+                }
+              }
+            }
           }
         }
       }
@@ -2413,7 +2548,7 @@
       "get": {
         "operationId": "feedsListAll",
         "summary": "List all feeds",
-        "description": "Retrieve all product feeds in your account. Use the `id` values as `feed_id` for the refresh endpoint. Data feeds are not included.",
+        "description": "Retrieve all product feeds in your account.",
         "tags": [
           "Feeds"
         ],
@@ -2440,13 +2575,9 @@
                             "type": "string"
                           },
                           "products_count": {
-                            "type": "integer",
-                            "nullable": true
+                            "type": "integer"
                           },
-                          "error": {
-                            "type": "string",
-                            "nullable": true
-                          },
+                          "error": {},
                           "created_at": {
                             "type": "string"
                           },
@@ -3778,6 +3909,18 @@
                       "groups": {
                         "type": "object",
                         "description": "Group assignments. Overwrites current values. To keep existing selections, send the current values together with new ones."
+                      },
+                      "fcm_token": {
+                        "type": "string",
+                        "description": "Firebase Cloud Messaging (FCM) registration token used to deliver push notifications. Max 255 characters. Required whenever you send `fcm_app_id`."
+                      },
+                      "fcm_platform": {
+                        "type": "string",
+                        "description": "Device platform for push notifications. Must be `android`, `ios`, or `web`. Can only be sent together with `fcm_token`."
+                      },
+                      "fcm_app_id": {
+                        "type": "string",
+                        "description": "Firebase application ID associated with the FCM token. Max 150 characters. Required whenever you send `fcm_token`."
                       }
                     },
                     "required": [
@@ -3840,7 +3983,10 @@
                       "Category 1",
                       "Category 2"
                     ]
-                  }
+                  },
+                  "fcm_token": "fcmExampleToken:APA91bExampleRegistrationToken",
+                  "fcm_platform": "android",
+                  "fcm_app_id": "1:1234567890:android:abc123def456"
                 },
                 "trigger_autoresponders": false,
                 "update_existing": false,
@@ -3982,6 +4128,18 @@
                           "type": "integer",
                           "description": "Subscriber status. `1` = subscribed, `2` = unsubscribed, `4` = hard bounce.",
                           "default": 1
+                        },
+                        "fcm_token": {
+                          "type": "string",
+                          "description": "Firebase Cloud Messaging (FCM) registration token used to deliver push notifications. Max 255 characters. Required whenever you send `fcm_app_id`."
+                        },
+                        "fcm_platform": {
+                          "type": "string",
+                          "description": "Device platform for push notifications. Must be `android`, `ios`, or `web`. Can only be sent together with `fcm_token`."
+                        },
+                        "fcm_app_id": {
+                          "type": "string",
+                          "description": "Firebase application ID associated with the FCM token. Max 150 characters. Required whenever you send `fcm_token`."
                         }
                       },
                       "required": [
@@ -4017,7 +4175,10 @@
                     "email": "foo@bar.cz",
                     "custom_fields": {
                       "category": "customer"
-                    }
+                    },
+                    "fcm_token": "fcmExampleToken:APA91bExampleRegistrationToken",
+                    "fcm_platform": "ios",
+                    "fcm_app_id": "1:1234567890:ios:abc123def456"
                   },
                   {
                     "name": "Foo 2",
@@ -4316,6 +4477,18 @@
                       "groups": {
                         "type": "object",
                         "description": "Group assignments. Overwrites current values."
+                      },
+                      "fcm_token": {
+                        "type": "string",
+                        "description": "Firebase Cloud Messaging (FCM) registration token used to deliver push notifications. Max 255 characters. Required whenever you send `fcm_app_id`."
+                      },
+                      "fcm_platform": {
+                        "type": "string",
+                        "description": "Device platform for push notifications. Must be `android`, `ios`, or `web`. Can only be sent together with `fcm_token`."
+                      },
+                      "fcm_app_id": {
+                        "type": "string",
+                        "description": "Firebase application ID associated with the FCM token. Max 150 characters. Required whenever you send `fcm_token`."
                       }
                     }
                   }
@@ -4343,7 +4516,10 @@
                       "Category 1",
                       "Category 2"
                     ]
-                  }
+                  },
+                  "fcm_token": "fcmExampleToken:APA91bExampleRegistrationToken",
+                  "fcm_platform": "web",
+                  "fcm_app_id": "1:1234567890:web:abc123def456"
                 }
               }
             }
@@ -4486,6 +4662,18 @@
                           "type": "array",
                           "description": "Subscriber tags. Limited to 2000 characters total and 50 characters per tag. Content overwrites current tags.",
                           "items": {}
+                        },
+                        "fcm_token": {
+                          "type": "string",
+                          "description": "Firebase Cloud Messaging (FCM) registration token used to deliver push notifications. Max 255 characters. Required whenever you send `fcm_app_id`."
+                        },
+                        "fcm_platform": {
+                          "type": "string",
+                          "description": "Device platform for push notifications. Must be `android`, `ios`, or `web`. Can only be sent together with `fcm_token`."
+                        },
+                        "fcm_app_id": {
+                          "type": "string",
+                          "description": "Firebase application ID associated with the FCM token. Max 150 characters. Required whenever you send `fcm_token`."
                         }
                       },
                       "required": [
@@ -4514,7 +4702,10 @@
                     },
                     "tags": [
                       "vip"
-                    ]
+                    ],
+                    "fcm_token": "fcmExampleToken:APA91bExampleRegistrationToken",
+                    "fcm_platform": "android",
+                    "fcm_app_id": "1:1234567890:android:abc123def456"
                   },
                   {
                     "email": "foo2@bar.cz",
@@ -4579,6 +4770,100 @@
                     "subscriber_data.0.custom_fields": [
                       "Custom fields must be an array with unique keys (case-insensitive)",
                       "Subscriber custom fields must be an array with max 5000 bytes"
+                    ]
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/push/click": {
+      "post": {
+        "operationId": "pushRegisterClick",
+        "summary": "Register a push click",
+        "description": "Report push notification click tokens so taps are attributed to the campaign or automation that sent them.",
+        "tags": [
+          "Push notifications"
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "ecm_push_id": {
+                    "type": [
+                      "array",
+                      "string"
+                    ],
+                    "description": "Click tokens read from the `ecm_push_id` value in the notification's `data` payload. Send an array of 1 to 500 tokens, or a single token as a plain string. Each token can be up to 2048 characters.",
+                    "items": {}
+                  }
+                },
+                "required": [
+                  "ecm_push_id"
+                ]
+              },
+              "example": {
+                "ecm_push_id": [
+                  "eyJpdiI6IkV4YW1wbGVJdiIsInZhbHVlIjoiRXhhbXBsZUVuY3J5cHRlZENsaWNrVG9rZW4ifQ=="
+                ]
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "rejected": {
+                      "type": "integer"
+                    }
+                  }
+                },
+                "example": {
+                  "rejected": 1
+                }
+              }
+            }
+          },
+          "204": {
+            "description": "No Content",
+            "content": {
+              "application/json": {}
+            }
+          },
+          "422": {
+            "description": "Unprocessable Entity",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "errors": {
+                      "type": "object",
+                      "properties": {
+                        "ecm_push_id": {
+                          "type": "array",
+                          "items": {
+                            "type": "string"
+                          }
+                        }
+                      }
+                    }
+                  }
+                },
+                "example": {
+                  "errors": {
+                    "ecm_push_id": [
+                      "The ecm_push_id is invalid."
                     ]
                   }
                 }
@@ -6151,7 +6436,7 @@
       "post": {
         "operationId": "templatesCreate",
         "summary": "Create a new template",
-        "description": "Create a new email template from raw HTML or from an MJML definition. Send exactly one of `html` and `mjml`. A template created from an MJML definition is compiled to HTML by Ecomail and stays editable in the drag-and-drop editor.",
+        "description": "Create a new email template from HTML or from an MJML definition.",
         "tags": [
           "Templates"
         ],
@@ -6172,24 +6457,7 @@
                   },
                   "mjml": {
                     "type": "object",
-                    "description": "MJML definition of the template, in the same JSON format the Ecomail editor uses. Required when `html` is not sent. Each node has a `tagName` (an MJML component such as `mj-section`, `mj-column`, `mj-text`, `mj-image`, or `mj-button`), optional `attributes`, and either `children` or `content`.",
-                    "properties": {
-                      "tagName": {
-                        "type": "string"
-                      },
-                      "attributes": {
-                        "type": "object"
-                      },
-                      "children": {
-                        "type": "array",
-                        "items": {
-                          "type": "object"
-                        }
-                      }
-                    },
-                    "required": [
-                      "children"
-                    ]
+                    "description": "MJML definition of the template, in the same JSON format the Ecomail editor uses. Required when `html` is not sent. The definition is a tree of nodes. Each node has a `tagName` (an MJML component such as `mj-section`, `mj-column`, `mj-text`, `mj-image`, or `mj-button`), optional `attributes`, and either `children` or `content`. The root node must contain a `children` array."
                   }
                 },
                 "required": [
@@ -6197,27 +6465,8 @@
                 ]
               },
               "example": {
-                "name": "New MJML Template",
-                "mjml": {
-                  "tagName": "mj-body",
-                  "attributes": {},
-                  "children": [
-                    {
-                      "tagName": "mj-section",
-                      "children": [
-                        {
-                          "tagName": "mj-column",
-                          "children": [
-                            {
-                              "tagName": "mj-text",
-                              "content": "Hello from the API"
-                            }
-                          ]
-                        }
-                      ]
-                    }
-                  ]
-                }
+                "name": "New Template",
+                "html": "<b>Template HTML</b>"
               }
             }
           }
@@ -6250,7 +6499,7 @@
             }
           },
           "422": {
-            "description": "The MJML definition could not be rendered to HTML.",
+            "description": "Unprocessable Entity",
             "content": {
               "application/json": {
                 "schema": {
@@ -7337,7 +7586,7 @@
                         },
                         "categories": {
                           "type": "array",
-                          "description": "List of product categories. Limited to 100 characters per category and 20 categories per item. Currently not visible in the Ecomail app — use the `category` parameter for now.",
+                          "description": "List of product categories. Limited to 100 characters per category and 20 categories per item.",
                           "items": {}
                         },
                         "price": {
