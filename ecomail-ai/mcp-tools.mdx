@@ -28,7 +28,7 @@ The Ecomail [remote MCP server](/ecomail-ai/remote-mcp) exposes the following to
 | --- | --- |
 | `campaign-detail-tool` | Get detailed information about a specific campaign, including configuration, recipient lists and delivery statistics. |
 | `campaign-link-stats-tool` | Get click statistics for individual links in a campaign. Returns each tracked URL with its click count, ordered by most clicked. |
-| `campaign-list-tool` | List campaigns with optional filtering by status, title or date range, and sorting. |
+| `campaign-list-tool` | List campaigns with optional filtering by status, title or send date range (`sent_from` / `sent_to`), sorted by campaign columns or performance metrics. Each campaign carries a `stats` block — `detail=brief` (default) for rates and key counts, `detail=full` for every raw count. |
 
 ## Contact Lists
 
@@ -54,7 +54,7 @@ The Ecomail [remote MCP server](/ecomail-ai/remote-mcp) exposes the following to
 
 | Tool | Description |
 | --- | --- |
-| `deliverability-tool` | Retrieve deliverability metrics for a selected period — inbox placement, bounce rates, spam complaints and other delivery trends. Supports filtering by recipient domains, sending domains and mailbox provider. Up to 90 days of historical data. |
+| `deliverability-tool` | Retrieve deliverability metrics for a selected period — bounce rates, spam complaints, engagement and other delivery trends. Break the period down with `group_by` (`day`, `week`, `month`, `domain`, `sending_domain`, `mailbox_provider` or `campaign`), filter by recipient domains, sending domains or mailbox provider, and pick `detail=brief` or `detail=full`. Up to 90 days of historical data. Inbox-vs-spam folder placement is not available. |
 
 ## Feedback
 
