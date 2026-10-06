@@ -1,0 +1,168 @@
+---
+title: 'Get automation action stats detail'
+api: 'POST https://api2.ecomailapp.cz/pipelines/{id}/actions/{actionId}/stats-detail'
+description: 'Return aggregated statistics for a single automation action together with a per-subscriber breakdown of events on that action.'
+---
+
+<ParamField path="id" type="integer" required>
+  Automation ID.
+</ParamField>
+
+<ParamField path="actionId" type="string" required>
+  Action ID inside the automation.
+</ParamField>
+
+<ParamField body="emails" type="string[]">
+  Restrict the breakdown to these subscribers. Omit or send an empty array to return all subscribers that went through the action (paginated). Maximum 1000 entries.
+</ParamField>
+
+<ParamField body="event" type="string">
+  Filter by event type. Accepts any campaign log event value, e.g. `send`, `open`, `click`, `unsub`, `soft_bounce`, `hard_bounce`, `out_of_band`, `spam`, `spam_complaint`, `bounce`, `not_opened`, `not_clicked`, `open_no_click`, and for SMS/WhatsApp actions `sms_sent`, `sms_inv_nr`, `sms_accepted`, `whatsapp_sent`, `whatsapp_failed`.
+</ParamField>
+
+<ParamField body="email" type="string">
+  Filter by a single subscriber email address.
+</ParamField>
+
+<ParamField body="detail" type="string">
+  Set to `true` to return individual log entries instead of per-subscriber aggregates. Most useful together with `event`.
+</ParamField>
+
+<ParamField body="from_date" type="string">
+  Filter to events that occurred on or after this date (`YYYY-MM-DD`, UTC). Must be within the last 12 months.
+</ParamField>
+
+<ParamField body="to_date" type="string">
+  Filter to events that occurred on or before this date (`YYYY-MM-DD`, UTC). Must be on or after `from_date` (same-day ranges are allowed).
+</ParamField>
+
+<ParamField body="per_page" type="integer">
+  Number of subscribers per page. Default is `100`, maximum is `100`.
+</ParamField>
+
+<ParamField body="page" type="integer">
+  Page number. Default is `1`.
+</ParamField>
+
+The endpoint accepts the body as JSON because the `emails` filter can exceed the URL length limit. The `summary` block contains the same counters as `pipelines/{id}/stats` but scoped to a single action. The `subscribers` map is keyed by email and lists event counts for each contact that interacted with the action.
+
+<RequestExample>
+```bash cURL
+curl -X POST "https://api2.ecomailapp.cz/pipelines/42/actions/abc-123/stats-detail" \
+  -H "key: YOUR_API_KEY" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "emails": ["foo@bar.com", "baz@bar.com"],
+    "per_page": 100,
+    "page": 1
+  }'
+```
+
+```php PHP
+$pipelineId = 42;
+$actionId = 'abc-123';
+$payload = [
+    'emails' => ['foo@bar.com', 'baz@bar.com'],
+    'per_page' => 100,
+    'page' => 1,
+];
+$ch = curl_init();
+curl_setopt($ch, CURLOPT_URL, "https://api2.ecomailapp.cz/pipelines/{$pipelineId}/actions/{$actionId}/stats-detail");
+curl_setopt($ch, CURLOPT_POST, true);
+curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($payload));
+curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+curl_setopt($ch, CURLOPT_HTTPHEADER, [
+    'key: YOUR_API_KEY',
+    'Content-Type: application/json',
+]);
+$response = curl_exec($ch);
+curl_close($ch);
+```
+</RequestExample>
+
+<ResponseExample>
+```json 200
+{
+  "metadata": {
+    "pipeline_id": 42,
+    "action_id": "abc-123",
+    "action_name": "Welcome email",
+    "action_type": "mail",
+    "created_at": "2026-02-10T09:22:11+00:00"
+  },
+  "summary": {
+    "triggered": 0,
+    "ended": 0,
+    "open": 850,
+    "open_rate": 56.86,
+    "total_open": 1100,
+    "not_opened": 645,
+    "send": 1495,
+    "click": 120,
+    "total_click": 160,
+    "click_rate": 8.03,
+    "ctr": 14.12,
+    "inject": 1507,
+    "soft_bounce": 8,
+    "hard_bounce": 4,
+    "out_of_band": 0,
+    "bounce": 12,
+    "bounce_rate": 0.8,
+    "conversions": 0,
+    "conversions_value": 0,
+    "conversions_average": 0,
+    "conversionrate": 0,
+    "spam": 1,
+    "unsub": 2,
+    "sms_sent": 0,
+    "sms_inv_nr": 0,
+    "delivery_rate": 99.2,
+    "active": 0,
+    "action_id": "abc-123",
+    "type": "mail"
+  },
+  "subscribers": {
+    "foo@bar.com": {
+      "send": 1,
+      "open": 1,
+      "click": 0,
+      "unsub": 0,
+      "soft_bounce": 0,
+      "hard_bounce": 0,
+      "out_of_band": 0,
+      "spam": 0,
+      "spam_complaint": 0
+    },
+    "baz@bar.com": {
+      "send": 1,
+      "open": 0,
+      "click": 0,
+      "unsub": 0,
+      "soft_bounce": 0,
+      "hard_bounce": 0,
+      "out_of_band": 0,
+      "spam": 0,
+      "spam_complaint": 0
+    }
+  },
+  "total": 1500,
+  "per_page": 100,
+  "next_page_url": "https://api2.ecomailapp.cz/pipelines/42/actions/abc-123/stats-detail?page=2"
+}
+```
+
+```json 404
+{
+  "message": "Action not found"
+}
+```
+
+```json 422
+{
+  "message": "The given data was invalid.",
+  "errors": {
+    "emails.0": ["The emails.0 field must be a valid email address."]
+  }
+}
+```
+</ResponseExample>
