@@ -62,6 +62,9 @@
       "description": "Search for contacts across your account."
     },
     {
+      "name": "Smart delivery"
+    },
+    {
       "name": "Subscribers",
       "description": "Read subscriber profiles, events, and activity logs."
     },
@@ -6296,6 +6299,868 @@
                   "errors": {
                     "query": [
                       "Invalid email address"
+                    ]
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/smart-delivery/rules": {
+      "get": {
+        "operationId": "smartDeliveryListAll",
+        "summary": "List smart delivery rules",
+        "description": "Return every smart delivery rule of the account — the two system rules first, then the custom rules.",
+        "tags": [
+          "Smart delivery"
+        ],
+        "parameters": [
+          {
+            "name": "applicability",
+            "in": "query",
+            "required": false,
+            "description": "Return only the rules usable in this area. Allowed values: `campaign`, `pipeline`, `both`. A rule with applicability `both` matches every filter value.",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "with_usages",
+            "in": "query",
+            "required": false,
+            "description": "Add the `usage` object to each rule — the campaigns and automation actions that use the rule. Without this parameter `usage` is `null`.",
+            "schema": {
+              "type": "boolean",
+              "default": false
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "success": {
+                      "type": "boolean"
+                    },
+                    "data": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "id": {
+                            "type": "string"
+                          },
+                          "name": {
+                            "type": "string"
+                          },
+                          "description": {
+                            "type": "string"
+                          },
+                          "is_system": {
+                            "type": "boolean"
+                          },
+                          "applicability": {
+                            "type": "string"
+                          },
+                          "limits": {
+                            "type": "object",
+                            "properties": {
+                              "priority_window_hours": {
+                                "type": "integer"
+                              },
+                              "priority_scope": {
+                                "type": "string"
+                              },
+                              "frequency_cap_email_count": {},
+                              "frequency_cap_email_days": {},
+                              "frequency_cap_email_scope": {},
+                              "frequency_cap_sms_count": {},
+                              "frequency_cap_sms_days": {},
+                              "frequency_cap_sms_scope": {}
+                            }
+                          },
+                          "usage": {
+                            "type": "object",
+                            "properties": {
+                              "count": {
+                                "type": "integer"
+                              },
+                              "pipelines": {
+                                "type": "array",
+                                "items": {}
+                              },
+                              "campaigns": {
+                                "type": "array",
+                                "items": {}
+                              }
+                            }
+                          }
+                        }
+                      }
+                    }
+                  }
+                },
+                "example": {
+                  "success": true,
+                  "data": [
+                    {
+                      "id": "standard",
+                      "name": "Standard",
+                      "description": "At most one e-mail anywhere in the last 16 hours.",
+                      "is_system": true,
+                      "applicability": "both",
+                      "limits": {
+                        "priority_window_hours": 16,
+                        "priority_scope": "all",
+                        "frequency_cap_email_count": null,
+                        "frequency_cap_email_days": null,
+                        "frequency_cap_email_scope": null,
+                        "frequency_cap_sms_count": null,
+                        "frequency_cap_sms_days": null,
+                        "frequency_cap_sms_scope": null
+                      },
+                      "usage": {
+                        "count": 0,
+                        "pipelines": [],
+                        "campaigns": []
+                      }
+                    },
+                    {
+                      "id": "aB3dE5fG7h",
+                      "name": "Weekend",
+                      "description": "Weekend sends",
+                      "is_system": false,
+                      "applicability": "campaign",
+                      "limits": {
+                        "priority_window_hours": 12,
+                        "priority_scope": "all",
+                        "frequency_cap_email_count": 2,
+                        "frequency_cap_email_days": 7,
+                        "frequency_cap_email_scope": "all",
+                        "frequency_cap_sms_count": null,
+                        "frequency_cap_sms_days": null,
+                        "frequency_cap_sms_scope": null
+                      },
+                      "usage": {
+                        "count": 2,
+                        "pipelines": [
+                          {
+                            "pipeline_id": 42,
+                            "action_id": "4f6c2a9e-1b7d-4e3a-9c8f-2d5b6a7e8f90"
+                          }
+                        ],
+                        "campaigns": [
+                          {
+                            "campaign_id": 1234,
+                            "title": "Newsletter"
+                          }
+                        ]
+                      }
+                    }
+                  ]
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Unprocessable Entity",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "success": {
+                      "type": "boolean"
+                    },
+                    "message": {
+                      "type": "string"
+                    },
+                    "data": {
+                      "type": "object",
+                      "properties": {
+                        "applicability": {
+                          "type": "array",
+                          "items": {
+                            "type": "string"
+                          }
+                        }
+                      }
+                    }
+                  }
+                },
+                "example": {
+                  "success": false,
+                  "message": "Validation errors",
+                  "data": {
+                    "applicability": [
+                      "The selected applicability is invalid."
+                    ]
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "operationId": "smartDeliveryCreate",
+        "summary": "Create smart delivery rule",
+        "description": "Create a custom smart delivery rule that limits how often a contact receives messages.",
+        "tags": [
+          "Smart delivery"
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "name": {
+                    "type": "string",
+                    "description": "Name of the rule. Max 255 characters."
+                  },
+                  "description": {
+                    "type": "string",
+                    "description": "Description of the rule. Max 1000 characters."
+                  },
+                  "applicability": {
+                    "type": "string",
+                    "description": "Where the rule can be used. Allowed values: `campaign`, `pipeline`, `both`.",
+                    "default": "both"
+                  },
+                  "limits": {
+                    "type": "object",
+                    "description": "The limits of the rule. Send `null` or omit a field to switch that limit off.",
+                    "properties": {
+                      "priority_window_hours": {
+                        "type": "integer",
+                        "description": "Skip a contact who received a message in the last N hours. Range `0`–`24`. Requires `priority_scope`."
+                      },
+                      "priority_scope": {
+                        "type": "string",
+                        "description": "Which messages count for `priority_window_hours`. Allowed values: `all`, `campaigns`, `pipelines_all`, `pipelines_other`."
+                      },
+                      "frequency_cap_email_count": {
+                        "type": "integer",
+                        "description": "Maximum number of e-mails a contact can receive in `frequency_cap_email_days` days. Range `1`–`50`."
+                      },
+                      "frequency_cap_email_days": {
+                        "type": "integer",
+                        "description": "Length of the e-mail frequency cap period in days. Range `1`–`7`."
+                      },
+                      "frequency_cap_email_scope": {
+                        "type": "string",
+                        "description": "Which e-mails count for the e-mail frequency cap. Allowed values: `all`, `campaigns`, `pipelines_all`, `pipelines_other`."
+                      },
+                      "frequency_cap_sms_count": {
+                        "type": "integer",
+                        "description": "Maximum number of SMS messages a contact can receive in `frequency_cap_sms_days` days. Range `1`–`50`."
+                      },
+                      "frequency_cap_sms_days": {
+                        "type": "integer",
+                        "description": "Length of the SMS frequency cap period in days. Range `1`–`7`."
+                      },
+                      "frequency_cap_sms_scope": {
+                        "type": "string",
+                        "description": "Which SMS messages count for the SMS frequency cap. Allowed values: `all`, `campaigns`, `pipelines_all`, `pipelines_other`."
+                      }
+                    }
+                  }
+                },
+                "required": [
+                  "name",
+                  "limits"
+                ]
+              },
+              "example": {
+                "name": "Weekend",
+                "description": "Weekend sends",
+                "applicability": "campaign",
+                "limits": {
+                  "priority_window_hours": 12,
+                  "priority_scope": "all",
+                  "frequency_cap_email_count": 2,
+                  "frequency_cap_email_days": 7,
+                  "frequency_cap_email_scope": "all"
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Created",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "success": {
+                      "type": "boolean"
+                    },
+                    "data": {
+                      "type": "object",
+                      "properties": {
+                        "id": {
+                          "type": "string"
+                        },
+                        "name": {
+                          "type": "string"
+                        },
+                        "description": {
+                          "type": "string"
+                        },
+                        "is_system": {
+                          "type": "boolean"
+                        },
+                        "applicability": {
+                          "type": "string"
+                        },
+                        "limits": {
+                          "type": "object",
+                          "properties": {
+                            "priority_window_hours": {
+                              "type": "integer"
+                            },
+                            "priority_scope": {
+                              "type": "string"
+                            },
+                            "frequency_cap_email_count": {
+                              "type": "integer"
+                            },
+                            "frequency_cap_email_days": {
+                              "type": "integer"
+                            },
+                            "frequency_cap_email_scope": {
+                              "type": "string"
+                            },
+                            "frequency_cap_sms_count": {},
+                            "frequency_cap_sms_days": {},
+                            "frequency_cap_sms_scope": {}
+                          }
+                        },
+                        "usage": {}
+                      }
+                    }
+                  }
+                },
+                "example": {
+                  "success": true,
+                  "data": {
+                    "id": "aB3dE5fG7h",
+                    "name": "Weekend",
+                    "description": "Weekend sends",
+                    "is_system": false,
+                    "applicability": "campaign",
+                    "limits": {
+                      "priority_window_hours": 12,
+                      "priority_scope": "all",
+                      "frequency_cap_email_count": 2,
+                      "frequency_cap_email_days": 7,
+                      "frequency_cap_email_scope": "all",
+                      "frequency_cap_sms_count": null,
+                      "frequency_cap_sms_days": null,
+                      "frequency_cap_sms_scope": null
+                    },
+                    "usage": null
+                  }
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Unprocessable Entity",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "success": {
+                      "type": "boolean"
+                    },
+                    "message": {
+                      "type": "string"
+                    }
+                  }
+                },
+                "example": {
+                  "success": false,
+                  "message": "You have reached the maximum number of custom sending policies."
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/smart-delivery/rules/{id}": {
+      "put": {
+        "operationId": "smartDeliveryUpdate",
+        "summary": "Update smart delivery rule",
+        "description": "Replace a smart delivery rule with the sent values. A field you omit is cleared.",
+        "tags": [
+          "Smart delivery"
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "description": "ID of the rule. Use `standard` to change the limits of the system Standard rule.",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "name": {
+                    "type": "string",
+                    "description": "Name of the rule. Max 255 characters. Not required for `standard`, and ignored for it: the system rule keeps its name."
+                  },
+                  "description": {
+                    "type": "string",
+                    "description": "Description of the rule. Max 1000 characters. When you omit it, the description is cleared."
+                  },
+                  "applicability": {
+                    "type": "string",
+                    "description": "Where the rule can be used. Allowed values: `campaign`, `pipeline`, `both`. When you omit it, the rule is set to `both`.",
+                    "default": "both"
+                  },
+                  "limits": {
+                    "type": "object",
+                    "description": "The limits of the rule. Send `null` or omit a field to switch that limit off.",
+                    "properties": {
+                      "priority_window_hours": {
+                        "type": "integer",
+                        "description": "Skip a contact who received a message in the last N hours. Range `0`–`24`. Requires `priority_scope`."
+                      },
+                      "priority_scope": {
+                        "type": "string",
+                        "description": "Which messages count for `priority_window_hours`. Allowed values: `all`, `campaigns`, `pipelines_all`, `pipelines_other`."
+                      },
+                      "frequency_cap_email_count": {
+                        "type": "integer",
+                        "description": "Maximum number of e-mails a contact can receive in `frequency_cap_email_days` days. Range `1`–`50`."
+                      },
+                      "frequency_cap_email_days": {
+                        "type": "integer",
+                        "description": "Length of the e-mail frequency cap period in days. Range `1`–`7`."
+                      },
+                      "frequency_cap_email_scope": {
+                        "type": "string",
+                        "description": "Which e-mails count for the e-mail frequency cap. Allowed values: `all`, `campaigns`, `pipelines_all`, `pipelines_other`."
+                      },
+                      "frequency_cap_sms_count": {
+                        "type": "integer",
+                        "description": "Maximum number of SMS messages a contact can receive in `frequency_cap_sms_days` days. Range `1`–`50`."
+                      },
+                      "frequency_cap_sms_days": {
+                        "type": "integer",
+                        "description": "Length of the SMS frequency cap period in days. Range `1`–`7`."
+                      },
+                      "frequency_cap_sms_scope": {
+                        "type": "string",
+                        "description": "Which SMS messages count for the SMS frequency cap. Allowed values: `all`, `campaigns`, `pipelines_all`, `pipelines_other`."
+                      }
+                    }
+                  }
+                },
+                "required": [
+                  "name",
+                  "limits"
+                ]
+              },
+              "example": {
+                "name": "Weekend",
+                "applicability": "both",
+                "limits": {
+                  "priority_window_hours": 4,
+                  "priority_scope": "all"
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "success": {
+                      "type": "boolean"
+                    },
+                    "data": {
+                      "type": "object",
+                      "properties": {
+                        "id": {
+                          "type": "string"
+                        },
+                        "name": {
+                          "type": "string"
+                        },
+                        "description": {},
+                        "is_system": {
+                          "type": "boolean"
+                        },
+                        "applicability": {
+                          "type": "string"
+                        },
+                        "limits": {
+                          "type": "object",
+                          "properties": {
+                            "priority_window_hours": {
+                              "type": "integer"
+                            },
+                            "priority_scope": {
+                              "type": "string"
+                            },
+                            "frequency_cap_email_count": {},
+                            "frequency_cap_email_days": {},
+                            "frequency_cap_email_scope": {},
+                            "frequency_cap_sms_count": {},
+                            "frequency_cap_sms_days": {},
+                            "frequency_cap_sms_scope": {}
+                          }
+                        },
+                        "usage": {}
+                      }
+                    }
+                  }
+                },
+                "example": {
+                  "success": true,
+                  "data": {
+                    "id": "aB3dE5fG7h",
+                    "name": "Weekend",
+                    "description": null,
+                    "is_system": false,
+                    "applicability": "both",
+                    "limits": {
+                      "priority_window_hours": 4,
+                      "priority_scope": "all",
+                      "frequency_cap_email_count": null,
+                      "frequency_cap_email_days": null,
+                      "frequency_cap_email_scope": null,
+                      "frequency_cap_sms_count": null,
+                      "frequency_cap_sms_days": null,
+                      "frequency_cap_sms_scope": null
+                    },
+                    "usage": null
+                  }
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "success": {
+                      "type": "boolean"
+                    },
+                    "message": {
+                      "type": "string"
+                    }
+                  }
+                },
+                "example": {
+                  "success": false,
+                  "message": "System sending policies cannot be edited or deleted."
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "success": {
+                      "type": "boolean"
+                    },
+                    "message": {
+                      "type": "string"
+                    }
+                  }
+                },
+                "example": {
+                  "success": false,
+                  "message": "Sending policy not found."
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "Conflict",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "success": {
+                      "type": "boolean"
+                    },
+                    "message": {
+                      "type": "string"
+                    },
+                    "data": {
+                      "type": "object",
+                      "properties": {
+                        "applicability": {
+                          "type": "string"
+                        },
+                        "defaults": {
+                          "type": "array",
+                          "items": {}
+                        },
+                        "usage": {
+                          "type": "object",
+                          "properties": {
+                            "count": {
+                              "type": "integer"
+                            },
+                            "pipelines": {
+                              "type": "array",
+                              "items": {}
+                            },
+                            "campaigns": {
+                              "type": "array",
+                              "items": {
+                                "type": "object",
+                                "properties": {
+                                  "campaign_id": {
+                                    "type": "integer"
+                                  },
+                                  "title": {
+                                    "type": "string"
+                                  }
+                                }
+                              }
+                            }
+                          }
+                        }
+                      }
+                    }
+                  }
+                },
+                "example": {
+                  "success": false,
+                  "message": "This sending policy cannot be narrowed because it is already used in the excluded area.",
+                  "data": {
+                    "applicability": "pipeline",
+                    "defaults": [],
+                    "usage": {
+                      "count": 1,
+                      "pipelines": [],
+                      "campaigns": [
+                        {
+                          "campaign_id": 1234,
+                          "title": "Newsletter"
+                        }
+                      ]
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Unprocessable Entity",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "success": {
+                      "type": "boolean"
+                    },
+                    "message": {
+                      "type": "string"
+                    },
+                    "data": {
+                      "type": "object",
+                      "properties": {
+                        "limits.priority_scope": {
+                          "type": "array",
+                          "items": {
+                            "type": "string"
+                          }
+                        }
+                      }
+                    }
+                  }
+                },
+                "example": {
+                  "success": false,
+                  "message": "Validation errors",
+                  "data": {
+                    "limits.priority_scope": [
+                      "The limits.priority scope field is required when limits.priority window hours is present."
+                    ]
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "delete": {
+        "operationId": "smartDeliveryDelete",
+        "summary": "Delete smart delivery rule",
+        "description": "Delete a custom smart delivery rule that no campaign or automation uses.",
+        "tags": [
+          "Smart delivery"
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "description": "ID of the custom rule.",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "No Content",
+            "content": {
+              "application/json": {}
+            }
+          },
+          "403": {
+            "description": "Forbidden",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "success": {
+                      "type": "boolean"
+                    },
+                    "message": {
+                      "type": "string"
+                    }
+                  }
+                },
+                "example": {
+                  "success": false,
+                  "message": "System sending policies cannot be edited or deleted."
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "success": {
+                      "type": "boolean"
+                    },
+                    "message": {
+                      "type": "string"
+                    }
+                  }
+                },
+                "example": {
+                  "success": false,
+                  "message": "Sending policy not found."
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "Conflict",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "success": {
+                      "type": "boolean"
+                    },
+                    "message": {
+                      "type": "string"
+                    },
+                    "data": {
+                      "type": "object",
+                      "properties": {
+                        "count": {
+                          "type": "integer"
+                        },
+                        "pipelines": {
+                          "type": "array",
+                          "items": {
+                            "type": "object",
+                            "properties": {
+                              "pipeline_id": {
+                                "type": "integer"
+                              },
+                              "action_id": {
+                                "type": "string"
+                              }
+                            }
+                          }
+                        },
+                        "campaigns": {
+                          "type": "array",
+                          "items": {
+                            "type": "object",
+                            "properties": {
+                              "campaign_id": {
+                                "type": "integer"
+                              },
+                              "title": {
+                                "type": "string"
+                              }
+                            }
+                          }
+                        }
+                      }
+                    }
+                  }
+                },
+                "example": {
+                  "success": false,
+                  "message": "This sending policy cannot be deleted because it is used in campaigns or automations.",
+                  "data": {
+                    "count": 2,
+                    "pipelines": [
+                      {
+                        "pipeline_id": 42,
+                        "action_id": "4f6c2a9e-1b7d-4e3a-9c8f-2d5b6a7e8f90"
+                      }
+                    ],
+                    "campaigns": [
+                      {
+                        "campaign_id": 1234,
+                        "title": "Newsletter"
+                      }
                     ]
                   }
                 }
