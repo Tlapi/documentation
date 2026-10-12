@@ -1,0 +1,111 @@
+---
+title: 'List smart delivery rules'
+api: 'GET https://api2.ecomailapp.cz/smart-delivery/rules'
+description: 'Return every smart delivery rule of the account — the two system rules first, then the custom rules.'
+---
+
+<ParamField query="applicability" type="string">
+  Return only the rules usable in this area. Allowed values: `campaign`, `pipeline`, `both`. A rule with applicability `both` matches every filter value.
+</ParamField>
+
+<ParamField query="with_usages" type="boolean" default="false">
+  Add the `usage` object to each rule — the campaigns and automation actions that use the rule. Without this parameter `usage` is `null`.
+</ParamField>
+
+<Note>
+  Every account has two system rules: `standard` and `unlimited`. You can change the limits of `standard`, but not its name. You cannot change or delete `unlimited`.
+</Note>
+
+<RequestExample>
+```bash cURL
+curl -X GET "https://api2.ecomailapp.cz/smart-delivery/rules?applicability=campaign&with_usages=1" \
+  -H "key: YOUR_API_KEY" \
+  -H "Content-Type: application/json"
+```
+
+```php PHP
+$ch = curl_init();
+curl_setopt($ch, CURLOPT_URL, 'https://api2.ecomailapp.cz/smart-delivery/rules?applicability=campaign&with_usages=1');
+curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+curl_setopt($ch, CURLOPT_HTTPHEADER, [
+    'key: YOUR_API_KEY',
+    'Content-Type: application/json',
+]);
+$response = curl_exec($ch);
+curl_close($ch);
+```
+</RequestExample>
+
+<ResponseExample>
+```json 200
+{
+  "success": true,
+  "data": [
+    {
+      "id": "standard",
+      "name": "Standard",
+      "description": "At most one e-mail anywhere in the last 16 hours.",
+      "is_system": true,
+      "applicability": "both",
+      "limits": {
+        "priority_window_hours": 16,
+        "priority_scope": "all",
+        "frequency_cap_email_count": null,
+        "frequency_cap_email_days": null,
+        "frequency_cap_email_scope": null,
+        "frequency_cap_sms_count": null,
+        "frequency_cap_sms_days": null,
+        "frequency_cap_sms_scope": null
+      },
+      "usage": {
+        "count": 0,
+        "pipelines": [],
+        "campaigns": []
+      }
+    },
+    {
+      "id": "aB3dE5fG7h",
+      "name": "Weekend",
+      "description": "Weekend sends",
+      "is_system": false,
+      "applicability": "campaign",
+      "limits": {
+        "priority_window_hours": 12,
+        "priority_scope": "all",
+        "frequency_cap_email_count": 2,
+        "frequency_cap_email_days": 7,
+        "frequency_cap_email_scope": "all",
+        "frequency_cap_sms_count": null,
+        "frequency_cap_sms_days": null,
+        "frequency_cap_sms_scope": null
+      },
+      "usage": {
+        "count": 2,
+        "pipelines": [
+          {
+            "pipeline_id": 42,
+            "action_id": "4f6c2a9e-1b7d-4e3a-9c8f-2d5b6a7e8f90"
+          }
+        ],
+        "campaigns": [
+          {
+            "campaign_id": 1234,
+            "title": "Newsletter"
+          }
+        ]
+      }
+    }
+  ]
+}
+```
+
+```json 422
+{
+  "success": false,
+  "message": "Validation errors",
+  "data": {
+    "applicability": ["The selected applicability is invalid."]
+  }
+}
+```
+</ResponseExample>
