@@ -58,6 +58,9 @@
       "description": "Search for contacts across your account."
     },
     {
+      "name": "Smart delivery"
+    },
+    {
       "name": "Subscribers",
       "description": "Read subscriber profiles, events, and activity logs."
     },
@@ -184,25 +187,10 @@
                             }
                           },
                           "next": {
-                            "description": "Ids of the follow-up nodes: an array of node ids on most node types, or an object with one array of node ids per output port on branching node types (`yes`/`no` on a check node, the variant keys on a split node, `default`/`quarantine_skip` on a mail node). Empty or null at the end of a branch.",
-                            "nullable": true,
-                            "oneOf": [
-                              {
-                                "type": "array",
-                                "items": {
-                                  "type": "string"
-                                }
-                              },
-                              {
-                                "type": "object",
-                                "additionalProperties": {
-                                  "type": "array",
-                                  "items": {
-                                    "type": "string"
-                                  }
-                                }
-                              }
-                            ]
+                            "type": "array",
+                            "items": {
+                              "type": "string"
+                            }
                           }
                         }
                       }
@@ -218,7 +206,9 @@
                         "name": "Welcome email",
                         "template": 42
                       },
-                      "next": ["def-456"]
+                      "next": [
+                        "def-456"
+                      ]
                     },
                     {
                       "id": "def-456",
@@ -227,7 +217,9 @@
                         "name": "Opened the welcome email?"
                       },
                       "next": {
-                        "yes": ["ghi-789"],
+                        "yes": [
+                          "ghi-789"
+                        ],
                         "no": []
                       }
                     },
@@ -304,25 +296,10 @@
                           }
                         },
                         "next": {
-                          "description": "Ids of the follow-up nodes: an array of node ids on most node types, or an object with one array of node ids per output port on branching node types (`yes`/`no` on a check node, the variant keys on a split node, `default`/`quarantine_skip` on a mail node). Empty or null at the end of a branch.",
-                          "nullable": true,
-                          "oneOf": [
-                            {
-                              "type": "array",
-                              "items": {
-                                "type": "string"
-                              }
-                            },
-                            {
-                              "type": "object",
-                              "additionalProperties": {
-                                "type": "array",
-                                "items": {
-                                  "type": "string"
-                                }
-                              }
-                            }
-                          ]
+                          "type": "array",
+                          "items": {
+                            "type": "string"
+                          }
                         }
                       }
                     }
@@ -336,7 +313,9 @@
                       "name": "Welcome email",
                       "template": 42
                     },
-                    "next": ["def-456"]
+                    "next": [
+                      "def-456"
+                    ]
                   }
                 }
               }
@@ -443,6 +422,24 @@
             "schema": {
               "type": "integer"
             }
+          },
+          {
+            "name": "from_date",
+            "in": "query",
+            "required": false,
+            "description": "Filter statistics from this date onwards (`YYYY-MM-DD`, UTC). Cannot be more than one year in the past.",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "to_date",
+            "in": "query",
+            "required": false,
+            "description": "Filter statistics up to this date (`YYYY-MM-DD`, UTC). Must be after `from_date`.",
+            "schema": {
+              "type": "string"
+            }
           }
         ],
         "responses": {
@@ -515,6 +512,15 @@
                         },
                         "delivery_rate": {
                           "type": "integer"
+                        },
+                        "open_in_range": {
+                          "type": "integer"
+                        },
+                        "click_in_range": {
+                          "type": "integer"
+                        },
+                        "inject_in_range": {
+                          "type": "integer"
                         }
                       }
                     }
@@ -541,7 +547,10 @@
                     "conversions_value": 0,
                     "spam": 0,
                     "unsub": 0,
-                    "delivery_rate": 100
+                    "delivery_rate": 100,
+                    "open_in_range": 1,
+                    "click_in_range": 1,
+                    "inject_in_range": 2
                   }
                 }
               }
@@ -590,7 +599,25 @@
             "name": "from_date",
             "in": "query",
             "required": false,
-            "description": "Filter from date onwards in `YYYY-MM-DD` format (UTC).",
+            "description": "Filter events from this date onwards in `YYYY-MM-DD` format (UTC). Cannot be more than one year in the past.",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "to_date",
+            "in": "query",
+            "required": false,
+            "description": "Filter events up to this date in `YYYY-MM-DD` format (UTC). Must be after `from_date`.",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "detail",
+            "in": "query",
+            "required": false,
+            "description": "Set to `true` to return each individual event per subscriber instead of aggregated per-event counts. In detail mode every event row also carries the automation mail it belongs to — `action_id` and the resolved `mail_name` (see [Get actions](/api-reference/automations/get-actions)).",
             "schema": {
               "type": "string"
             }
@@ -599,7 +626,7 @@
             "name": "per_page",
             "in": "query",
             "required": false,
-            "description": "Number of results per page. Default is `100`, maximum is `5000`.",
+            "description": "Number of results per page. Default and maximum is `100`.",
             "schema": {
               "type": "integer"
             }
@@ -622,9 +649,7 @@
                 "schema": {
                   "type": "object",
                   "properties": {
-                    "next_page_url": {
-                      "type": "string"
-                    },
+                    "next_page_url": {},
                     "total": {
                       "type": "integer"
                     },
@@ -635,31 +660,25 @@
                       "type": "object",
                       "properties": {
                         "foo@bar.com": {
-                          "type": "object",
-                          "properties": {
-                            "open": {
-                              "type": "integer"
-                            },
-                            "send": {
-                              "type": "integer"
-                            },
-                            "unsub": {
-                              "type": "integer"
-                            },
-                            "soft_bounce": {
-                              "type": "integer"
-                            },
-                            "click": {
-                              "type": "integer"
-                            },
-                            "hard_bounce": {
-                              "type": "integer"
-                            },
-                            "out_of_band": {
-                              "type": "integer"
-                            },
-                            "spam": {
-                              "type": "integer"
+                          "type": "array",
+                          "items": {
+                            "type": "object",
+                            "properties": {
+                              "url": {
+                                "type": "string"
+                              },
+                              "event": {
+                                "type": "string"
+                              },
+                              "occured_at": {
+                                "type": "string"
+                              },
+                              "action_id": {
+                                "type": "string"
+                              },
+                              "mail_name": {
+                                "type": "string"
+                              }
                             }
                           }
                         }
@@ -668,20 +687,19 @@
                   }
                 },
                 "example": {
-                  "next_page_url": "https://api2.ecomailapp.cz/pipelines/12345/stats-detail?page=2",
-                  "total": 2546,
+                  "next_page_url": null,
+                  "total": 3,
                   "per_page": 100,
                   "subscribers": {
-                    "foo@bar.com": {
-                      "open": 2,
-                      "send": 3,
-                      "unsub": 0,
-                      "soft_bounce": 0,
-                      "click": 0,
-                      "hard_bounce": 0,
-                      "out_of_band": 0,
-                      "spam": 0
-                    }
+                    "foo@bar.com": [
+                      {
+                        "url": "",
+                        "event": "open",
+                        "occured_at": "2026-03-22 10:15:03",
+                        "action_id": "a1b2c3d4e5",
+                        "mail_name": "Welcome email"
+                      }
+                    ]
                   }
                 }
               }
@@ -1567,6 +1585,24 @@
             "schema": {
               "type": "integer"
             }
+          },
+          {
+            "name": "from_date",
+            "in": "query",
+            "required": false,
+            "description": "Filter statistics from this date onwards (`YYYY-MM-DD`, UTC). Cannot be more than one year in the past.",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "to_date",
+            "in": "query",
+            "required": false,
+            "description": "Filter statistics up to this date (`YYYY-MM-DD`, UTC). Must be after `from_date`.",
+            "schema": {
+              "type": "string"
+            }
           }
         ],
         "responses": {
@@ -1630,6 +1666,12 @@
                         },
                         "conversions_value": {
                           "type": "integer"
+                        },
+                        "opened_in_range": {
+                          "type": "integer"
+                        },
+                        "clicked_in_range": {
+                          "type": "integer"
                         }
                       }
                     }
@@ -1653,7 +1695,9 @@
                     "unsub": 1,
                     "unsub_rate": 1,
                     "conversions": 0,
-                    "conversions_value": 0
+                    "conversions_value": 0,
+                    "opened_in_range": 3,
+                    "clicked_in_range": 1
                   }
                 }
               }
@@ -1702,7 +1746,25 @@
             "name": "from_date",
             "in": "query",
             "required": false,
-            "description": "Filter from date onwards (`YYYY-MM-DD` in UTC).",
+            "description": "Filter events from this date onwards (`YYYY-MM-DD` in UTC). Cannot be more than one year in the past.",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "to_date",
+            "in": "query",
+            "required": false,
+            "description": "Filter events up to this date (`YYYY-MM-DD` in UTC). Must be after `from_date`.",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "detail",
+            "in": "query",
+            "required": false,
+            "description": "Set to `true` to return each individual event per subscriber (with `event`, `url` and `occured_at`) instead of aggregated per-event counts.",
             "schema": {
               "type": "string"
             }
@@ -1734,9 +1796,7 @@
                 "schema": {
                   "type": "object",
                   "properties": {
-                    "next_page_url": {
-                      "type": "string"
-                    },
+                    "next_page_url": {},
                     "total": {
                       "type": "integer"
                     },
@@ -1747,31 +1807,19 @@
                       "type": "object",
                       "properties": {
                         "foo@bar.com": {
-                          "type": "object",
-                          "properties": {
-                            "open": {
-                              "type": "integer"
-                            },
-                            "send": {
-                              "type": "integer"
-                            },
-                            "unsub": {
-                              "type": "integer"
-                            },
-                            "soft_bounce": {
-                              "type": "integer"
-                            },
-                            "click": {
-                              "type": "integer"
-                            },
-                            "hard_bounce": {
-                              "type": "integer"
-                            },
-                            "out_of_band": {
-                              "type": "integer"
-                            },
-                            "spam": {
-                              "type": "integer"
+                          "type": "array",
+                          "items": {
+                            "type": "object",
+                            "properties": {
+                              "url": {
+                                "type": "string"
+                              },
+                              "event": {
+                                "type": "string"
+                              },
+                              "occured_at": {
+                                "type": "string"
+                              }
                             }
                           }
                         }
@@ -1780,20 +1828,17 @@
                   }
                 },
                 "example": {
-                  "next_page_url": "https://api2.ecomailapp.cz/campaigns/12345/stats-detail?page=2",
-                  "total": 4256,
+                  "next_page_url": null,
+                  "total": 3,
                   "per_page": 100,
                   "subscribers": {
-                    "foo@bar.com": {
-                      "open": 2,
-                      "send": 1,
-                      "unsub": 0,
-                      "soft_bounce": 0,
-                      "click": 1,
-                      "hard_bounce": 0,
-                      "out_of_band": 0,
-                      "spam": 0
-                    }
+                    "foo@bar.com": [
+                      {
+                        "url": "https://example.com/landing",
+                        "event": "click",
+                        "occured_at": "2026-03-22 10:15:03"
+                      }
+                    ]
                   }
                 }
               }
@@ -2266,6 +2311,9 @@
                       },
                       "blocked": {
                         "type": "boolean"
+                      },
+                      "type": {
+                        "type": "string"
                       }
                     }
                   }
@@ -2274,12 +2322,20 @@
                   {
                     "name": "foo.cz",
                     "valid": true,
-                    "blocked": false
+                    "blocked": false,
+                    "type": "sending"
+                  },
+                  {
+                    "name": "foo.cz",
+                    "valid": true,
+                    "blocked": false,
+                    "type": "transactional"
                   },
                   {
                     "name": "bar.cz",
                     "valid": false,
-                    "blocked": false
+                    "blocked": false,
+                    "type": "sending"
                   }
                 ]
               }
@@ -2304,6 +2360,11 @@
                   "name": {
                     "type": "string",
                     "description": "Domain name."
+                  },
+                  "type": {
+                    "type": "string",
+                    "description": "Which variant to create — `sending` or `transactional`. One domain name can be held as both variants at the same time, and each of them is created separately. Omit the field to create a sending domain.",
+                    "default": "sending"
                   }
                 },
                 "required": [
@@ -2346,13 +2407,25 @@
                 "schema": {
                   "type": "object",
                   "properties": {
-                    "error": {
-                      "type": "string"
+                    "errors": {
+                      "type": "object",
+                      "properties": {
+                        "type": {
+                          "type": "array",
+                          "items": {
+                            "type": "string"
+                          }
+                        }
+                      }
                     }
                   }
                 },
                 "example": {
-                  "error": "Invalid URL address"
+                  "errors": {
+                    "type": [
+                      "type contains invalid value."
+                    ]
+                  }
                 }
               }
             }
@@ -2374,6 +2447,15 @@
             "in": "path",
             "required": true,
             "description": "Domain name.",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "type",
+            "in": "query",
+            "required": false,
+            "description": "Which variant to delete — `sending` or `transactional`. Omit it while the account holds the name under a single variant; that one is deleted whichever type it is.",
             "schema": {
               "type": "string"
             }
@@ -2405,6 +2487,58 @@
                 }
               }
             }
+          },
+          "409": {
+            "description": "Conflict",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "error": {
+                      "type": "string"
+                    },
+                    "domain": {
+                      "type": "string"
+                    }
+                  }
+                },
+                "example": {
+                  "error": "Domain exists as both a sending and a transactional domain, specify which type to delete.",
+                  "domain": "foo.cz"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Unprocessable Entity",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "errors": {
+                      "type": "object",
+                      "properties": {
+                        "type": {
+                          "type": "array",
+                          "items": {
+                            "type": "string"
+                          }
+                        }
+                      }
+                    }
+                  }
+                },
+                "example": {
+                  "errors": {
+                    "type": [
+                      "type contains invalid value."
+                    ]
+                  }
+                }
+              }
+            }
           }
         }
       }
@@ -2413,7 +2547,7 @@
       "get": {
         "operationId": "feedsListAll",
         "summary": "List all feeds",
-        "description": "Retrieve all product feeds in your account. Use the `id` values as `feed_id` for the refresh endpoint. Data feeds are not included.",
+        "description": "Retrieve all product feeds in your account.",
         "tags": [
           "Feeds"
         ],
@@ -2440,13 +2574,9 @@
                             "type": "string"
                           },
                           "products_count": {
-                            "type": "integer",
-                            "nullable": true
+                            "type": "integer"
                           },
-                          "error": {
-                            "type": "string",
-                            "nullable": true
-                          },
+                          "error": {},
                           "created_at": {
                             "type": "string"
                           },
@@ -5368,6 +5498,868 @@
         }
       }
     },
+    "/smart-delivery/rules": {
+      "get": {
+        "operationId": "smartDeliveryListAll",
+        "summary": "List smart delivery rules",
+        "description": "Return every smart delivery rule of the account — the two system rules first, then the custom rules.",
+        "tags": [
+          "Smart delivery"
+        ],
+        "parameters": [
+          {
+            "name": "applicability",
+            "in": "query",
+            "required": false,
+            "description": "Return only the rules usable in this area. Allowed values: `campaign`, `pipeline`, `both`. A rule with applicability `both` matches every filter value.",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "with_usages",
+            "in": "query",
+            "required": false,
+            "description": "Add the `usage` object to each rule — the campaigns and automation actions that use the rule. Without this parameter `usage` is `null`.",
+            "schema": {
+              "type": "boolean",
+              "default": false
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "success": {
+                      "type": "boolean"
+                    },
+                    "data": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "id": {
+                            "type": "string"
+                          },
+                          "name": {
+                            "type": "string"
+                          },
+                          "description": {
+                            "type": "string"
+                          },
+                          "is_system": {
+                            "type": "boolean"
+                          },
+                          "applicability": {
+                            "type": "string"
+                          },
+                          "limits": {
+                            "type": "object",
+                            "properties": {
+                              "priority_window_hours": {
+                                "type": "integer"
+                              },
+                              "priority_scope": {
+                                "type": "string"
+                              },
+                              "frequency_cap_email_count": {},
+                              "frequency_cap_email_days": {},
+                              "frequency_cap_email_scope": {},
+                              "frequency_cap_sms_count": {},
+                              "frequency_cap_sms_days": {},
+                              "frequency_cap_sms_scope": {}
+                            }
+                          },
+                          "usage": {
+                            "type": "object",
+                            "properties": {
+                              "count": {
+                                "type": "integer"
+                              },
+                              "pipelines": {
+                                "type": "array",
+                                "items": {}
+                              },
+                              "campaigns": {
+                                "type": "array",
+                                "items": {}
+                              }
+                            }
+                          }
+                        }
+                      }
+                    }
+                  }
+                },
+                "example": {
+                  "success": true,
+                  "data": [
+                    {
+                      "id": "standard",
+                      "name": "Standard",
+                      "description": "At most one e-mail anywhere in the last 16 hours.",
+                      "is_system": true,
+                      "applicability": "both",
+                      "limits": {
+                        "priority_window_hours": 16,
+                        "priority_scope": "all",
+                        "frequency_cap_email_count": null,
+                        "frequency_cap_email_days": null,
+                        "frequency_cap_email_scope": null,
+                        "frequency_cap_sms_count": null,
+                        "frequency_cap_sms_days": null,
+                        "frequency_cap_sms_scope": null
+                      },
+                      "usage": {
+                        "count": 0,
+                        "pipelines": [],
+                        "campaigns": []
+                      }
+                    },
+                    {
+                      "id": "aB3dE5fG7h",
+                      "name": "Weekend",
+                      "description": "Weekend sends",
+                      "is_system": false,
+                      "applicability": "campaign",
+                      "limits": {
+                        "priority_window_hours": 12,
+                        "priority_scope": "all",
+                        "frequency_cap_email_count": 2,
+                        "frequency_cap_email_days": 7,
+                        "frequency_cap_email_scope": "all",
+                        "frequency_cap_sms_count": null,
+                        "frequency_cap_sms_days": null,
+                        "frequency_cap_sms_scope": null
+                      },
+                      "usage": {
+                        "count": 2,
+                        "pipelines": [
+                          {
+                            "pipeline_id": 42,
+                            "action_id": "4f6c2a9e-1b7d-4e3a-9c8f-2d5b6a7e8f90"
+                          }
+                        ],
+                        "campaigns": [
+                          {
+                            "campaign_id": 1234,
+                            "title": "Newsletter"
+                          }
+                        ]
+                      }
+                    }
+                  ]
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Unprocessable Entity",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "success": {
+                      "type": "boolean"
+                    },
+                    "message": {
+                      "type": "string"
+                    },
+                    "data": {
+                      "type": "object",
+                      "properties": {
+                        "applicability": {
+                          "type": "array",
+                          "items": {
+                            "type": "string"
+                          }
+                        }
+                      }
+                    }
+                  }
+                },
+                "example": {
+                  "success": false,
+                  "message": "Validation errors",
+                  "data": {
+                    "applicability": [
+                      "The selected applicability is invalid."
+                    ]
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "operationId": "smartDeliveryCreate",
+        "summary": "Create smart delivery rule",
+        "description": "Create a custom smart delivery rule that limits how often a contact receives messages.",
+        "tags": [
+          "Smart delivery"
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "name": {
+                    "type": "string",
+                    "description": "Name of the rule. Max 255 characters."
+                  },
+                  "description": {
+                    "type": "string",
+                    "description": "Description of the rule. Max 1000 characters."
+                  },
+                  "applicability": {
+                    "type": "string",
+                    "description": "Where the rule can be used. Allowed values: `campaign`, `pipeline`, `both`.",
+                    "default": "both"
+                  },
+                  "limits": {
+                    "type": "object",
+                    "description": "The limits of the rule. Send `null` or omit a field to switch that limit off.",
+                    "properties": {
+                      "priority_window_hours": {
+                        "type": "integer",
+                        "description": "Skip a contact who received a message in the last N hours. Range `0`–`24`. Requires `priority_scope`."
+                      },
+                      "priority_scope": {
+                        "type": "string",
+                        "description": "Which messages count for `priority_window_hours`. Allowed values: `all`, `campaigns`, `pipelines_all`, `pipelines_other`."
+                      },
+                      "frequency_cap_email_count": {
+                        "type": "integer",
+                        "description": "Maximum number of e-mails a contact can receive in `frequency_cap_email_days` days. Range `1`–`50`."
+                      },
+                      "frequency_cap_email_days": {
+                        "type": "integer",
+                        "description": "Length of the e-mail frequency cap period in days. Range `1`–`7`."
+                      },
+                      "frequency_cap_email_scope": {
+                        "type": "string",
+                        "description": "Which e-mails count for the e-mail frequency cap. Allowed values: `all`, `campaigns`, `pipelines_all`, `pipelines_other`."
+                      },
+                      "frequency_cap_sms_count": {
+                        "type": "integer",
+                        "description": "Maximum number of SMS messages a contact can receive in `frequency_cap_sms_days` days. Range `1`–`50`."
+                      },
+                      "frequency_cap_sms_days": {
+                        "type": "integer",
+                        "description": "Length of the SMS frequency cap period in days. Range `1`–`7`."
+                      },
+                      "frequency_cap_sms_scope": {
+                        "type": "string",
+                        "description": "Which SMS messages count for the SMS frequency cap. Allowed values: `all`, `campaigns`, `pipelines_all`, `pipelines_other`."
+                      }
+                    }
+                  }
+                },
+                "required": [
+                  "name",
+                  "limits"
+                ]
+              },
+              "example": {
+                "name": "Weekend",
+                "description": "Weekend sends",
+                "applicability": "campaign",
+                "limits": {
+                  "priority_window_hours": 12,
+                  "priority_scope": "all",
+                  "frequency_cap_email_count": 2,
+                  "frequency_cap_email_days": 7,
+                  "frequency_cap_email_scope": "all"
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Created",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "success": {
+                      "type": "boolean"
+                    },
+                    "data": {
+                      "type": "object",
+                      "properties": {
+                        "id": {
+                          "type": "string"
+                        },
+                        "name": {
+                          "type": "string"
+                        },
+                        "description": {
+                          "type": "string"
+                        },
+                        "is_system": {
+                          "type": "boolean"
+                        },
+                        "applicability": {
+                          "type": "string"
+                        },
+                        "limits": {
+                          "type": "object",
+                          "properties": {
+                            "priority_window_hours": {
+                              "type": "integer"
+                            },
+                            "priority_scope": {
+                              "type": "string"
+                            },
+                            "frequency_cap_email_count": {
+                              "type": "integer"
+                            },
+                            "frequency_cap_email_days": {
+                              "type": "integer"
+                            },
+                            "frequency_cap_email_scope": {
+                              "type": "string"
+                            },
+                            "frequency_cap_sms_count": {},
+                            "frequency_cap_sms_days": {},
+                            "frequency_cap_sms_scope": {}
+                          }
+                        },
+                        "usage": {}
+                      }
+                    }
+                  }
+                },
+                "example": {
+                  "success": true,
+                  "data": {
+                    "id": "aB3dE5fG7h",
+                    "name": "Weekend",
+                    "description": "Weekend sends",
+                    "is_system": false,
+                    "applicability": "campaign",
+                    "limits": {
+                      "priority_window_hours": 12,
+                      "priority_scope": "all",
+                      "frequency_cap_email_count": 2,
+                      "frequency_cap_email_days": 7,
+                      "frequency_cap_email_scope": "all",
+                      "frequency_cap_sms_count": null,
+                      "frequency_cap_sms_days": null,
+                      "frequency_cap_sms_scope": null
+                    },
+                    "usage": null
+                  }
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Unprocessable Entity",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "success": {
+                      "type": "boolean"
+                    },
+                    "message": {
+                      "type": "string"
+                    }
+                  }
+                },
+                "example": {
+                  "success": false,
+                  "message": "You have reached the maximum number of custom sending policies."
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/smart-delivery/rules/{id}": {
+      "put": {
+        "operationId": "smartDeliveryUpdate",
+        "summary": "Update smart delivery rule",
+        "description": "Replace a smart delivery rule with the sent values. A field you omit is cleared.",
+        "tags": [
+          "Smart delivery"
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "description": "ID of the rule. Use `standard` to change the limits of the system Standard rule.",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "name": {
+                    "type": "string",
+                    "description": "Name of the rule. Max 255 characters. Not required for `standard`, and ignored for it: the system rule keeps its name."
+                  },
+                  "description": {
+                    "type": "string",
+                    "description": "Description of the rule. Max 1000 characters. When you omit it, the description is cleared."
+                  },
+                  "applicability": {
+                    "type": "string",
+                    "description": "Where the rule can be used. Allowed values: `campaign`, `pipeline`, `both`. When you omit it, the rule is set to `both`.",
+                    "default": "both"
+                  },
+                  "limits": {
+                    "type": "object",
+                    "description": "The limits of the rule. Send `null` or omit a field to switch that limit off.",
+                    "properties": {
+                      "priority_window_hours": {
+                        "type": "integer",
+                        "description": "Skip a contact who received a message in the last N hours. Range `0`–`24`. Requires `priority_scope`."
+                      },
+                      "priority_scope": {
+                        "type": "string",
+                        "description": "Which messages count for `priority_window_hours`. Allowed values: `all`, `campaigns`, `pipelines_all`, `pipelines_other`."
+                      },
+                      "frequency_cap_email_count": {
+                        "type": "integer",
+                        "description": "Maximum number of e-mails a contact can receive in `frequency_cap_email_days` days. Range `1`–`50`."
+                      },
+                      "frequency_cap_email_days": {
+                        "type": "integer",
+                        "description": "Length of the e-mail frequency cap period in days. Range `1`–`7`."
+                      },
+                      "frequency_cap_email_scope": {
+                        "type": "string",
+                        "description": "Which e-mails count for the e-mail frequency cap. Allowed values: `all`, `campaigns`, `pipelines_all`, `pipelines_other`."
+                      },
+                      "frequency_cap_sms_count": {
+                        "type": "integer",
+                        "description": "Maximum number of SMS messages a contact can receive in `frequency_cap_sms_days` days. Range `1`–`50`."
+                      },
+                      "frequency_cap_sms_days": {
+                        "type": "integer",
+                        "description": "Length of the SMS frequency cap period in days. Range `1`–`7`."
+                      },
+                      "frequency_cap_sms_scope": {
+                        "type": "string",
+                        "description": "Which SMS messages count for the SMS frequency cap. Allowed values: `all`, `campaigns`, `pipelines_all`, `pipelines_other`."
+                      }
+                    }
+                  }
+                },
+                "required": [
+                  "name",
+                  "limits"
+                ]
+              },
+              "example": {
+                "name": "Weekend",
+                "applicability": "both",
+                "limits": {
+                  "priority_window_hours": 4,
+                  "priority_scope": "all"
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "success": {
+                      "type": "boolean"
+                    },
+                    "data": {
+                      "type": "object",
+                      "properties": {
+                        "id": {
+                          "type": "string"
+                        },
+                        "name": {
+                          "type": "string"
+                        },
+                        "description": {},
+                        "is_system": {
+                          "type": "boolean"
+                        },
+                        "applicability": {
+                          "type": "string"
+                        },
+                        "limits": {
+                          "type": "object",
+                          "properties": {
+                            "priority_window_hours": {
+                              "type": "integer"
+                            },
+                            "priority_scope": {
+                              "type": "string"
+                            },
+                            "frequency_cap_email_count": {},
+                            "frequency_cap_email_days": {},
+                            "frequency_cap_email_scope": {},
+                            "frequency_cap_sms_count": {},
+                            "frequency_cap_sms_days": {},
+                            "frequency_cap_sms_scope": {}
+                          }
+                        },
+                        "usage": {}
+                      }
+                    }
+                  }
+                },
+                "example": {
+                  "success": true,
+                  "data": {
+                    "id": "aB3dE5fG7h",
+                    "name": "Weekend",
+                    "description": null,
+                    "is_system": false,
+                    "applicability": "both",
+                    "limits": {
+                      "priority_window_hours": 4,
+                      "priority_scope": "all",
+                      "frequency_cap_email_count": null,
+                      "frequency_cap_email_days": null,
+                      "frequency_cap_email_scope": null,
+                      "frequency_cap_sms_count": null,
+                      "frequency_cap_sms_days": null,
+                      "frequency_cap_sms_scope": null
+                    },
+                    "usage": null
+                  }
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "success": {
+                      "type": "boolean"
+                    },
+                    "message": {
+                      "type": "string"
+                    }
+                  }
+                },
+                "example": {
+                  "success": false,
+                  "message": "System sending policies cannot be edited or deleted."
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "success": {
+                      "type": "boolean"
+                    },
+                    "message": {
+                      "type": "string"
+                    }
+                  }
+                },
+                "example": {
+                  "success": false,
+                  "message": "Sending policy not found."
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "Conflict",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "success": {
+                      "type": "boolean"
+                    },
+                    "message": {
+                      "type": "string"
+                    },
+                    "data": {
+                      "type": "object",
+                      "properties": {
+                        "applicability": {
+                          "type": "string"
+                        },
+                        "defaults": {
+                          "type": "array",
+                          "items": {}
+                        },
+                        "usage": {
+                          "type": "object",
+                          "properties": {
+                            "count": {
+                              "type": "integer"
+                            },
+                            "pipelines": {
+                              "type": "array",
+                              "items": {}
+                            },
+                            "campaigns": {
+                              "type": "array",
+                              "items": {
+                                "type": "object",
+                                "properties": {
+                                  "campaign_id": {
+                                    "type": "integer"
+                                  },
+                                  "title": {
+                                    "type": "string"
+                                  }
+                                }
+                              }
+                            }
+                          }
+                        }
+                      }
+                    }
+                  }
+                },
+                "example": {
+                  "success": false,
+                  "message": "This sending policy cannot be narrowed because it is already used in the excluded area.",
+                  "data": {
+                    "applicability": "pipeline",
+                    "defaults": [],
+                    "usage": {
+                      "count": 1,
+                      "pipelines": [],
+                      "campaigns": [
+                        {
+                          "campaign_id": 1234,
+                          "title": "Newsletter"
+                        }
+                      ]
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Unprocessable Entity",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "success": {
+                      "type": "boolean"
+                    },
+                    "message": {
+                      "type": "string"
+                    },
+                    "data": {
+                      "type": "object",
+                      "properties": {
+                        "limits.priority_scope": {
+                          "type": "array",
+                          "items": {
+                            "type": "string"
+                          }
+                        }
+                      }
+                    }
+                  }
+                },
+                "example": {
+                  "success": false,
+                  "message": "Validation errors",
+                  "data": {
+                    "limits.priority_scope": [
+                      "The limits.priority scope field is required when limits.priority window hours is present."
+                    ]
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "delete": {
+        "operationId": "smartDeliveryDelete",
+        "summary": "Delete smart delivery rule",
+        "description": "Delete a custom smart delivery rule that no campaign or automation uses.",
+        "tags": [
+          "Smart delivery"
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "description": "ID of the custom rule.",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "No Content",
+            "content": {
+              "application/json": {}
+            }
+          },
+          "403": {
+            "description": "Forbidden",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "success": {
+                      "type": "boolean"
+                    },
+                    "message": {
+                      "type": "string"
+                    }
+                  }
+                },
+                "example": {
+                  "success": false,
+                  "message": "System sending policies cannot be edited or deleted."
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "success": {
+                      "type": "boolean"
+                    },
+                    "message": {
+                      "type": "string"
+                    }
+                  }
+                },
+                "example": {
+                  "success": false,
+                  "message": "Sending policy not found."
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "Conflict",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "success": {
+                      "type": "boolean"
+                    },
+                    "message": {
+                      "type": "string"
+                    },
+                    "data": {
+                      "type": "object",
+                      "properties": {
+                        "count": {
+                          "type": "integer"
+                        },
+                        "pipelines": {
+                          "type": "array",
+                          "items": {
+                            "type": "object",
+                            "properties": {
+                              "pipeline_id": {
+                                "type": "integer"
+                              },
+                              "action_id": {
+                                "type": "string"
+                              }
+                            }
+                          }
+                        },
+                        "campaigns": {
+                          "type": "array",
+                          "items": {
+                            "type": "object",
+                            "properties": {
+                              "campaign_id": {
+                                "type": "integer"
+                              },
+                              "title": {
+                                "type": "string"
+                              }
+                            }
+                          }
+                        }
+                      }
+                    }
+                  }
+                },
+                "example": {
+                  "success": false,
+                  "message": "This sending policy cannot be deleted because it is used in campaigns or automations.",
+                  "data": {
+                    "count": 2,
+                    "pipelines": [
+                      {
+                        "pipeline_id": 42,
+                        "action_id": "4f6c2a9e-1b7d-4e3a-9c8f-2d5b6a7e8f90"
+                      }
+                    ],
+                    "campaigns": [
+                      {
+                        "campaign_id": 1234,
+                        "title": "Newsletter"
+                      }
+                    ]
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/subscribers/{email}": {
       "get": {
         "operationId": "subscribersGet",
@@ -6151,7 +7143,7 @@
       "post": {
         "operationId": "templatesCreate",
         "summary": "Create a new template",
-        "description": "Create a new email template from raw HTML or from an MJML definition. Send exactly one of `html` and `mjml`. A template created from an MJML definition is compiled to HTML by Ecomail and stays editable in the drag-and-drop editor.",
+        "description": "Create a new email template from HTML or from an MJML definition.",
         "tags": [
           "Templates"
         ],
@@ -6172,24 +7164,7 @@
                   },
                   "mjml": {
                     "type": "object",
-                    "description": "MJML definition of the template, in the same JSON format the Ecomail editor uses. Required when `html` is not sent. Each node has a `tagName` (an MJML component such as `mj-section`, `mj-column`, `mj-text`, `mj-image`, or `mj-button`), optional `attributes`, and either `children` or `content`.",
-                    "properties": {
-                      "tagName": {
-                        "type": "string"
-                      },
-                      "attributes": {
-                        "type": "object"
-                      },
-                      "children": {
-                        "type": "array",
-                        "items": {
-                          "type": "object"
-                        }
-                      }
-                    },
-                    "required": [
-                      "children"
-                    ]
+                    "description": "MJML definition of the template, in the same JSON format the Ecomail editor uses. Required when `html` is not sent. The definition is a tree of nodes. Each node has a `tagName` (an MJML component such as `mj-section`, `mj-column`, `mj-text`, `mj-image`, or `mj-button`), optional `attributes`, and either `children` or `content`. The root node must contain a `children` array."
                   }
                 },
                 "required": [
@@ -6197,27 +7172,8 @@
                 ]
               },
               "example": {
-                "name": "New MJML Template",
-                "mjml": {
-                  "tagName": "mj-body",
-                  "attributes": {},
-                  "children": [
-                    {
-                      "tagName": "mj-section",
-                      "children": [
-                        {
-                          "tagName": "mj-column",
-                          "children": [
-                            {
-                              "tagName": "mj-text",
-                              "content": "Hello from the API"
-                            }
-                          ]
-                        }
-                      ]
-                    }
-                  ]
-                }
+                "name": "New Template",
+                "html": "<b>Template HTML</b>"
               }
             }
           }
@@ -6250,7 +7206,7 @@
             }
           },
           "422": {
-            "description": "The MJML definition could not be rendered to HTML.",
+            "description": "Unprocessable Entity",
             "content": {
               "application/json": {
                 "schema": {
@@ -7337,7 +8293,7 @@
                         },
                         "categories": {
                           "type": "array",
-                          "description": "List of product categories. Limited to 100 characters per category and 20 categories per item. Currently not visible in the Ecomail app — use the `category` parameter for now.",
+                          "description": "List of product categories. Limited to 100 characters per category and 20 categories per item.",
                           "items": {}
                         },
                         "price": {
