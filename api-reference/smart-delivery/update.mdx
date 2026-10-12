@@ -1,0 +1,172 @@
+---
+title: 'Update smart delivery rule'
+api: 'PUT https://api2.ecomailapp.cz/smart-delivery/rules/{id}'
+description: 'Replace a smart delivery rule with the sent values. A field you omit is cleared.'
+---
+
+<ParamField path="id" type="string" required>
+  ID of the rule. Use `standard` to change the limits of the system Standard rule.
+</ParamField>
+
+<ParamField body="name" type="string" required>
+  Name of the rule. Max 255 characters. Not required for `standard`, and ignored for it: the system rule keeps its name.
+</ParamField>
+
+<ParamField body="description" type="string">
+  Description of the rule. Max 1000 characters. When you omit it, the description is cleared.
+</ParamField>
+
+<ParamField body="applicability" type="string" default="both">
+  Where the rule can be used. Allowed values: `campaign`, `pipeline`, `both`. When you omit it, the rule is set to `both`.
+</ParamField>
+
+<ParamField body="limits" type="object" required>
+  The limits of the rule. Send `null` or omit a field to switch that limit off.
+
+  <Expandable title="limits properties">
+    <ParamField body="limits[priority_window_hours]" type="integer">
+      Skip a contact who received a message in the last N hours. Range `0`–`24`. Requires `priority_scope`.
+    </ParamField>
+
+    <ParamField body="limits[priority_scope]" type="string">
+      Which messages count for `priority_window_hours`. Allowed values: `all`, `campaigns`, `pipelines_all`, `pipelines_other`.
+    </ParamField>
+
+    <ParamField body="limits[frequency_cap_email_count]" type="integer">
+      Maximum number of e-mails a contact can receive in `frequency_cap_email_days` days. Range `1`–`50`.
+    </ParamField>
+
+    <ParamField body="limits[frequency_cap_email_days]" type="integer">
+      Length of the e-mail frequency cap period in days. Range `1`–`7`.
+    </ParamField>
+
+    <ParamField body="limits[frequency_cap_email_scope]" type="string">
+      Which e-mails count for the e-mail frequency cap. Allowed values: `all`, `campaigns`, `pipelines_all`, `pipelines_other`.
+    </ParamField>
+
+    <ParamField body="limits[frequency_cap_sms_count]" type="integer">
+      Maximum number of SMS messages a contact can receive in `frequency_cap_sms_days` days. Range `1`–`50`.
+    </ParamField>
+
+    <ParamField body="limits[frequency_cap_sms_days]" type="integer">
+      Length of the SMS frequency cap period in days. Range `1`–`7`.
+    </ParamField>
+
+    <ParamField body="limits[frequency_cap_sms_scope]" type="string">
+      Which SMS messages count for the SMS frequency cap. Allowed values: `all`, `campaigns`, `pipelines_all`, `pipelines_other`.
+    </ParamField>
+  </Expandable>
+</ParamField>
+
+<Note>
+  The system rule `unlimited` cannot be changed and returns `403`.
+  You cannot narrow `applicability` to an area that excludes a campaign, an automation action, or an account default that already uses the rule. The `409` response lists what blocks the change.
+</Note>
+
+<RequestExample>
+```bash cURL
+curl -X PUT https://api2.ecomailapp.cz/smart-delivery/rules/aB3dE5fG7h \
+  -H "key: YOUR_API_KEY" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "name": "Weekend",
+    "applicability": "both",
+    "limits": {
+      "priority_window_hours": 4,
+      "priority_scope": "all"
+    }
+  }'
+```
+
+```php PHP
+$ch = curl_init();
+curl_setopt($ch, CURLOPT_URL, 'https://api2.ecomailapp.cz/smart-delivery/rules/aB3dE5fG7h');
+curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+curl_setopt($ch, CURLOPT_CUSTOMREQUEST, 'PUT');
+curl_setopt($ch, CURLOPT_HTTPHEADER, [
+    'key: YOUR_API_KEY',
+    'Content-Type: application/json',
+]);
+curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode([
+    'name' => 'Weekend',
+    'applicability' => 'both',
+    'limits' => [
+        'priority_window_hours' => 4,
+        'priority_scope' => 'all',
+    ],
+]));
+$response = curl_exec($ch);
+curl_close($ch);
+```
+</RequestExample>
+
+<ResponseExample>
+```json 200
+{
+  "success": true,
+  "data": {
+    "id": "aB3dE5fG7h",
+    "name": "Weekend",
+    "description": null,
+    "is_system": false,
+    "applicability": "both",
+    "limits": {
+      "priority_window_hours": 4,
+      "priority_scope": "all",
+      "frequency_cap_email_count": null,
+      "frequency_cap_email_days": null,
+      "frequency_cap_email_scope": null,
+      "frequency_cap_sms_count": null,
+      "frequency_cap_sms_days": null,
+      "frequency_cap_sms_scope": null
+    },
+    "usage": null
+  }
+}
+```
+
+```json 403
+{
+  "success": false,
+  "message": "System sending policies cannot be edited or deleted."
+}
+```
+
+```json 404
+{
+  "success": false,
+  "message": "Sending policy not found."
+}
+```
+
+```json 409
+{
+  "success": false,
+  "message": "This sending policy cannot be narrowed because it is already used in the excluded area.",
+  "data": {
+    "applicability": "pipeline",
+    "defaults": [],
+    "usage": {
+      "count": 1,
+      "pipelines": [],
+      "campaigns": [
+        {
+          "campaign_id": 1234,
+          "title": "Newsletter"
+        }
+      ]
+    }
+  }
+}
+```
+
+```json 422
+{
+  "success": false,
+  "message": "Validation errors",
+  "data": {
+    "limits.priority_scope": ["The limits.priority scope field is required when limits.priority window hours is present."]
+  }
+}
+```
+</ResponseExample>
