@@ -17,7 +17,7 @@ description: 'Return statistics for a specific automation with each subscriber a
 </ParamField>
 
 <ParamField query="from_date" type="string">
-  Filter events from this date onwards in `YYYY-MM-DD` format (UTC). Cannot be more than one year in the past.
+  Filter events from this date onwards in `YYYY-MM-DD` format (UTC). Cannot be more than one year in the past. If you omit it, it defaults to the date one year ago.
 </ParamField>
 
 <ParamField query="to_date" type="string">
@@ -37,6 +37,10 @@ description: 'Return statistics for a specific automation with each subscriber a
 </ParamField>
 
 The `total` field returns the total number of subscribers that entered the automation. The `open`, `click`, and `send` fields return unique counts.
+
+<Note>
+  This endpoint returns events from the last year only. If you omit `from_date`, the results start one year ago. A `to_date` older than that returns no subscribers.
+</Note>
 
 <RequestExample>
 ```bash cURL
