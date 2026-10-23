@@ -109,6 +109,15 @@
             ]
           },
           {
+            "group": "Smart delivery",
+            "pages": [
+              "api-reference/smart-delivery/list-all",
+              "api-reference/smart-delivery/create",
+              "api-reference/smart-delivery/update",
+              "api-reference/smart-delivery/delete"
+            ]
+          },
+          {
             "group": "Subscribers",
             "pages": [
               "api-reference/subscribers/get",

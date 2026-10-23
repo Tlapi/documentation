@@ -1,0 +1,77 @@
+---
+title: 'Delete smart delivery rule'
+api: 'DELETE https://api2.ecomailapp.cz/smart-delivery/rules/{id}'
+description: 'Delete a custom smart delivery rule that no campaign or automation uses.'
+---
+
+<ParamField path="id" type="string" required>
+  ID of the custom rule.
+</ParamField>
+
+<Note>
+  System rules (`standard`, `unlimited`) cannot be deleted and return `403`.
+  A rule used by a campaign or an automation action cannot be deleted. The `409` response lists the campaigns and automation actions that use it.
+  A successful delete returns `204` with no body.
+</Note>
+
+<RequestExample>
+```bash cURL
+curl -X DELETE https://api2.ecomailapp.cz/smart-delivery/rules/aB3dE5fG7h \
+  -H "key: YOUR_API_KEY" \
+  -H "Content-Type: application/json"
+```
+
+```php PHP
+$ch = curl_init();
+curl_setopt($ch, CURLOPT_URL, 'https://api2.ecomailapp.cz/smart-delivery/rules/aB3dE5fG7h');
+curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+curl_setopt($ch, CURLOPT_CUSTOMREQUEST, 'DELETE');
+curl_setopt($ch, CURLOPT_HTTPHEADER, [
+    'key: YOUR_API_KEY',
+    'Content-Type: application/json',
+]);
+$response = curl_exec($ch);
+curl_close($ch);
+```
+</RequestExample>
+
+<ResponseExample>
+```json 204
+```
+
+```json 403
+{
+  "success": false,
+  "message": "System sending policies cannot be edited or deleted."
+}
+```
+
+```json 404
+{
+  "success": false,
+  "message": "Sending policy not found."
+}
+```
+
+```json 409
+{
+  "success": false,
+  "message": "This sending policy cannot be deleted because it is used in campaigns or automations.",
+  "data": {
+    "count": 2,
+    "pipelines": [
+      {
+        "pipeline_id": 42,
+        "action_id": "4f6c2a9e-1b7d-4e3a-9c8f-2d5b6a7e8f90"
+      }
+    ],
+    "campaigns": [
+      {
+        "campaign_id": 1234,
+        "title": "Newsletter"
+      }
+    ]
+  }
+}
+```
+</ResponseExample>
