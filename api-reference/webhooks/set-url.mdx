@@ -1,0 +1,48 @@
+---
+title: 'Set webhook URL'
+api: 'POST https://api2.ecomailapp.cz/account/settings/webhook'
+description: 'Set the target webhook URL for campaign statistics.'
+---
+
+<Note>
+  The webhook sends POST requests as JSON with a 10-second timeout.
+</Note>
+
+<ParamField body="url" type="string" required>
+  Target webhook URL.
+</ParamField>
+
+<RequestExample>
+```bash cURL
+curl -X POST https://api2.ecomailapp.cz/account/settings/webhook \
+  -H "key: YOUR_API_KEY" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "url": "https://your-webhook-url.com"
+  }'
+```
+
+```php PHP
+$ch = curl_init();
+curl_setopt($ch, CURLOPT_URL, 'https://api2.ecomailapp.cz/account/settings/webhook');
+curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+curl_setopt($ch, CURLOPT_POST, true);
+curl_setopt($ch, CURLOPT_HTTPHEADER, [
+    'key: YOUR_API_KEY',
+    'Content-Type: application/json',
+]);
+curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode([
+    'url' => 'https://your-webhook-url.com',
+]));
+$response = curl_exec($ch);
+curl_close($ch);
+```
+</RequestExample>
+
+<ResponseExample>
+```json 200
+{
+  "success": true
+}
+```
+</ResponseExample>

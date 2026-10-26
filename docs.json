@@ -1,0 +1,229 @@
+{
+  "$schema": "https://mintlify.com/docs.json",
+  "theme": "mint",
+  "name": "Ecomail API",
+  "colors": {
+    "primary": "#0F7B5F",
+    "light": "#12B886",
+    "dark": "#0D6B52"
+  },
+  "favicon": "/favicon-32x32.png",
+  "redirects": [
+    {
+      "source": "/api-reference/openapi.json",
+      "destination": "/openapi.json",
+      "permanent": true
+    }
+  ],
+  "navigation": {
+    "tabs": [
+      {
+        "tab": "API reference",
+        "groups": [
+          {
+            "group": "Getting started",
+            "pages": [
+              "api-reference/introduction"
+            ]
+          },
+          {
+            "group": "Automations",
+            "pages": [
+              "api-reference/automations/list-all",
+              "api-reference/automations/get-actions",
+              "api-reference/automations/get-action-detail",
+              "api-reference/automations/trigger",
+              "api-reference/automations/get-stats",
+              "api-reference/automations/get-stats-detail"
+            ]
+          },
+          {
+            "group": "Campaigns",
+            "pages": [
+              "api-reference/campaigns/list-all",
+              "api-reference/campaigns/add-new",
+              "api-reference/campaigns/get-detail",
+              "api-reference/campaigns/update",
+              "api-reference/campaigns/send",
+              "api-reference/campaigns/get-stats",
+              "api-reference/campaigns/get-stats-detail",
+              "api-reference/campaigns/get-segment-stats",
+              "api-reference/campaigns/get-log"
+            ]
+          },
+          {
+            "group": "Discount coupons",
+            "pages": [
+              "api-reference/coupons/import",
+              "api-reference/coupons/put-import",
+              "api-reference/coupons/delete"
+            ]
+          },
+          {
+            "group": "Domains",
+            "pages": [
+              "api-reference/domains/list-all",
+              "api-reference/domains/create",
+              "api-reference/domains/delete"
+            ]
+          },
+          {
+            "group": "Feeds",
+            "pages": [
+              "api-reference/feeds/list-all",
+              "api-reference/feeds/refresh-product",
+              "api-reference/feeds/refresh-data"
+            ]
+          },
+          {
+            "group": "Lists",
+            "pages": [
+              "api-reference/lists/list-all",
+              "api-reference/lists/add-new",
+              "api-reference/lists/show",
+              "api-reference/lists/update",
+              "api-reference/lists/get-segments",
+              "api-reference/lists/get-subscribers",
+              "api-reference/lists/get-subscriber",
+              "api-reference/lists/get-subscriber-by-phone",
+              "api-reference/lists/subscribe",
+              "api-reference/lists/subscribe-bulk",
+              "api-reference/lists/unsubscribe",
+              "api-reference/lists/update-subscriber",
+              "api-reference/lists/update-subscribers-bulk"
+            ]
+          },
+          {
+            "group": "Recommenders",
+            "pages": [
+              "api-reference/recommenders/list-all",
+              "api-reference/recommenders/create",
+              "api-reference/recommenders/show",
+              "api-reference/recommenders/update",
+              "api-reference/recommenders/delete"
+            ]
+          },
+          {
+            "group": "Search",
+            "pages": [
+              "api-reference/search/find-contact"
+            ]
+          },
+          {
+            "group": "Subscribers",
+            "pages": [
+              "api-reference/subscribers/get",
+              "api-reference/subscribers/transactions",
+              "api-reference/subscribers/events",
+              "api-reference/subscribers/email-log",
+              "api-reference/subscribers/automation-log",
+              "api-reference/subscribers/delete"
+            ]
+          },
+          {
+            "group": "Templates",
+            "pages": [
+              "api-reference/templates/list-all",
+              "api-reference/templates/create",
+              "api-reference/templates/get",
+              "api-reference/templates/update"
+            ]
+          },
+          {
+            "group": "Tracker events",
+            "pages": [
+              "api-reference/tracker/create-event",
+              "api-reference/tracker/get-event"
+            ]
+          },
+          {
+            "group": "Transactional emails",
+            "pages": [
+              "api-reference/transactional/send-message",
+              "api-reference/transactional/send-template",
+              "api-reference/transactional/stats",
+              "api-reference/transactional/doi-stats"
+            ]
+          },
+          {
+            "group": "Transactions",
+            "pages": [
+              "api-reference/transactions/create",
+              "api-reference/transactions/create-bulk",
+              "api-reference/transactions/get",
+              "api-reference/transactions/update",
+              "api-reference/transactions/delete",
+              "api-reference/transactions/delete-bulk"
+            ]
+          },
+          {
+            "group": "Webhooks",
+            "pages": [
+              "api-reference/webhooks/set-url",
+              "api-reference/webhooks/get-url",
+              "api-reference/webhooks/delete-url",
+              "api-reference/webhooks/events"
+            ]
+          }
+        ]
+      },
+      {
+        "tab": "Template language",
+        "groups": [
+          {
+            "group": "Template language",
+            "pages": [
+              "template-language/links"
+            ]
+          }
+        ]
+      },
+      {
+        "tab": "Ecomail AI",
+        "groups": [
+          {
+            "group": "Ecomail AI",
+            "pages": [
+              "ecomail-ai/overview",
+              "ecomail-ai/remote-mcp",
+              "ecomail-ai/mcp-tools",
+              "ecomail-ai/mcp-examples",
+              "ecomail-ai/mcp"
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  "logo": {
+    "light": "/logo/light.svg",
+    "dark": "/logo/dark.svg"
+  },
+  "navbar": {
+    "links": [
+      {
+        "label": "Support",
+        "href": "mailto:support@ecomail.cz"
+      }
+    ],
+    "primary": {
+      "type": "button",
+      "label": "Sign in",
+      "href": "https://ecomail.app"
+    }
+  },
+  "api": {
+    "mdx": {
+      "server": "https://api2.ecomailapp.cz",
+      "auth": {
+        "method": "key",
+        "name": "key"
+      }
+    }
+  },
+  "footer": {
+    "socials": {
+      "website": "https://ecomail.app"
+    }
+  }
+}

@@ -1,0 +1,51 @@
+---
+title: 'Delete discount coupons'
+api: 'DELETE https://api2.ecomailapp.cz/coupons/delete'
+description: 'Delete discount coupons from a default or specific folder.'
+---
+
+<ParamField body="folderId" type="integer">
+  Folder ID. If not provided, coupons are deleted from the default folder.
+</ParamField>
+
+<ParamField body="codes" type="array" required>
+  Array of coupon code strings to delete.
+</ParamField>
+
+<RequestExample>
+```bash cURL
+curl -X DELETE https://api2.ecomailapp.cz/coupons/delete \
+  -H "key: YOUR_API_KEY" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "folderId": 1,
+    "codes": ["code1", "code2", "code3", "code4"]
+  }'
+```
+
+```php PHP
+$ch = curl_init();
+curl_setopt($ch, CURLOPT_URL, 'https://api2.ecomailapp.cz/coupons/delete');
+curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+curl_setopt($ch, CURLOPT_CUSTOMREQUEST, 'DELETE');
+curl_setopt($ch, CURLOPT_HTTPHEADER, [
+    'key: YOUR_API_KEY',
+    'Content-Type: application/json',
+]);
+curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode([
+    'folderId' => 1,
+    'codes' => ['code1', 'code2', 'code3', 'code4'],
+]));
+$response = curl_exec($ch);
+curl_close($ch);
+```
+</RequestExample>
+
+<ResponseExample>
+```json 200
+{
+  "deleted": 4,
+  "invalid": 0
+}
+```
+</ResponseExample>

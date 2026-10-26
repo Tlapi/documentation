@@ -1,0 +1,48 @@
+---
+title: 'Trigger automation'
+api: 'POST https://api2.ecomailapp.cz/pipelines/{pipeline_id}/trigger'
+description: 'Run a specific automation for the given email/subscriber.'
+---
+
+<ParamField path="pipeline_id" type="integer" required>
+  Automation ID.
+</ParamField>
+
+<ParamField body="email" type="string" required>
+  Subscriber's email address.
+</ParamField>
+
+<RequestExample>
+```bash cURL
+curl -X POST https://api2.ecomailapp.cz/pipelines/1/trigger \
+  -H "key: YOUR_API_KEY" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "email": "foo@bar.cz"
+  }'
+```
+
+```php PHP
+$ch = curl_init();
+curl_setopt($ch, CURLOPT_URL, 'https://api2.ecomailapp.cz/pipelines/1/trigger');
+curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+curl_setopt($ch, CURLOPT_POST, true);
+curl_setopt($ch, CURLOPT_HTTPHEADER, [
+    'key: YOUR_API_KEY',
+    'Content-Type: application/json',
+]);
+curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode([
+    'email' => 'foo@bar.cz',
+]));
+$response = curl_exec($ch);
+curl_close($ch);
+```
+</RequestExample>
+
+<ResponseExample>
+```json 200
+{
+  "email": "foo@bar.cz"
+}
+```
+</ResponseExample>

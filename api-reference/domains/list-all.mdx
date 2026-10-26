@@ -1,0 +1,66 @@
+---
+title: 'List all domains'
+api: 'GET https://api2.ecomailapp.cz/domains'
+description: 'Retrieve all domains in your account.'
+---
+
+<RequestExample>
+```bash cURL
+curl https://api2.ecomailapp.cz/domains \
+  -H "key: YOUR_API_KEY" \
+  -H "Content-Type: application/json"
+```
+
+```php PHP
+$ch = curl_init();
+curl_setopt($ch, CURLOPT_URL, 'https://api2.ecomailapp.cz/domains');
+curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+curl_setopt($ch, CURLOPT_HTTPHEADER, [
+    'key: YOUR_API_KEY',
+    'Content-Type: application/json',
+]);
+$response = curl_exec($ch);
+curl_close($ch);
+```
+</RequestExample>
+
+<ResponseField name="name" type="string">
+  Domain name. A name held as both a sending and a transactional domain is listed once per variant.
+</ResponseField>
+
+<ResponseField name="valid" type="boolean">
+  Whether the domain passed verification.
+</ResponseField>
+
+<ResponseField name="blocked" type="boolean">
+  Whether sending from the domain is blocked.
+</ResponseField>
+
+<ResponseField name="type" type="string">
+  Variant of the domain — `sending` or `transactional`.
+</ResponseField>
+
+<ResponseExample>
+```json 200
+[
+  {
+    "name": "foo.cz",
+    "valid": true,
+    "blocked": false,
+    "type": "sending"
+  },
+  {
+    "name": "foo.cz",
+    "valid": true,
+    "blocked": false,
+    "type": "transactional"
+  },
+  {
+    "name": "bar.cz",
+    "valid": false,
+    "blocked": false,
+    "type": "sending"
+  }
+]
+```
+</ResponseExample>

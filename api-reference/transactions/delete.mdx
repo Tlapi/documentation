@@ -1,0 +1,59 @@
+---
+title: 'Delete a transaction'
+api: 'DELETE https://api2.ecomailapp.cz/tracker/transaction/{order_id}/delete'
+description: 'Delete a single transaction by order ID.'
+---
+
+<ParamField path="order_id" type="string" required>
+  Order ID from your shop.
+</ParamField>
+
+<ParamField body="transaction_data" type="object">
+  Optional filter to match the transaction by shop.
+
+  <Expandable title="transaction_data properties">
+    <ParamField body="transaction_data.shop" type="string">
+      If provided, the transaction is only deleted if it matches this shop value.
+    </ParamField>
+  </Expandable>
+</ParamField>
+
+<RequestExample>
+```bash cURL
+curl -X DELETE https://api2.ecomailapp.cz/tracker/transaction/transaction_1234/delete \
+  -H "key: YOUR_API_KEY" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "transaction_data": {
+      "shop": "someshop.com"
+    }
+  }'
+```
+
+```php PHP
+$orderId = 'transaction_1234';
+$ch = curl_init();
+curl_setopt($ch, CURLOPT_URL, "https://api2.ecomailapp.cz/tracker/transaction/{$orderId}/delete");
+curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+curl_setopt($ch, CURLOPT_CUSTOMREQUEST, 'DELETE');
+curl_setopt($ch, CURLOPT_HTTPHEADER, [
+    'key: YOUR_API_KEY',
+    'Content-Type: application/json',
+]);
+curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode([
+    'transaction_data' => [
+        'shop' => 'someshop.com',
+    ],
+]));
+$response = curl_exec($ch);
+curl_close($ch);
+```
+</RequestExample>
+
+<ResponseExample>
+```json 200
+{
+  "deleted": true
+}
+```
+</ResponseExample>

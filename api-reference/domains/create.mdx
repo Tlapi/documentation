@@ -1,0 +1,88 @@
+---
+title: 'Create a new domain'
+api: 'POST https://api2.ecomailapp.cz/domains'
+description: 'Add a new domain to your account.'
+---
+
+<ParamField body="name" type="string" required>
+  Domain name.
+</ParamField>
+
+<ParamField body="type" type="string" default="sending">
+  Which variant to create — `sending` or `transactional`. One domain name can be held as both variants at the
+  same time, and each of them is created separately. Omit the field to create a sending domain.
+</ParamField>
+
+<RequestExample>
+```bash cURL
+curl -X POST https://api2.ecomailapp.cz/domains \
+  -H "key: YOUR_API_KEY" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "name": "newdomain.cz"
+  }'
+```
+
+```bash cURL (transactional)
+curl -X POST https://api2.ecomailapp.cz/domains \
+  -H "key: YOUR_API_KEY" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "name": "newdomain.cz",
+    "type": "transactional"
+  }'
+```
+
+```php PHP
+$ch = curl_init();
+curl_setopt($ch, CURLOPT_URL, 'https://api2.ecomailapp.cz/domains');
+curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+curl_setopt($ch, CURLOPT_POST, true);
+curl_setopt($ch, CURLOPT_HTTPHEADER, [
+    'key: YOUR_API_KEY',
+    'Content-Type: application/json',
+]);
+curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode([
+    'name' => 'newdomain.cz',
+]));
+$response = curl_exec($ch);
+curl_close($ch);
+```
+</RequestExample>
+
+<ResponseExample>
+```json 200
+{
+  "name": "newdomain.cz",
+  "valid": 0
+}
+```
+
+```json 422 Domain exists
+{
+  "error": "Domain already exists.",
+  "domain": "newdomain.cz"
+}
+```
+
+```json 422 Freemail domain
+{
+  "error": "Freemail domain is not allowed.",
+  "domain": "newdomain.cz"
+}
+```
+
+```json 422 Invalid domain
+{
+  "error": "Invalid URL address"
+}
+```
+
+```json 422 Invalid type
+{
+  "errors": {
+    "type": ["type contains invalid value."]
+  }
+}
+```
+</ResponseExample>

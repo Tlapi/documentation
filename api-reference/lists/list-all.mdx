@@ -1,0 +1,91 @@
+---
+title: 'View all lists'
+api: 'GET https://api2.ecomailapp.cz/lists'
+description: 'Retrieve all subscriber lists in your account.'
+---
+
+## List properties
+
+<ParamField body="id" type="integer">
+  Unique identifier of the list.
+</ParamField>
+
+<ParamField body="name" type="string" required>
+  List name.
+</ParamField>
+
+<ParamField body="from_name" type="string">
+  Sender name used in emails sent from this list.
+</ParamField>
+
+<ParamField body="from_email" type="string">
+  Sender email address used in emails sent from this list.
+</ParamField>
+
+<ParamField body="reply_to" type="string">
+  Reply-to email address.
+</ParamField>
+
+<ParamField body="sub_success_page" type="string">
+  URL to redirect to after submitting a sign-up form.
+</ParamField>
+
+<ParamField body="sub_confirmed_page" type="string">
+  URL to redirect to after confirming a sign-up email.
+</ParamField>
+
+<ParamField body="unsub_page" type="string">
+  URL to redirect to after unsubscribing from the list.
+</ParamField>
+
+<ParamField body="double_optin" type="boolean">
+  Whether sign-up confirmation (double opt-in) is required.
+</ParamField>
+
+<ParamField body="conf_subject" type="string">
+  Subject line of the confirmation email.
+</ParamField>
+
+<ParamField body="conf_message" type="string">
+  HTML content of the confirmation email.
+</ParamField>
+
+<RequestExample>
+```bash cURL
+curl https://api2.ecomailapp.cz/lists \
+  -H "key: YOUR_API_KEY" \
+  -H "Content-Type: application/json"
+```
+
+```php PHP
+$ch = curl_init();
+curl_setopt($ch, CURLOPT_URL, 'https://api2.ecomailapp.cz/lists');
+curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+curl_setopt($ch, CURLOPT_HTTPHEADER, [
+    'key: YOUR_API_KEY',
+    'Content-Type: application/json',
+]);
+$response = curl_exec($ch);
+curl_close($ch);
+```
+</RequestExample>
+
+<ResponseExample>
+```json 200
+[
+  {
+    "id": 29,
+    "name": "New list name",
+    "from_name": "Ecomailapp.cz",
+    "from_email": "test@ecomailapp.cz",
+    "reply_to": "support@ecomail.cz",
+    "sub_success_page": null,
+    "sub_confirmed_page": null,
+    "unsub_page": null,
+    "double_optin": null,
+    "conf_subject": null,
+    "conf_message": null
+  }
+]
+```
+</ResponseExample>

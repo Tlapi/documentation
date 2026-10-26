@@ -1,0 +1,72 @@
+---
+title: 'Delete bulk transactions'
+api: 'DELETE https://api2.ecomailapp.cz/tracker/transaction/delete-bulk'
+description: 'Delete multiple transactions in a single request.'
+---
+
+<Note>
+  Limited to 1000 transactions per request.
+</Note>
+
+<ParamField body="transaction_data" type="array" required>
+  Array of transaction identifiers to delete.
+
+  <Expandable title="transaction_data item properties">
+    <ParamField body="transaction_data[].order_id" type="string" required>
+      Order ID of the transaction to delete.
+    </ParamField>
+
+    <ParamField body="transaction_data[].shop" type="string">
+      If provided, the transaction is only deleted if it matches this shop value.
+    </ParamField>
+  </Expandable>
+</ParamField>
+
+<RequestExample>
+```bash cURL
+curl -X DELETE https://api2.ecomailapp.cz/tracker/transaction/delete-bulk \
+  -H "key: YOUR_API_KEY" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "transaction_data": [
+      {"order_id": "1000001"},
+      {"order_id": "1000025", "shop": "someshop.com"}
+    ]
+  }'
+```
+
+```php PHP
+$ch = curl_init();
+curl_setopt($ch, CURLOPT_URL, 'https://api2.ecomailapp.cz/tracker/transaction/delete-bulk');
+curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+curl_setopt($ch, CURLOPT_CUSTOMREQUEST, 'DELETE');
+curl_setopt($ch, CURLOPT_HTTPHEADER, [
+    'key: YOUR_API_KEY',
+    'Content-Type: application/json',
+]);
+curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode([
+    'transaction_data' => [
+        ['order_id' => '1000001'],
+        ['order_id' => '1000025', 'shop' => 'someshop.com'],
+    ],
+]));
+$response = curl_exec($ch);
+curl_close($ch);
+```
+</RequestExample>
+
+<ResponseExample>
+```json 200
+{
+  "deleted": 2
+}
+```
+
+```json 422
+{
+  "errors": {
+    "transaction_data": ["The transaction data may not have more than 1000 items."]
+  }
+}
+```
+</ResponseExample>

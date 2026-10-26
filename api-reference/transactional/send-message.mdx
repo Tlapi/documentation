@@ -1,0 +1,224 @@
+---
+title: 'Send transactional email'
+api: 'POST https://api2.ecomailapp.cz/transactional/send-message'
+description: 'Send a transactional email with custom content.'
+---
+
+<Note>
+  Transactional emails are only available for paid accounts with a verified sending domain.
+</Note>
+
+<Note>
+  The total data limit for sent merge tags is 100,000 bytes. Message size including attachments must be under 4 MB.
+</Note>
+
+<Note>
+  Reserved variables that cannot be used as merge tag names: `address.name`, `email`, `email_id`, `address.email`, `env_from`.
+</Note>
+
+<Note>
+  When using HTML code in global merge vars, use curly braces around the tag in HTML content: `{*|htmlcode|*}` renders the HTML, while `*|htmlcode|*` shows raw HTML.
+</Note>
+
+<Note>
+  To send to multiple CC/BCC recipients, include multiple objects in the `to` array with the same email but different `cc`/`bcc` values.
+</Note>
+
+<ParamField body="message" type="object" required>
+  The message object containing all email details.
+
+  <Expandable title="message properties">
+    <ParamField body="message.subject" type="string" required>
+      Email subject line.
+    </ParamField>
+
+    <ParamField body="message.from_name" type="string" required>
+      Sender's display name.
+    </ParamField>
+
+    <ParamField body="message.from_email" type="string" required>
+      Sender's email address. Must be from a verified domain.
+    </ParamField>
+
+    <ParamField body="message.reply_to" type="string">
+      Reply-to email address.
+    </ParamField>
+
+    <ParamField body="message.text" type="string">
+      Plain text content. Either `text` or `html` is required.
+    </ParamField>
+
+    <ParamField body="message.html" type="string">
+      HTML content. Either `text` or `html` is required.
+    </ParamField>
+
+    <ParamField body="message.amp_html" type="string">
+      AMP HTML content.
+    </ParamField>
+
+    <ParamField body="message.to" type="array" required>
+      Array of recipient objects.
+
+      <Expandable title="recipient object properties">
+        <ParamField body="message.to[].email" type="string" required>
+          Recipient's email address.
+        </ParamField>
+
+        <ParamField body="message.to[].name" type="string">
+          Recipient's display name.
+        </ParamField>
+
+        <ParamField body="message.to[].cc" type="string">
+          CC email address.
+        </ParamField>
+
+        <ParamField body="message.to[].bcc" type="string">
+          BCC email address.
+        </ParamField>
+      </Expandable>
+    </ParamField>
+
+    <ParamField body="message.global_merge_vars" type="array">
+      Array of merge tag objects for personalization.
+
+      <Expandable title="merge var properties">
+        <ParamField body="message.global_merge_vars[].name" type="string">
+          Merge tag name.
+        </ParamField>
+
+        <ParamField body="message.global_merge_vars[].content" type="string">
+          Merge tag value.
+        </ParamField>
+      </Expandable>
+    </ParamField>
+
+    <ParamField body="message.attachments" type="array">
+      Array of attachment objects.
+
+      <Expandable title="attachment properties">
+        <ParamField body="message.attachments[].type" type="string">
+          MIME type of the attachment.
+        </ParamField>
+
+        <ParamField body="message.attachments[].name" type="string">
+          File name of the attachment.
+        </ParamField>
+
+        <ParamField body="message.attachments[].content" type="string">
+          Base64 encoded file content.
+        </ParamField>
+      </Expandable>
+    </ParamField>
+
+    <ParamField body="message.options" type="object">
+      Tracking options.
+
+      <Expandable title="options properties">
+        <ParamField body="message.options.click_tracking" type="boolean">
+          Enable click tracking.
+        </ParamField>
+
+        <ParamField body="message.options.open_tracking" type="boolean">
+          Enable open tracking.
+        </ParamField>
+      </Expandable>
+    </ParamField>
+  </Expandable>
+</ParamField>
+
+<RequestExample>
+```bash cURL
+curl -X POST https://api2.ecomailapp.cz/transactional/send-message \
+  -H "key: YOUR_API_KEY" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "message": {
+      "subject": "Email subject",
+      "from_name": "Sender'\''s name",
+      "from_email": "foo@bar.cz",
+      "reply_to": "foo@bar.cz",
+      "text": "Plain text content",
+      "html": "<b>Email HTML content</b>",
+      "to": [
+        {
+          "email": "to@me.com",
+          "name": "Recipient'\''s name",
+          "cc": "cc@me.com",
+          "bcc": "bcc@me.com"
+        }
+      ],
+      "global_merge_vars": [
+        {"name": "mergeTagName", "content": "mergeTagValue"}
+      ],
+      "attachments": [
+        {
+          "type": "mime/type",
+          "name": "attachment-name.pdf",
+          "content": "base64encodedcontent"
+        }
+      ],
+      "options": {
+        "click_tracking": true,
+        "open_tracking": true
+      }
+    }
+  }'
+```
+
+```php PHP
+$ch = curl_init();
+curl_setopt($ch, CURLOPT_URL, 'https://api2.ecomailapp.cz/transactional/send-message');
+curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+curl_setopt($ch, CURLOPT_POST, true);
+curl_setopt($ch, CURLOPT_HTTPHEADER, [
+    'key: YOUR_API_KEY',
+    'Content-Type: application/json',
+]);
+curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode([
+    'message' => [
+        'subject' => 'Email subject',
+        'from_name' => "Sender's name",
+        'from_email' => 'foo@bar.cz',
+        'reply_to' => 'foo@bar.cz',
+        'text' => 'Plain text content',
+        'html' => '<b>Email HTML content</b>',
+        'to' => [
+            [
+                'email' => 'to@me.com',
+                'name' => "Recipient's name",
+                'cc' => 'cc@me.com',
+                'bcc' => 'bcc@me.com',
+            ],
+        ],
+        'global_merge_vars' => [
+            ['name' => 'mergeTagName', 'content' => 'mergeTagValue'],
+        ],
+        'attachments' => [
+            [
+                'type' => 'mime/type',
+                'name' => 'attachment-name.pdf',
+                'content' => 'base64encodedcontent',
+            ],
+        ],
+        'options' => [
+            'click_tracking' => true,
+            'open_tracking' => true,
+        ],
+    ],
+]));
+$response = curl_exec($ch);
+curl_close($ch);
+```
+</RequestExample>
+
+<ResponseExample>
+```json 200
+{
+  "results": {
+    "total_rejected_recipients": 0,
+    "total_accepted_recipients": 2,
+    "id": 11668787484950529
+  }
+}
+```
+</ResponseExample>

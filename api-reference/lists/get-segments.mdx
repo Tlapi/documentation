@@ -1,0 +1,51 @@
+---
+title: 'Get segments'
+api: 'GET https://api2.ecomailapp.cz/lists/{list_id}/segments'
+description: 'Retrieve all segments created in a specific list.'
+---
+
+<ParamField path="list_id" type="integer" required>
+  ID of the list.
+</ParamField>
+
+<Note>
+  A list with no segments returns an empty array.
+</Note>
+
+<RequestExample>
+```bash cURL
+curl https://api2.ecomailapp.cz/lists/1/segments \
+  -H "key: YOUR_API_KEY" \
+  -H "Content-Type: application/json"
+```
+
+```php PHP
+$listId = 1;
+$ch = curl_init();
+curl_setopt($ch, CURLOPT_URL, "https://api2.ecomailapp.cz/lists/{$listId}/segments");
+curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+curl_setopt($ch, CURLOPT_HTTPHEADER, [
+    'key: YOUR_API_KEY',
+    'Content-Type: application/json',
+]);
+$response = curl_exec($ch);
+curl_close($ch);
+```
+</RequestExample>
+
+<ResponseExample>
+```json 200
+{
+  "segments": {
+    "5c36008811e45": { "name": "Segment 1", "id": "5c36008811e45", "count": 860 },
+    "5cbf2405a77ce": { "name": "Segment 2", "id": "5cbf2405a77ce", "count": 540 }
+  }
+}
+```
+
+```json 404
+{
+  "message": "Not Found!"
+}
+```
+</ResponseExample>

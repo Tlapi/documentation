@@ -1,0 +1,49 @@
+---
+title: 'Transactional email stats'
+api: 'GET https://api2.ecomailapp.cz/transactional/stats'
+description: 'Get statistics for transactional emails for the past 6 months.'
+---
+
+<RequestExample>
+```bash cURL
+curl https://api2.ecomailapp.cz/transactional/stats \
+  -H "key: YOUR_API_KEY" \
+  -H "Content-Type: application/json"
+```
+
+```php PHP
+$ch = curl_init();
+curl_setopt($ch, CURLOPT_URL, 'https://api2.ecomailapp.cz/transactional/stats');
+curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+curl_setopt($ch, CURLOPT_HTTPHEADER, [
+    'key: YOUR_API_KEY',
+    'Content-Type: application/json',
+]);
+$response = curl_exec($ch);
+curl_close($ch);
+```
+</RequestExample>
+
+<ResponseExample>
+```json 200
+{
+  "stats": {
+    "open_rate": 85.71,
+    "click_rate": 0,
+    "bounce_rate": 0,
+    "count_injected": 21,
+    "count_accepted": 21,
+    "count_delivered": 21,
+    "count_unique_rendered": 18,
+    "count_rendered": 126,
+    "count_clicked": 0,
+    "count_unique_clicked": 0,
+    "count_bounce": 0,
+    "count_hard_bounce": 0,
+    "count_soft_bounce": 0,
+    "count_rejected": 0,
+    "count_spam_complaint": 0
+  }
+}
+```
+</ResponseExample>

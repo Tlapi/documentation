@@ -1,0 +1,83 @@
+---
+title: 'Get transactions'
+api: 'GET https://api2.ecomailapp.cz/tracker/transaction'
+description: 'Retrieve a paginated list of transactions with optional filters.'
+---
+
+<Note>
+  Timestamps are saved and returned in UTC+0.
+</Note>
+
+<ParamField query="shop" type="string">
+  Filter by exact shop name.
+</ParamField>
+
+<ParamField query="email" type="string">
+  Filter by email address.
+</ParamField>
+
+<ParamField query="date_from" type="string">
+  Start date filter in `YYYY-MM-DD` format.
+</ParamField>
+
+<ParamField query="date_to" type="string">
+  End date filter in `YYYY-MM-DD` format.
+</ParamField>
+
+<ParamField query="per_page" type="integer">
+  Number of results per page. Maximum `500`.
+</ParamField>
+
+<ParamField query="page" type="integer">
+  Page number.
+</ParamField>
+
+<RequestExample>
+```bash cURL
+curl "https://api2.ecomailapp.cz/tracker/transaction?shop=mujshop.cz&per_page=100&page=1" \
+  -H "key: YOUR_API_KEY" \
+  -H "Content-Type: application/json"
+```
+
+```php PHP
+$ch = curl_init();
+curl_setopt($ch, CURLOPT_URL, 'https://api2.ecomailapp.cz/tracker/transaction?shop=mujshop.cz&per_page=100&page=1');
+curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+curl_setopt($ch, CURLOPT_HTTPHEADER, [
+    'key: YOUR_API_KEY',
+    'Content-Type: application/json',
+]);
+$response = curl_exec($ch);
+curl_close($ch);
+```
+</RequestExample>
+
+<ResponseExample>
+```json 200
+{
+  "current_page": 1,
+  "data": [
+    {
+      "id": 2220,
+      "order_id": "5301",
+      "email": "foo@bar.cz",
+      "shop": "mujshop.cz",
+      "amount": 2000,
+      "timestamp": "2023-02-15 09:40:56",
+      "status": null,
+      "items": [
+        {
+          "code": "product code 1",
+          "title": "product name 1",
+          "categories": ["product category 1"],
+          "price": 400,
+          "amount": "1"
+        }
+      ]
+    }
+  ],
+  "per_page": 100,
+  "total": 234
+}
+```
+</ResponseExample>

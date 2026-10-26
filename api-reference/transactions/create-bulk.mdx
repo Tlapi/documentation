@@ -1,0 +1,100 @@
+---
+title: 'Create bulk transactions'
+api: 'POST https://api2.ecomailapp.cz/tracker/transaction-bulk'
+description: 'Create multiple transactions in a single request.'
+---
+
+<Note>
+  Limited to 1000 transactions per request. Bulk imports do **not** trigger automations with the "Makes an order" trigger.
+</Note>
+
+<Note>
+  Timestamps are saved and returned in UTC+0.
+</Note>
+
+<ParamField body="transaction_data" type="array" required>
+  Array of transaction objects, each containing a `transaction` and `transaction_items` object with the same structure as the [single create endpoint](/api-reference/transactions/create).
+
+  <Expandable title="transaction_data item properties">
+    <ParamField body="transaction_data[].transaction" type="object" required>
+      Transaction details. See [Create a transaction](/api-reference/transactions/create) for all available properties.
+    </ParamField>
+
+    <ParamField body="transaction_data[].transaction_items" type="array" required>
+      Array of transaction items. See [Create a transaction](/api-reference/transactions/create) for all available properties.
+    </ParamField>
+  </Expandable>
+</ParamField>
+
+<RequestExample>
+```bash cURL
+curl -X POST https://api2.ecomailapp.cz/tracker/transaction-bulk \
+  -H "key: YOUR_API_KEY" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "transaction_data": [
+      {
+        "transaction": {
+          "order_id": "transaction_1001",
+          "email": "foo@bar.cz",
+          "shop": "myshop.cz",
+          "amount": 1000,
+          "timestamp": 1673342224,
+          "status": "completed"
+        },
+        "transaction_items": [
+          {
+            "code": "product code 1",
+            "title": "product name 1",
+            "price": 400,
+            "amount": "1"
+          }
+        ]
+      }
+    ]
+  }'
+```
+
+```php PHP
+$ch = curl_init();
+curl_setopt($ch, CURLOPT_URL, 'https://api2.ecomailapp.cz/tracker/transaction-bulk');
+curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+curl_setopt($ch, CURLOPT_POST, true);
+curl_setopt($ch, CURLOPT_HTTPHEADER, [
+    'key: YOUR_API_KEY',
+    'Content-Type: application/json',
+]);
+curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode([
+    'transaction_data' => [
+        [
+            'transaction' => [
+                'order_id' => 'transaction_1001',
+                'email' => 'foo@bar.cz',
+                'shop' => 'myshop.cz',
+                'amount' => 1000,
+                'timestamp' => 1673342224,
+                'status' => 'completed',
+            ],
+            'transaction_items' => [
+                [
+                    'code' => 'product code 1',
+                    'title' => 'product name 1',
+                    'price' => 400,
+                    'amount' => '1',
+                ],
+            ],
+        ],
+    ],
+]));
+$response = curl_exec($ch);
+curl_close($ch);
+```
+</RequestExample>
+
+<ResponseExample>
+```json 200
+{
+  "inserts": 2
+}
+```
+</ResponseExample>

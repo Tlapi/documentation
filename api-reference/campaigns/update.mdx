@@ -1,0 +1,183 @@
+---
+title: 'Update campaign'
+api: 'PUT https://api2.ecomailapp.cz/campaigns/{campaign_id}'
+description: 'Update an existing campaign.'
+---
+
+Only the fields you send are changed. Read-only fields such as `status`, `sent_at`, or `created_at` are ignored.
+
+Once smart delivery is set on a campaign, the response returns `recepient_lists` in the segments format, with the smart delivery settings inside the first segment. The segments format stays after you turn smart delivery off. You can send this value back unchanged. Read the settings from the top-level `smart_delivery` field.
+
+<ParamField path="campaign_id" type="integer" required>
+  Campaign ID.
+</ParamField>
+
+<ParamField body="title" type="string" required>
+  Campaign title. Maximum 255 characters.
+</ParamField>
+
+<ParamField body="from_name" type="string">
+  Sender's name. Maximum 150 characters. Send `null` to clear it.
+</ParamField>
+
+<ParamField body="from_email" type="string">
+  Sender's email address.
+</ParamField>
+
+<ParamField body="reply_to" type="string">
+  Reply-to email address.
+</ParamField>
+
+<ParamField body="subject" type="string">
+  Campaign subject line. Maximum 255 characters. Send `null` to clear it.
+</ParamField>
+
+<ParamField body="preheader" type="string">
+  Preheader text shown after the subject line in the inbox. Maximum 255 characters. Send `null` to clear it.
+</ParamField>
+
+<ParamField body="ga" type="string">
+  Google Analytics campaign name. Send `null` to clear it.
+</ParamField>
+
+<ParamField body="html_text" type="string">
+  HTML content of the campaign. When you send it, it must not be empty.
+</ParamField>
+
+<ParamField body="template_id" type="integer">
+  ID of a template to copy into the campaign. The template content replaces the campaign content. When you send the ID of the template the campaign already uses, the campaign content stays unchanged.
+</ParamField>
+
+<ParamField body="recepient_lists" type="array|object">
+  Array of list IDs or an object with segments. The current smart delivery settings of the campaign are kept.
+</ParamField>
+
+<ParamField body="campaign_type" type="string">
+  Campaign type. Allowed values: `email`, `sms`, `whatsapp`, `push_notification`. Your account must have the channel enabled, otherwise the request fails with `403`.
+</ParamField>
+
+<ParamField body="smart_delivery" type="object">
+  Smart delivery settings of the campaign. Smart delivery skips subscribers who would receive too many emails.
+  Send either `sending_policy_id`, or the manual limits. When you send `sending_policy_id`, the manual limits are ignored.
+  When you omit `smart_delivery`, the current settings stay unchanged.
+  Send `null` or `{"sending_policy_id": "unlimited"}` to turn smart delivery off.
+
+  <Expandable title="smart_delivery properties">
+    <ParamField body="smart_delivery[sending_policy_id]" type="string">
+      ID of a sending policy usable for campaigns. Use `standard` or `unlimited` for the system policies, or the ID of a custom policy from **Account settings** → **Settings** → **Sending rules**.
+    </ParamField>
+
+    <ParamField body="smart_delivery[priority_window_hours]" type="integer">
+      Skip a subscriber who received an email in the last N hours. Allowed range: `0`–`24`. Requires `priority_scope`.
+    </ParamField>
+
+    <ParamField body="smart_delivery[priority_scope]" type="string">
+      Which emails count for `priority_window_hours`. Allowed values: `all`, `campaigns`, `pipelines_all` (automations only).
+    </ParamField>
+
+    <ParamField body="smart_delivery[frequency_cap_email_count]" type="integer">
+      Maximum number of emails a subscriber can receive in `frequency_cap_email_days` days. Allowed range: `1`–`50`. Send it together with `frequency_cap_email_days` and `frequency_cap_email_scope`.
+    </ParamField>
+
+    <ParamField body="smart_delivery[frequency_cap_email_days]" type="integer">
+      Length of the frequency cap period in days. Allowed range: `1`–`7`.
+    </ParamField>
+
+    <ParamField body="smart_delivery[frequency_cap_email_scope]" type="string">
+      Which emails count for the frequency cap. Allowed values: `all`, `campaigns`, `pipelines_all` (automations only).
+    </ParamField>
+  </Expandable>
+</ParamField>
+
+<RequestExample>
+```bash cURL
+curl -X PUT https://api2.ecomailapp.cz/campaigns/1 \
+  -H "key: YOUR_API_KEY" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "title": "Campaign title",
+    "from_name": "Senders name",
+    "from_email": "test@ecomailapp.cz",
+    "reply_to": "test@ecomailapp.cz",
+    "subject": "New campaign subject",
+    "html_text": "HTML content of new campaign",
+    "recepient_lists": [1, 2],
+    "smart_delivery": {
+      "sending_policy_id": "standard"
+    }
+  }'
+```
+
+```php PHP
+$campaignId = 1;
+$ch = curl_init();
+curl_setopt($ch, CURLOPT_URL, "https://api2.ecomailapp.cz/campaigns/{$campaignId}");
+curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+curl_setopt($ch, CURLOPT_CUSTOMREQUEST, 'PUT');
+curl_setopt($ch, CURLOPT_HTTPHEADER, [
+    'key: YOUR_API_KEY',
+    'Content-Type: application/json',
+]);
+curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode([
+    'title' => 'Campaign title',
+    'from_name' => 'Senders name',
+    'from_email' => 'test@ecomailapp.cz',
+    'reply_to' => 'test@ecomailapp.cz',
+    'subject' => 'New campaign subject',
+    'html_text' => 'HTML content of new campaign',
+    'recepient_lists' => [1, 2],
+    'smart_delivery' => [
+        'sending_policy_id' => 'standard',
+    ],
+]));
+$response = curl_exec($ch);
+curl_close($ch);
+```
+</RequestExample>
+
+<ResponseExample>
+```json 200
+{
+  "id": 1,
+  "title": "Campaign title",
+  "from_name": "Senders name",
+  "from_email": "test@ecomailapp.cz",
+  "reply_to": "test@ecomailapp.cz",
+  "subject": "New campaign subject",
+  "recepient_lists": {
+    "segments": [
+      {
+        "id": "cid_1",
+        "query": "entire_list",
+        "smart_delivery": {
+          "sending_policy_id": "standard"
+        },
+        "lists": [1, 2]
+      }
+    ]
+  },
+  "template_type": "html",
+  "campaign_type": "email",
+  "updated_at": "2025-01-10T08:30:00.000000Z",
+  "created_at": "2025-01-09 14:12:05",
+  "archive_url": "https://foo.ecomailapp.cz/campaigns/render/1/randomhashhere",
+  "smart_delivery": {
+    "sending_policy_id": "standard"
+  }
+}
+```
+
+```json 403
+{
+  "errors": ["cant create campaign of type sms"]
+}
+```
+
+```json 422
+{
+  "errors": {
+    "smart_delivery.sending_policy_id": ["Sending policy not found."]
+  }
+}
+```
+</ResponseExample>

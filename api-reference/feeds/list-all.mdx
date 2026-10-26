@@ -1,0 +1,73 @@
+---
+title: 'List all feeds'
+api: 'GET https://api2.ecomailapp.cz/feeds'
+description: 'Retrieve all product feeds in your account.'
+---
+
+Returns the product feeds of your account. Use the `id` values as `feed_id` for the [refresh endpoint](/api-reference/feeds/refresh-product). Data feeds are not included.
+
+<ResponseField name="feeds" type="array">
+  List of product feeds.
+
+  <Expandable title="Feed object">
+    <ResponseField name="id" type="integer">
+      Feed ID.
+    </ResponseField>
+    <ResponseField name="type" type="string">
+      Feed format, for example `heureka`, `google`, or `zbozi`.
+    </ResponseField>
+    <ResponseField name="url" type="string">
+      Source URL of the feed.
+    </ResponseField>
+    <ResponseField name="products_count" type="integer | null">
+      Number of products loaded from the feed.
+    </ResponseField>
+    <ResponseField name="error" type="string | null">
+      Error from the last feed processing, or `null` when the feed is healthy.
+    </ResponseField>
+    <ResponseField name="created_at" type="string">
+      When the feed was created, formatted as `Y-m-d H:i:s`.
+    </ResponseField>
+    <ResponseField name="updated_at" type="string">
+      When the feed was last updated, formatted as `Y-m-d H:i:s`.
+    </ResponseField>
+  </Expandable>
+</ResponseField>
+
+<RequestExample>
+```bash cURL
+curl https://api2.ecomailapp.cz/feeds \
+  -H "key: YOUR_API_KEY" \
+  -H "Content-Type: application/json"
+```
+
+```php PHP
+$ch = curl_init();
+curl_setopt($ch, CURLOPT_URL, 'https://api2.ecomailapp.cz/feeds');
+curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+curl_setopt($ch, CURLOPT_HTTPHEADER, [
+    'key: YOUR_API_KEY',
+    'Content-Type: application/json',
+]);
+$response = curl_exec($ch);
+curl_close($ch);
+```
+</RequestExample>
+
+<ResponseExample>
+```json 200
+{
+  "feeds": [
+    {
+      "id": 1,
+      "type": "heureka",
+      "url": "https://www.example.com/feed.xml",
+      "products_count": 250,
+      "error": null,
+      "created_at": "2026-08-01 10:00:00",
+      "updated_at": "2026-08-31 06:30:00"
+    }
+  ]
+}
+```
+</ResponseExample>

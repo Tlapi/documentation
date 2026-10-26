@@ -1,0 +1,35 @@
+---
+title: 'Get webhook URL'
+api: 'GET https://api2.ecomailapp.cz/account/settings/webhook'
+description: 'Get the currently configured webhook URL.'
+---
+
+<RequestExample>
+```bash cURL
+curl https://api2.ecomailapp.cz/account/settings/webhook \
+  -H "key: YOUR_API_KEY" \
+  -H "Content-Type: application/json"
+```
+
+```php PHP
+$ch = curl_init();
+curl_setopt($ch, CURLOPT_URL, 'https://api2.ecomailapp.cz/account/settings/webhook');
+curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+curl_setopt($ch, CURLOPT_HTTPHEADER, [
+    'key: YOUR_API_KEY',
+    'Content-Type: application/json',
+]);
+$response = curl_exec($ch);
+curl_close($ch);
+```
+</RequestExample>
+
+<ResponseExample>
+```json 200
+{
+  "webhook": {
+    "url": "https://your-webhook-url.com"
+  }
+}
+```
+</ResponseExample>

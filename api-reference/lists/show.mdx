@@ -1,0 +1,79 @@
+---
+title: 'Show list detail'
+api: 'GET https://api2.ecomailapp.cz/lists/{list_id}'
+description: 'Retrieve detailed information about a specific list, including custom fields, groups, segments, and subscriber counts.'
+---
+
+<ParamField path="list_id" type="integer" required>
+  ID of the list.
+</ParamField>
+
+<RequestExample>
+```bash cURL
+curl https://api2.ecomailapp.cz/lists/1 \
+  -H "key: YOUR_API_KEY" \
+  -H "Content-Type: application/json"
+```
+
+```php PHP
+$listId = 1;
+$ch = curl_init();
+curl_setopt($ch, CURLOPT_URL, "https://api2.ecomailapp.cz/lists/{$listId}");
+curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+curl_setopt($ch, CURLOPT_HTTPHEADER, [
+    'key: YOUR_API_KEY',
+    'Content-Type: application/json',
+]);
+$response = curl_exec($ch);
+curl_close($ch);
+```
+</RequestExample>
+
+<ResponseExample>
+```json 200
+{
+  "list": {
+    "id": "1",
+    "name": "List Name",
+    "from_name": "Sender Name",
+    "from_email": "sender@example.com",
+    "reply_to": "reply@example.com",
+    "sub_success_page": null,
+    "sub_confirmed_page": "https://www.example.com/confirm?email=*|EMAIL|*",
+    "unsub_page": null,
+    "double_optin": true,
+    "conf_subject": "Confirmation Subject",
+    "conf_message": "Please confirm your subscription: *|SUBCONFIRM|*",
+    "custom_fields": {
+      "date1": { "type": "string", "name": "Date Field" },
+      "size": { "type": "int", "name": "Size Field" }
+    },
+    "groups": {
+      "grp_5e83080ebb988": {
+        "name": "Group 1",
+        "category": [{ "name": "Category A", "id": "plnQNPzCz" }],
+        "id": "grp_1",
+        "type": "select"
+      }
+    },
+    "segments": {
+      "5c36008811e45": {
+        "name": "Segment 1",
+        "id": "5c36008811e45"
+      }
+    },
+    "active_subscribers": 100,
+    "created": "26.6.2018"
+  },
+  "subscribers": {
+    "unknown": 0,
+    "subscribed": 375,
+    "unsubscribed": 143,
+    "soft_bounced": 9,
+    "hard_bounced": 11,
+    "complained": 1,
+    "unconfirmed": 25
+  }
+}
+```
+</ResponseExample>

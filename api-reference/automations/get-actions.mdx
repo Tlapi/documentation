@@ -1,0 +1,92 @@
+---
+title: 'Get automation actions'
+api: 'GET https://api2.ecomailapp.cz/pipelines/{id}/actions'
+description: 'Retrieve all actions (nodes) within a given automation.'
+---
+
+<ParamField path="id" type="integer" required>
+  Automation ID.
+</ParamField>
+
+Each node carries `next` with the ids of its follow-up nodes, so the response describes the full automation graph:
+
+- On most node types `next` is an array of node ids — usually one id, empty or `null` at the end of a branch.
+- On branching node types `next` is an object with one array of node ids per output port — `yes` / `no` on a `check` node, the variant keys on a `split` node, and `default` / `quarantine_skip` on a `mail` node.
+
+<RequestExample>
+```bash cURL
+curl "https://api2.ecomailapp.cz/pipelines/42/actions" \
+  -H "key: YOUR_API_KEY" \
+  -H "Content-Type: application/json"
+```
+
+```php PHP
+$pipelineId = 42;
+$ch = curl_init();
+curl_setopt($ch, CURLOPT_URL, "https://api2.ecomailapp.cz/pipelines/{$pipelineId}/actions");
+curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+curl_setopt($ch, CURLOPT_HTTPHEADER, [
+    'key: YOUR_API_KEY',
+    'Content-Type: application/json',
+]);
+$response = curl_exec($ch);
+curl_close($ch);
+```
+</RequestExample>
+
+<ResponseExample>
+```json 200
+{
+  "data": [
+    {
+      "id": "abc-123",
+      "type": "mail",
+      "properties": {
+        "name": "Welcome email",
+        "template": 42
+      },
+      "next": ["def-456"]
+    },
+    {
+      "id": "def-456",
+      "type": "check",
+      "properties": {
+        "name": "Opened the welcome email?"
+      },
+      "next": {
+        "yes": ["ghi-789"],
+        "no": []
+      }
+    },
+    {
+      "id": "ghi-789",
+      "type": "tag",
+      "properties": {
+        "tag": "engaged"
+      },
+      "next": []
+    }
+  ]
+}
+```
+</ResponseExample>
+
+### Action types
+
+| Type | Description |
+|---|---|
+| `mail` | Send an email. |
+| `sms` | Send an SMS. |
+| `wait` | Wait for a specified duration. |
+| `check` | Conditional branch (if/else). |
+| `split` | A/B split test. |
+| `tag` | Add a tag to the subscriber. |
+| `untag` | Remove a tag from the subscriber. |
+| `subscribe` | Subscribe to a list. |
+| `unsubscribe` | Unsubscribe from a list. |
+| `edit` | Edit subscriber fields. |
+| `webhook` | Send a webhook. |
+| `trigger` | Trigger another automation. |
+| `goal` | Goal (wait for condition). |
+| `end` | End of automation. |
+| `note` | Internal note. |

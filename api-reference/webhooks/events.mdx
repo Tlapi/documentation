@@ -1,0 +1,337 @@
+---
+title: 'Webhook events'
+description: 'Reference of all webhook event types and their payloads delivered to your webhook URL.'
+---
+
+When you configure a webhook URL, Ecomail sends HTTP POST requests with JSON payloads for each email event in real time.
+
+## Delivery
+
+Each batch is sent as a **POST** request with `Content-Type: application/json`. Ecomail retries delivery for up to **8 hours** if your endpoint does not respond with a `2xx` status code. Each request has a **10-second timeout**.
+
+Each batch includes the header `X-MessageSystems-Batch-ID` which can be used for deduplication.
+
+## Payload structure
+
+Every webhook payload is an array of event objects wrapped in the following structure:
+
+```json
+[
+  {
+    "msys": {
+      "message_event": {
+        "type": "delivery",
+        "timestamp": "1716300000",
+        ...
+      }
+    }
+  }
+]
+```
+
+## Ecomail metadata
+
+Every email sent through Ecomail includes the following custom metadata in the `rcpt_meta` field:
+
+| Field | Type | Description |
+|---|---|---|
+| `campaign_id` | string | ID of the campaign this email belongs to (bulk campaigns only). |
+| `pipeline_id` | string | ID of the automation pipeline (automation emails only). |
+| `pipeline_action_id` | string | ID of the specific action within the automation pipeline. |
+| `subaccount` | string | Your Ecomail account name. |
+
+Example `rcpt_meta` in a payload:
+
+```json
+{
+  "msys": {
+    "message_event": {
+      "type": "delivery",
+      "rcpt_meta": {
+        "campaign_id": "123",
+        "pipeline_id": "45",
+        "pipeline_action_id": "67",
+        "subaccount": "my-account"
+      },
+      ...
+    }
+  }
+}
+```
+
+---
+
+## Event types
+
+### Delivery
+
+Sent when a message is successfully delivered to the recipient's mail server.
+
+| Field | Type | Description |
+|---|---|---|
+| `type` | string | `delivery` |
+| `timestamp` | string | Unix timestamp of the event. |
+| `event_id` | string | Unique event identifier. |
+| `message_id` | string | Unique message identifier. |
+| `rcpt_to` | string | Recipient email address. |
+| `friendly_from` | string | Friendly from address. |
+| `subject` | string | Email subject line. |
+| `sending_ip` | string | IP address used for sending. |
+| `sending_domain` | string | Sender domain. |
+| `recipient_domain` | string | Recipient domain portion. |
+| `msg_size` | string | Message size in bytes. |
+| `rcpt_meta` | object | Custom metadata (see above). |
+| `rcpt_tags` | array | Tags applied to the recipient. |
+| `delv_method` | string | Delivery protocol (e.g. `esmtp`). |
+| `campaign_id` | string | Campaign identifier. |
+| `template_id` | string | Template identifier. |
+| `transmission_id` | string | Transmission identifier. |
+| `customer_id` | string | Customer identifier. |
+
+---
+
+### Bounce
+
+Sent when a message is permanently rejected by the remote mail server.
+
+| Field | Type | Description |
+|---|---|---|
+| `type` | string | `bounce` |
+| `timestamp` | string | Unix timestamp. |
+| `event_id` | string | Unique event identifier. |
+| `message_id` | string | Unique message identifier. |
+| `rcpt_to` | string | Recipient email address. |
+| `bounce_class` | string | Bounce classification code. |
+| `error_code` | string | Remote server error code. |
+| `raw_reason` | string | Exact response from the remote server. |
+| `reason` | string | Canonicalized bounce reason. |
+| `num_retries` | string | Number of delivery attempts before bounce. |
+| `rcpt_meta` | object | Custom metadata. |
+| `campaign_id` | string | Campaign identifier. |
+| `template_id` | string | Template identifier. |
+| `transmission_id` | string | Transmission identifier. |
+
+---
+
+### Spam complaint
+
+Sent when a recipient marks the email as spam.
+
+| Field | Type | Description |
+|---|---|---|
+| `type` | string | `spam_complaint` |
+| `timestamp` | string | Unix timestamp. |
+| `event_id` | string | Unique event identifier. |
+| `message_id` | string | Unique message identifier. |
+| `rcpt_to` | string | Recipient email address. |
+| `friendly_from` | string | Friendly from address. |
+| `subject` | string | Email subject line. |
+| `rcpt_meta` | object | Custom metadata. |
+| `campaign_id` | string | Campaign identifier. |
+| `template_id` | string | Template identifier. |
+| `transmission_id` | string | Transmission identifier. |
+
+---
+
+### Open
+
+Sent when a recipient opens an email (tracked via pixel).
+
+| Field | Type | Description |
+|---|---|---|
+| `type` | string | `open` |
+| `timestamp` | string | Unix timestamp. |
+| `event_id` | string | Unique event identifier. |
+| `message_id` | string | Unique message identifier. |
+| `rcpt_to` | string | Recipient email address. |
+| `geo_ip` | object | Geographic info: `country`, `region`, `city`, `latitude`, `longitude`. |
+| `ip_address` | string | IP address of the opener. |
+| `user_agent` | string | Browser/client user agent string. |
+| `rcpt_meta` | object | Custom metadata. |
+| `campaign_id` | string | Campaign identifier. |
+| `template_id` | string | Template identifier. |
+| `transmission_id` | string | Transmission identifier. |
+
+---
+
+### Initial open
+
+Sent only for the **first** open of a message (subsequent opens fire the `open` event).
+
+Fields are identical to the [Open](#open) event with `type` set to `initial_open`.
+
+---
+
+### Click
+
+Sent when a recipient clicks a tracked link in the email.
+
+| Field | Type | Description |
+|---|---|---|
+| `type` | string | `click` |
+| `timestamp` | string | Unix timestamp. |
+| `event_id` | string | Unique event identifier. |
+| `message_id` | string | Unique message identifier. |
+| `rcpt_to` | string | Recipient email address. |
+| `target_link_url` | string | The URL that was clicked. |
+| `target_link_name` | string | Link identifier/name. |
+| `geo_ip` | object | Geographic info: `country`, `region`, `city`, `latitude`, `longitude`. |
+| `ip_address` | string | IP address of the clicker. |
+| `user_agent` | string | Browser/client user agent string. |
+| `rcpt_meta` | object | Custom metadata. |
+| `campaign_id` | string | Campaign identifier. |
+| `template_id` | string | Template identifier. |
+| `transmission_id` | string | Transmission identifier. |
+
+---
+
+### Injection
+
+Sent when a message is received by Ecomail for delivery.
+
+| Field | Type | Description |
+|---|---|---|
+| `type` | string | `injection` |
+| `timestamp` | string | Unix timestamp. |
+| `event_id` | string | Unique event identifier. |
+| `message_id` | string | Unique message identifier. |
+| `rcpt_to` | string | Recipient email address. |
+| `msg_from` | string | Envelope sender address. |
+| `msg_size` | string | Message size in bytes. |
+| `rcpt_meta` | object | Custom metadata. |
+| `campaign_id` | string | Campaign identifier. |
+| `template_id` | string | Template identifier. |
+| `transmission_id` | string | Transmission identifier. |
+
+---
+
+### Delay
+
+Sent when a message delivery is temporarily delayed.
+
+| Field | Type | Description |
+|---|---|---|
+| `type` | string | `delay` |
+| `timestamp` | string | Unix timestamp. |
+| `event_id` | string | Unique event identifier. |
+| `message_id` | string | Unique message identifier. |
+| `rcpt_to` | string | Recipient email address. |
+| `error_code` | string | Remote server error code. |
+| `raw_reason` | string | Exact response from the remote server. |
+| `reason` | string | Canonicalized delay reason. |
+| `num_retries` | string | Number of delivery attempts so far. |
+| `queue_time` | string | Time spent in queue (ms). |
+| `rcpt_meta` | object | Custom metadata. |
+| `campaign_id` | string | Campaign identifier. |
+| `template_id` | string | Template identifier. |
+| `transmission_id` | string | Transmission identifier. |
+
+---
+
+### Out of band bounce
+
+Sent when an asynchronous bounce occurs after initial acceptance.
+
+| Field | Type | Description |
+|---|---|---|
+| `type` | string | `out_of_band` |
+| `timestamp` | string | Unix timestamp. |
+| `event_id` | string | Unique event identifier. |
+| `message_id` | string | Unique message identifier. |
+| `rcpt_to` | string | Recipient email address. |
+| `bounce_class` | string | Bounce classification code. |
+| `error_code` | string | Remote server error code. |
+| `raw_reason` | string | Exact response from the remote server. |
+| `reason` | string | Canonicalized bounce reason. |
+| `rcpt_meta` | object | Custom metadata. |
+| `campaign_id` | string | Campaign identifier. |
+
+---
+
+### Policy rejection
+
+Sent when a message is rejected due to policy rules.
+
+| Field | Type | Description |
+|---|---|---|
+| `type` | string | `policy_rejection` |
+| `timestamp` | string | Unix timestamp. |
+| `event_id` | string | Unique event identifier. |
+| `message_id` | string | Unique message identifier. |
+| `rcpt_to` | string | Recipient email address. |
+| `error_code` | string | Error code. |
+| `reason` | string | Rejection reason. |
+| `rcpt_meta` | object | Custom metadata. |
+| `campaign_id` | string | Campaign identifier. |
+
+---
+
+### List unsubscribe
+
+Sent when a recipient unsubscribes via the `List-Unsubscribe` email header.
+
+| Field | Type | Description |
+|---|---|---|
+| `type` | string | `list_unsubscribe` |
+| `timestamp` | string | Unix timestamp. |
+| `event_id` | string | Unique event identifier. |
+| `message_id` | string | Unique message identifier. |
+| `rcpt_to` | string | Recipient email address. |
+| `rcpt_meta` | object | Custom metadata. |
+| `campaign_id` | string | Campaign identifier. |
+| `template_id` | string | Template identifier. |
+| `transmission_id` | string | Transmission identifier. |
+
+---
+
+### Link unsubscribe
+
+Sent when a recipient unsubscribes by clicking an unsubscribe link in the email body.
+
+| Field | Type | Description |
+|---|---|---|
+| `type` | string | `link_unsubscribe` |
+| `timestamp` | string | Unix timestamp. |
+| `event_id` | string | Unique event identifier. |
+| `message_id` | string | Unique message identifier. |
+| `rcpt_to` | string | Recipient email address. |
+| `rcpt_meta` | object | Custom metadata. |
+| `campaign_id` | string | Campaign identifier. |
+| `template_id` | string | Template identifier. |
+| `transmission_id` | string | Transmission identifier. |
+
+---
+
+### Generation failure
+
+Sent when email generation (template rendering) fails.
+
+| Field | Type | Description |
+|---|---|---|
+| `type` | string | `generation_failure` |
+| `timestamp` | string | Unix timestamp. |
+| `event_id` | string | Unique event identifier. |
+| `rcpt_to` | string | Recipient email address. |
+| `error_code` | string | Error code. |
+| `reason` | string | Failure reason. |
+| `rcpt_meta` | object | Custom metadata. |
+| `template_id` | string | Template identifier. |
+| `transmission_id` | string | Transmission identifier. |
+
+---
+
+### Generation rejection
+
+Sent when email generation is rejected due to policy.
+
+| Field | Type | Description |
+|---|---|---|
+| `type` | string | `generation_rejection` |
+| `timestamp` | string | Unix timestamp. |
+| `event_id` | string | Unique event identifier. |
+| `rcpt_to` | string | Recipient email address. |
+| `error_code` | string | Error code. |
+| `reason` | string | Rejection reason. |
+| `rcpt_meta` | object | Custom metadata. |
+| `template_id` | string | Template identifier. |
+| `transmission_id` | string | Transmission identifier. |
