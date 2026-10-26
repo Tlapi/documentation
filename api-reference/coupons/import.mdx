@@ -4,20 +4,44 @@ api: 'POST https://api2.ecomailapp.cz/coupons/import'
 description: 'Import discount coupons into a default or specific folder.'
 ---
 
+<Note>
+  A code that already exists in the target folder is skipped and counted in `duplicated`. Its stored fields do not change. To overwrite existing coupons, use `PUT /coupons/import`.
+</Note>
+
 <ParamField body="folderId" type="integer">
   Folder ID. If not provided, coupons are imported into the default folder.
 </ParamField>
 
 <ParamField body="codes" type="array" required>
-  Array of coupon code strings.
+  Array of coupon code strings, up to 50,000 codes. Each code can have up to 255 characters.
 </ParamField>
 
 <ParamField body="valid_until" type="string">
   Expiration date in `YYYY-MM-DD` format.
 </ParamField>
 
-<ParamField body="update_existing" type="boolean" default="false">
-  Update existing coupons if they already exist.
+<ParamField body="type" type="string">
+  Discount type: `percentual` or `fixed`. Required when `value` is set.
+</ParamField>
+
+<ParamField body="value" type="number">
+  Discount value, greater than `0`. The maximum is `100` for `percentual` and `99999999.99` for `fixed`. Required when `type` is set.
+</ParamField>
+
+<ParamField body="currency" type="string">
+  Three-letter currency code, for example `CZK`. Required when `type` is `fixed` or when `min_spend` is set.
+</ParamField>
+
+<ParamField body="min_spend" type="number">
+  Minimum order value, from `0` to `99999999.99`.
+</ParamField>
+
+<ParamField body="shipping_price" type="string">
+  Shipping rule of the discount: `cart`, `free`, or `beforeDiscount`.
+</ParamField>
+
+<ParamField body="update_existing" type="boolean" default="false" deprecated>
+  Deprecated. Use `PUT /coupons/import` instead. When `true`, only `valid_until` of the existing coupons is updated and the updated coupons are counted in both `duplicated` and `updated`. The request fails with `422` when `update_existing` is combined with `type`, `value`, `currency`, `min_spend`, or `shipping_price`.
 </ParamField>
 
 <RequestExample>
@@ -27,9 +51,13 @@ curl -X POST https://api2.ecomailapp.cz/coupons/import \
   -H "Content-Type: application/json" \
   -d '{
     "folderId": 1,
-    "codes": ["kod1", "kod2", "kod3", "kod4"],
+    "codes": ["code1", "code2", "code3", "code4"],
     "valid_until": "2025-12-31",
-    "update_existing": false
+    "type": "percentual",
+    "value": 15,
+    "currency": "CZK",
+    "min_spend": 1000,
+    "shipping_price": "free"
   }'
 ```
 
@@ -44,9 +72,13 @@ curl_setopt($ch, CURLOPT_HTTPHEADER, [
 ]);
 curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode([
     'folderId' => 1,
-    'codes' => ['kod1', 'kod2', 'kod3', 'kod4'],
+    'codes' => ['code1', 'code2', 'code3', 'code4'],
     'valid_until' => '2025-12-31',
-    'update_existing' => false,
+    'type' => 'percentual',
+    'value' => 15,
+    'currency' => 'CZK',
+    'min_spend' => 1000,
+    'shipping_price' => 'free',
 ]));
 $response = curl_exec($ch);
 curl_close($ch);
@@ -58,7 +90,16 @@ curl_close($ch);
 {
   "imported": 4,
   "duplicated": 0,
+  "updated": 0,
   "totalCount": 4
+}
+```
+
+```json 422
+{
+  "errors": {
+    "update_existing": ["The update_existing flag cannot be combined with discount metadata. Use PUT /coupons/import to overwrite existing coupons."]
+  }
 }
 ```
 </ResponseExample>

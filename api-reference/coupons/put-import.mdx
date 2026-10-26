@@ -1,0 +1,101 @@
+---
+title: 'Create or overwrite discount coupons'
+api: 'PUT https://api2.ecomailapp.cz/coupons/import'
+description: 'Create new discount coupons and overwrite existing ones in a default or specific folder.'
+---
+
+<Note>
+  An existing coupon is overwritten completely. The request sets `valid_until`, `type`, `value`, `currency`, `min_spend`, and `shipping_price` exactly as sent. A field that is missing or `null` is cleared. The coupon code and its usage state never change.
+</Note>
+
+<ParamField body="folderId" type="integer">
+  Folder ID. If not provided, coupons are created and overwritten in the default folder.
+</ParamField>
+
+<ParamField body="codes" type="array" required>
+  Array of coupon code strings, up to 50,000 codes. Each code can have up to 255 characters.
+</ParamField>
+
+<ParamField body="valid_until" type="string">
+  Expiration date in `YYYY-MM-DD` format.
+</ParamField>
+
+<ParamField body="type" type="string">
+  Discount type: `percentual` or `fixed`. Required when `value` is set.
+</ParamField>
+
+<ParamField body="value" type="number">
+  Discount value, greater than `0`. The maximum is `100` for `percentual` and `99999999.99` for `fixed`. Required when `type` is set.
+</ParamField>
+
+<ParamField body="currency" type="string">
+  Three-letter currency code, for example `CZK`. Required when `type` is `fixed` or when `min_spend` is set.
+</ParamField>
+
+<ParamField body="min_spend" type="number">
+  Minimum order value, from `0` to `99999999.99`.
+</ParamField>
+
+<ParamField body="shipping_price" type="string">
+  Shipping rule of the discount: `cart`, `free`, or `beforeDiscount`.
+</ParamField>
+
+<RequestExample>
+```bash cURL
+curl -X PUT https://api2.ecomailapp.cz/coupons/import \
+  -H "key: YOUR_API_KEY" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "folderId": 1,
+    "codes": ["code1", "code2", "code3", "code4"],
+    "valid_until": "2025-12-31",
+    "type": "fixed",
+    "value": 200,
+    "currency": "CZK",
+    "min_spend": 1000,
+    "shipping_price": "cart"
+  }'
+```
+
+```php PHP
+$ch = curl_init();
+curl_setopt($ch, CURLOPT_URL, 'https://api2.ecomailapp.cz/coupons/import');
+curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+curl_setopt($ch, CURLOPT_CUSTOMREQUEST, 'PUT');
+curl_setopt($ch, CURLOPT_HTTPHEADER, [
+    'key: YOUR_API_KEY',
+    'Content-Type: application/json',
+]);
+curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode([
+    'folderId' => 1,
+    'codes' => ['code1', 'code2', 'code3', 'code4'],
+    'valid_until' => '2025-12-31',
+    'type' => 'fixed',
+    'value' => 200,
+    'currency' => 'CZK',
+    'min_spend' => 1000,
+    'shipping_price' => 'cart',
+]));
+$response = curl_exec($ch);
+curl_close($ch);
+```
+</RequestExample>
+
+<ResponseExample>
+```json 200
+{
+  "imported": 1,
+  "duplicated": 0,
+  "updated": 3,
+  "totalCount": 4
+}
+```
+
+```json 422
+{
+  "errors": {
+    "currency": ["The currency field is required when type is fixed."]
+  }
+}
+```
+</ResponseExample>
