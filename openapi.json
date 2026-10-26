@@ -2350,16 +2350,36 @@
                   },
                   "codes": {
                     "type": "array",
-                    "description": "Array of coupon code strings.",
+                    "description": "Array of coupon code strings, up to 50,000 codes. Each code can have up to 255 characters.",
                     "items": {}
                   },
                   "valid_until": {
                     "type": "string",
                     "description": "Expiration date in `YYYY-MM-DD` format."
                   },
+                  "type": {
+                    "type": "string",
+                    "description": "Discount type: `percentual` or `fixed`. Required when `value` is set."
+                  },
+                  "value": {
+                    "type": "number",
+                    "description": "Discount value, greater than `0`. The maximum is `100` for `percentual` and `99999999.99` for `fixed`. Required when `type` is set."
+                  },
+                  "currency": {
+                    "type": "string",
+                    "description": "Three-letter currency code, for example `CZK`. Required when `type` is `fixed` or when `min_spend` is set."
+                  },
+                  "min_spend": {
+                    "type": "number",
+                    "description": "Minimum order value, from `0` to `99999999.99`."
+                  },
+                  "shipping_price": {
+                    "type": "string",
+                    "description": "Shipping rule of the discount: `cart`, `free`, or `beforeDiscount`."
+                  },
                   "update_existing": {
                     "type": "boolean",
-                    "description": "Update existing coupons if they already exist.",
+                    "description": "Deprecated. Use `PUT /coupons/import` instead. When `true`, only `valid_until` of the existing coupons is updated and the updated coupons are counted in both `duplicated` and `updated`. The request fails with `422` when `update_existing` is combined with `type`, `value`, `currency`, `min_spend`, or `shipping_price`.",
                     "default": false
                   }
                 },
@@ -2370,13 +2390,17 @@
               "example": {
                 "folderId": 1,
                 "codes": [
-                  "kod1",
-                  "kod2",
-                  "kod3",
-                  "kod4"
+                  "code1",
+                  "code2",
+                  "code3",
+                  "code4"
                 ],
                 "valid_until": "2025-12-31",
-                "update_existing": false
+                "type": "percentual",
+                "value": 15,
+                "currency": "CZK",
+                "min_spend": 1000,
+                "shipping_price": "free"
               }
             }
           }
@@ -2395,6 +2419,9 @@
                     "duplicated": {
                       "type": "integer"
                     },
+                    "updated": {
+                      "type": "integer"
+                    },
                     "totalCount": {
                       "type": "integer"
                     }
@@ -2403,7 +2430,38 @@
                 "example": {
                   "imported": 4,
                   "duplicated": 0,
+                  "updated": 0,
                   "totalCount": 4
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Unprocessable Entity",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "errors": {
+                      "type": "object",
+                      "properties": {
+                        "update_existing": {
+                          "type": "array",
+                          "items": {
+                            "type": "string"
+                          }
+                        }
+                      }
+                    }
+                  }
+                },
+                "example": {
+                  "errors": {
+                    "update_existing": [
+                      "The update_existing flag cannot be combined with discount metadata. Use PUT /coupons/import to overwrite existing coupons."
+                    ]
+                  }
                 }
               }
             }
