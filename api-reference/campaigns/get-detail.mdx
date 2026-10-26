@@ -8,6 +8,14 @@ description: 'Returns detailed campaign information including statistics for sen
   Campaign ID.
 </ParamField>
 
+The `smart_delivery` field returns the smart delivery settings of the campaign:
+
+- `{"sending_policy_id": "..."}` when the campaign uses a sending policy,
+- the manual limits (`priority_window_hours`, `priority_scope`, `frequency_cap_email_count`, `frequency_cap_email_days`, `frequency_cap_email_scope`) when they are set on the campaign,
+- `null` when smart delivery is off.
+
+See [Add new campaign](/api-reference/campaigns/add-new) for the meaning of each field.
+
 <RequestExample>
 ```bash cURL
 curl https://api2.ecomailapp.cz/campaigns/1 \
@@ -40,8 +48,17 @@ curl_close($ch);
   "subject": "First hello",
   "recepient_lists": {
     "segments": [
-      { "id": "segment_abc123", "list": 1 }
+      {
+        "id": "segment_abc123",
+        "list": 1,
+        "smart_delivery": {
+          "sending_policy_id": "standard"
+        }
+      }
     ]
+  },
+  "smart_delivery": {
+    "sending_policy_id": "standard"
   },
   "sent_at": "2025-01-10 08:30:00",
   "recipients": 100,
