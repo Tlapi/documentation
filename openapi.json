@@ -848,6 +848,13 @@
                       "template_id": {
                         "type": "integer"
                       },
+                      "recepient_lists": {
+                        "type": "array",
+                        "items": {
+                          "type": "integer"
+                        }
+                      },
+                      "smart_delivery": {},
                       "archive_url": {
                         "type": "string"
                       }
@@ -867,6 +874,10 @@
                     "status": 3,
                     "scheduled_at": null,
                     "template_id": 62,
+                    "recepient_lists": [
+                      1
+                    ],
+                    "smart_delivery": null,
                     "archive_url": "https://foo.ecomailapp.cz/campaigns/render/1/randomhashhere"
                   }
                 ]
@@ -891,11 +902,11 @@
                 "properties": {
                   "title": {
                     "type": "string",
-                    "description": "Campaign title."
+                    "description": "Campaign title. Maximum 255 characters."
                   },
                   "from_name": {
                     "type": "string",
-                    "description": "Sender's name."
+                    "description": "Sender's name. Maximum 150 characters."
                   },
                   "from_email": {
                     "type": "string",
@@ -907,11 +918,11 @@
                   },
                   "subject": {
                     "type": "string",
-                    "description": "Campaign subject line."
+                    "description": "Campaign subject line. Maximum 255 characters."
                   },
                   "html_text": {
                     "type": "string",
-                    "description": "HTML content of the campaign."
+                    "description": "HTML content of the campaign. When you send it, it must not be empty."
                   },
                   "recepient_lists": {
                     "type": [
@@ -920,16 +931,45 @@
                     ],
                     "description": "Array of list IDs or an object with segments. See the example above for the segments format.",
                     "items": {}
+                  },
+                  "campaign_type": {
+                    "type": "string",
+                    "description": "Campaign type. Allowed values: `email`, `sms`, `whatsapp`, `push_notification`. Your account must have the channel enabled, otherwise the request fails with `403`.",
+                    "default": "email"
+                  },
+                  "smart_delivery": {
+                    "type": "object",
+                    "description": "Smart delivery settings of the campaign. Smart delivery skips subscribers who would receive too many emails. Send either `sending_policy_id`, or the manual limits. When you send `sending_policy_id`, the manual limits are ignored. When you omit `smart_delivery`, the campaign gets the default sending policy of your account. Send `null` or `{\"sending_policy_id\": \"unlimited\"}` to turn smart delivery off.",
+                    "properties": {
+                      "sending_policy_id": {
+                        "type": "string",
+                        "description": "ID of a sending policy usable for campaigns. Use `standard` or `unlimited` for the system policies, or the ID of a custom policy from **Account settings** → **Settings** → **Sending rules**."
+                      },
+                      "priority_window_hours": {
+                        "type": "integer",
+                        "description": "Skip a subscriber who received an email in the last N hours. Allowed range: `0`–`24`. Requires `priority_scope`."
+                      },
+                      "priority_scope": {
+                        "type": "string",
+                        "description": "Which emails count for `priority_window_hours`. Allowed values: `all`, `campaigns`, `pipelines_all` (automations only)."
+                      },
+                      "frequency_cap_email_count": {
+                        "type": "integer",
+                        "description": "Maximum number of emails a subscriber can receive in `frequency_cap_email_days` days. Allowed range: `1`–`50`. Send it together with `frequency_cap_email_days` and `frequency_cap_email_scope`."
+                      },
+                      "frequency_cap_email_days": {
+                        "type": "integer",
+                        "description": "Length of the frequency cap period in days. Allowed range: `1`–`7`."
+                      },
+                      "frequency_cap_email_scope": {
+                        "type": "string",
+                        "description": "Which emails count for the frequency cap. Allowed values: `all`, `campaigns`, `pipelines_all` (automations only)."
+                      }
+                    }
                   }
                 },
                 "required": [
-                  "title",
-                  "from_name",
-                  "from_email",
-                  "reply_to",
-                  "subject",
-                  "html_text",
-                  "recepient_lists"
+                  "title"
                 ]
               },
               "example": {
@@ -941,7 +981,14 @@
                 "html_text": "HTML content of new campaign",
                 "recepient_lists": [
                   1
-                ]
+                ],
+                "smart_delivery": {
+                  "priority_window_hours": 12,
+                  "priority_scope": "all",
+                  "frequency_cap_email_count": 3,
+                  "frequency_cap_email_days": 7,
+                  "frequency_cap_email_scope": "campaigns"
+                }
               }
             }
           }
@@ -973,9 +1020,45 @@
                       "type": "string"
                     },
                     "recepient_lists": {
-                      "type": "array",
-                      "items": {
-                        "type": "integer"
+                      "type": "object",
+                      "properties": {
+                        "segments": {
+                          "type": "array",
+                          "items": {
+                            "type": "object",
+                            "properties": {
+                              "id": {
+                                "type": "string"
+                              },
+                              "query": {
+                                "type": "string"
+                              },
+                              "smart_delivery": {
+                                "type": "object",
+                                "properties": {
+                                  "priority_window_hours": {
+                                    "type": "integer"
+                                  },
+                                  "priority_scope": {
+                                    "type": "string"
+                                  },
+                                  "frequency_cap_email_count": {
+                                    "type": "integer"
+                                  },
+                                  "frequency_cap_email_days": {
+                                    "type": "integer"
+                                  },
+                                  "frequency_cap_email_scope": {
+                                    "type": "string"
+                                  }
+                                }
+                              },
+                              "list": {
+                                "type": "integer"
+                              }
+                            }
+                          }
+                        }
                       }
                     },
                     "template_type": {
@@ -986,6 +1069,32 @@
                     },
                     "updated_at": {
                       "type": "string"
+                    },
+                    "created_at": {
+                      "type": "string"
+                    },
+                    "archive_url": {
+                      "type": "string"
+                    },
+                    "smart_delivery": {
+                      "type": "object",
+                      "properties": {
+                        "priority_window_hours": {
+                          "type": "integer"
+                        },
+                        "priority_scope": {
+                          "type": "string"
+                        },
+                        "frequency_cap_email_count": {
+                          "type": "integer"
+                        },
+                        "frequency_cap_email_days": {
+                          "type": "integer"
+                        },
+                        "frequency_cap_email_scope": {
+                          "type": "string"
+                        }
+                      }
                     }
                   }
                 },
@@ -996,12 +1105,87 @@
                   "from_email": "test@ecomailapp.cz",
                   "reply_to": "test@ecomailapp.cz",
                   "subject": "New campaign subject",
-                  "recepient_lists": [
-                    1
-                  ],
+                  "recepient_lists": {
+                    "segments": [
+                      {
+                        "id": "cid_712",
+                        "query": "entire_list",
+                        "smart_delivery": {
+                          "priority_window_hours": 12,
+                          "priority_scope": "all",
+                          "frequency_cap_email_count": 3,
+                          "frequency_cap_email_days": 7,
+                          "frequency_cap_email_scope": "campaigns"
+                        },
+                        "list": 1
+                      }
+                    ]
+                  },
                   "template_type": "html",
                   "campaign_type": "email",
-                  "updated_at": "2023-06-14T10:16:16.112614Z"
+                  "updated_at": "2023-06-14T10:16:16.112614Z",
+                  "created_at": "2023-06-14T10:16:16.000000Z",
+                  "archive_url": "https://foo.ecomailapp.cz/campaigns/render/712/randomhashhere",
+                  "smart_delivery": {
+                    "priority_window_hours": 12,
+                    "priority_scope": "all",
+                    "frequency_cap_email_count": 3,
+                    "frequency_cap_email_days": 7,
+                    "frequency_cap_email_scope": "campaigns"
+                  }
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "errors": {
+                      "type": "array",
+                      "items": {
+                        "type": "string"
+                      }
+                    }
+                  }
+                },
+                "example": {
+                  "errors": [
+                    "cant create campaign of type sms"
+                  ]
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Unprocessable Entity",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "errors": {
+                      "type": "object",
+                      "properties": {
+                        "smart_delivery.priority_scope": {
+                          "type": "array",
+                          "items": {
+                            "type": "string"
+                          }
+                        }
+                      }
+                    }
+                  }
+                },
+                "example": {
+                  "errors": {
+                    "smart_delivery.priority_scope": [
+                      "The smart delivery.priority scope field is required when smart delivery.priority window hours is present."
+                    ]
+                  }
                 }
               }
             }
@@ -1067,9 +1251,25 @@
                               },
                               "list": {
                                 "type": "integer"
+                              },
+                              "smart_delivery": {
+                                "type": "object",
+                                "properties": {
+                                  "sending_policy_id": {
+                                    "type": "string"
+                                  }
+                                }
                               }
                             }
                           }
+                        }
+                      }
+                    },
+                    "smart_delivery": {
+                      "type": "object",
+                      "properties": {
+                        "sending_policy_id": {
+                          "type": "string"
                         }
                       }
                     },
@@ -1142,9 +1342,15 @@
                     "segments": [
                       {
                         "id": "segment_abc123",
-                        "list": 1
+                        "list": 1,
+                        "smart_delivery": {
+                          "sending_policy_id": "standard"
+                        }
                       }
                     ]
+                  },
+                  "smart_delivery": {
+                    "sending_policy_id": "standard"
                   },
                   "sent_at": "2025-01-10 08:30:00",
                   "recipients": 100,
@@ -1198,11 +1404,11 @@
                 "properties": {
                   "title": {
                     "type": "string",
-                    "description": "Campaign title."
+                    "description": "Campaign title. Maximum 255 characters."
                   },
                   "from_name": {
                     "type": "string",
-                    "description": "Sender's name."
+                    "description": "Sender's name. Maximum 150 characters. Send `null` to clear it."
                   },
                   "from_email": {
                     "type": "string",
@@ -1214,29 +1420,69 @@
                   },
                   "subject": {
                     "type": "string",
-                    "description": "Campaign subject line."
+                    "description": "Campaign subject line. Maximum 255 characters. Send `null` to clear it."
+                  },
+                  "preheader": {
+                    "type": "string",
+                    "description": "Preheader text shown after the subject line in the inbox. Maximum 255 characters. Send `null` to clear it."
+                  },
+                  "ga": {
+                    "type": "string",
+                    "description": "Google Analytics campaign name. Send `null` to clear it."
                   },
                   "html_text": {
                     "type": "string",
-                    "description": "HTML content of the campaign."
+                    "description": "HTML content of the campaign. When you send it, it must not be empty."
+                  },
+                  "template_id": {
+                    "type": "integer",
+                    "description": "ID of a template to copy into the campaign. The template content replaces the campaign content. When you send the ID of the template the campaign already uses, the campaign content stays unchanged."
                   },
                   "recepient_lists": {
                     "type": [
                       "array",
                       "object"
                     ],
-                    "description": "Array of list IDs or an object with segments.",
+                    "description": "Array of list IDs or an object with segments. The current smart delivery settings of the campaign are kept.",
                     "items": {}
+                  },
+                  "campaign_type": {
+                    "type": "string",
+                    "description": "Campaign type. Allowed values: `email`, `sms`, `whatsapp`, `push_notification`. Your account must have the channel enabled, otherwise the request fails with `403`."
+                  },
+                  "smart_delivery": {
+                    "type": "object",
+                    "description": "Smart delivery settings of the campaign. Smart delivery skips subscribers who would receive too many emails. Send either `sending_policy_id`, or the manual limits. When you send `sending_policy_id`, the manual limits are ignored. When you omit `smart_delivery`, the current settings stay unchanged. Send `null` or `{\"sending_policy_id\": \"unlimited\"}` to turn smart delivery off.",
+                    "properties": {
+                      "sending_policy_id": {
+                        "type": "string",
+                        "description": "ID of a sending policy usable for campaigns. Use `standard` or `unlimited` for the system policies, or the ID of a custom policy from **Account settings** → **Settings** → **Sending rules**."
+                      },
+                      "priority_window_hours": {
+                        "type": "integer",
+                        "description": "Skip a subscriber who received an email in the last N hours. Allowed range: `0`–`24`. Requires `priority_scope`."
+                      },
+                      "priority_scope": {
+                        "type": "string",
+                        "description": "Which emails count for `priority_window_hours`. Allowed values: `all`, `campaigns`, `pipelines_all` (automations only)."
+                      },
+                      "frequency_cap_email_count": {
+                        "type": "integer",
+                        "description": "Maximum number of emails a subscriber can receive in `frequency_cap_email_days` days. Allowed range: `1`–`50`. Send it together with `frequency_cap_email_days` and `frequency_cap_email_scope`."
+                      },
+                      "frequency_cap_email_days": {
+                        "type": "integer",
+                        "description": "Length of the frequency cap period in days. Allowed range: `1`–`7`."
+                      },
+                      "frequency_cap_email_scope": {
+                        "type": "string",
+                        "description": "Which emails count for the frequency cap. Allowed values: `all`, `campaigns`, `pipelines_all` (automations only)."
+                      }
+                    }
                   }
                 },
                 "required": [
-                  "title",
-                  "from_name",
-                  "from_email",
-                  "reply_to",
-                  "subject",
-                  "html_text",
-                  "recepient_lists"
+                  "title"
                 ]
               },
               "example": {
@@ -1249,7 +1495,10 @@
                 "recepient_lists": [
                   1,
                   2
-                ]
+                ],
+                "smart_delivery": {
+                  "sending_policy_id": "standard"
+                }
               }
             }
           }
@@ -1265,6 +1514,9 @@
                     "id": {
                       "type": "integer"
                     },
+                    "title": {
+                      "type": "string"
+                    },
                     "from_name": {
                       "type": "string"
                     },
@@ -1274,29 +1526,150 @@
                     "reply_to": {
                       "type": "string"
                     },
-                    "title": {
-                      "type": "string"
-                    },
                     "subject": {
                       "type": "string"
                     },
-                    "status": {
-                      "type": "integer"
+                    "recepient_lists": {
+                      "type": "object",
+                      "properties": {
+                        "segments": {
+                          "type": "array",
+                          "items": {
+                            "type": "object",
+                            "properties": {
+                              "id": {
+                                "type": "string"
+                              },
+                              "query": {
+                                "type": "string"
+                              },
+                              "smart_delivery": {
+                                "type": "object",
+                                "properties": {
+                                  "sending_policy_id": {
+                                    "type": "string"
+                                  }
+                                }
+                              },
+                              "lists": {
+                                "type": "array",
+                                "items": {
+                                  "type": "integer"
+                                }
+                              }
+                            }
+                          }
+                        }
+                      }
+                    },
+                    "template_type": {
+                      "type": "string"
+                    },
+                    "campaign_type": {
+                      "type": "string"
+                    },
+                    "updated_at": {
+                      "type": "string"
+                    },
+                    "created_at": {
+                      "type": "string"
                     },
                     "archive_url": {
                       "type": "string"
+                    },
+                    "smart_delivery": {
+                      "type": "object",
+                      "properties": {
+                        "sending_policy_id": {
+                          "type": "string"
+                        }
+                      }
                     }
                   }
                 },
                 "example": {
                   "id": 1,
-                  "from_name": "From name",
-                  "from_email": "from@foo.cz",
-                  "reply_to": "reply@bar.cz",
-                  "title": "My first campaign",
-                  "subject": "First hello",
-                  "status": 0,
-                  "archive_url": "https://foo.ecomailapp.cz/campaigns/render/1"
+                  "title": "Campaign title",
+                  "from_name": "Senders name",
+                  "from_email": "test@ecomailapp.cz",
+                  "reply_to": "test@ecomailapp.cz",
+                  "subject": "New campaign subject",
+                  "recepient_lists": {
+                    "segments": [
+                      {
+                        "id": "cid_1",
+                        "query": "entire_list",
+                        "smart_delivery": {
+                          "sending_policy_id": "standard"
+                        },
+                        "lists": [
+                          1,
+                          2
+                        ]
+                      }
+                    ]
+                  },
+                  "template_type": "html",
+                  "campaign_type": "email",
+                  "updated_at": "2025-01-10T08:30:00.000000Z",
+                  "created_at": "2025-01-09 14:12:05",
+                  "archive_url": "https://foo.ecomailapp.cz/campaigns/render/1/randomhashhere",
+                  "smart_delivery": {
+                    "sending_policy_id": "standard"
+                  }
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "errors": {
+                      "type": "array",
+                      "items": {
+                        "type": "string"
+                      }
+                    }
+                  }
+                },
+                "example": {
+                  "errors": [
+                    "cant create campaign of type sms"
+                  ]
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Unprocessable Entity",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "errors": {
+                      "type": "object",
+                      "properties": {
+                        "smart_delivery.sending_policy_id": {
+                          "type": "array",
+                          "items": {
+                            "type": "string"
+                          }
+                        }
+                      }
+                    }
+                  }
+                },
+                "example": {
+                  "errors": {
+                    "smart_delivery.sending_policy_id": [
+                      "Sending policy not found."
+                    ]
+                  }
                 }
               }
             }

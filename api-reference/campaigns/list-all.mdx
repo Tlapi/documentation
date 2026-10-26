@@ -14,6 +14,8 @@ description: 'Returns all campaigns with pagination and filtering.'
 - `7` — Scheduled
 </Note>
 
+Each campaign carries a `smart_delivery` field with its smart delivery settings, in the same format as [Get campaign detail](/api-reference/campaigns/get-detail).
+
 <ParamField query="per_page" type="integer">
   Number of items per page.
 </ParamField>
@@ -89,6 +91,8 @@ curl_close($ch);
     "status": 3,
     "scheduled_at": null,
     "template_id": 62,
+    "recepient_lists": [1],
+    "smart_delivery": null,
     "archive_url": "https://foo.ecomailapp.cz/campaigns/render/1/randomhashhere"
   }
 ]
