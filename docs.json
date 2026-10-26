@@ -55,6 +55,7 @@
             "group": "Discount coupons",
             "pages": [
               "api-reference/coupons/import",
+              "api-reference/coupons/put-import",
               "api-reference/coupons/delete"
             ]
           },
