@@ -57,7 +57,8 @@
             "pages": [
               "api-reference/coupons/import",
               "api-reference/coupons/put-import",
-              "api-reference/coupons/delete"
+              "api-reference/coupons/delete",
+              "api-reference/coupons/folders"
             ]
           },
           {

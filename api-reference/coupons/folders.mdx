@@ -1,0 +1,90 @@
+---
+title: 'List coupon folders'
+api: 'GET https://api2.ecomailapp.cz/coupons/folders'
+description: 'Retrieve every coupon folder with the number of coupons that can still be sent and the number of expired unused coupons.'
+---
+
+<Note>
+  Use `remaining` to top up a folder through `POST /coupons/import` before it runs out. `expired` coupons can no longer be sent and a daily job deletes them, so `remaining + expired` matches the remaining count shown on the Coupons page in the app until that job runs.
+</Note>
+
+The default folder is always listed first, also when the account has no coupons yet. The other folders follow in ascending order of `id`. A folder without coupons is listed with zeros.
+
+<ResponseField name="folders" type="object[]">
+  All coupon folders of the account.
+
+  <Expandable title="folder properties">
+    <ResponseField name="id" type="integer | null">
+      Folder ID, the same value as `folderId` in `POST /coupons/import`. The default folder has `null`, because coupons are imported into it when `folderId` is not provided.
+    </ResponseField>
+
+    <ResponseField name="name" type="string">
+      Folder name as stored in the account. The default folder is named `default`. The name is not translated.
+    </ResponseField>
+
+    <ResponseField name="is_default" type="boolean">
+      Whether the folder is the default folder.
+    </ResponseField>
+
+    <ResponseField name="remaining" type="integer">
+      Number of unused coupons that can still be sent: coupons without `valid_until`, or with `valid_until` today or later. A coupon that expires today is counted here.
+    </ResponseField>
+
+    <ResponseField name="expired" type="integer">
+      Number of unused coupons whose `valid_until` is earlier than today and that are not deleted yet.
+    </ResponseField>
+  </Expandable>
+</ResponseField>
+
+<Note>
+  Coupons imported with `folderId` set to the ID of the default folder are counted in the default folder (`"id": null`) together with the coupons imported without `folderId`. For the default folder, `remaining + expired` can therefore be higher than the number on the Coupons page.
+</Note>
+
+<RequestExample>
+```bash cURL
+curl https://api2.ecomailapp.cz/coupons/folders \
+  -H "key: YOUR_API_KEY" \
+  -H "Content-Type: application/json"
+```
+
+```php PHP
+$ch = curl_init();
+curl_setopt($ch, CURLOPT_URL, 'https://api2.ecomailapp.cz/coupons/folders');
+curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+curl_setopt($ch, CURLOPT_HTTPHEADER, [
+    'key: YOUR_API_KEY',
+    'Content-Type: application/json',
+]);
+$response = curl_exec($ch);
+curl_close($ch);
+```
+</RequestExample>
+
+<ResponseExample>
+```json 200
+{
+  "folders": [
+    {
+      "id": null,
+      "name": "default",
+      "is_default": true,
+      "remaining": 120,
+      "expired": 4
+    },
+    {
+      "id": 12,
+      "name": "Black Friday",
+      "is_default": false,
+      "remaining": 0,
+      "expired": 0
+    }
+  ]
+}
+```
+
+```json 401
+{
+  "message": "Wrong api key"
+}
+```
+</ResponseExample>
