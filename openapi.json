@@ -134,6 +134,190 @@
         }
       }
     },
+    "/pipelines/import": {
+      "post": {
+        "operationId": "automationsImport",
+        "summary": "Import automation",
+        "description": "Create a new automation from an exported automation definition.",
+        "tags": [
+          "Automations"
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "name": {
+                    "type": "string",
+                    "description": "Automation name. Maximum 255 characters."
+                  },
+                  "list_id": {
+                    "type": "integer",
+                    "description": "ID of an existing contact list in your account."
+                  },
+                  "multicast": {
+                    "type": "integer",
+                    "description": "Whether one contact can go through the automation more than once. `0` — only once. `1` — repeatedly, one run at a time. `2` — repeatedly, with runs in parallel.",
+                    "default": 0
+                  },
+                  "definition": {
+                    "type": "array",
+                    "description": "The trigger nodes of the automation graph, in the format the application exports. Each trigger has `trigger_id`, `type`, `properties`, and `next`. Each action has `id`, `type`, `properties`, and `next`. `next` is the list of nodes that follow the node.",
+                    "items": {}
+                  }
+                },
+                "required": [
+                  "name",
+                  "list_id",
+                  "definition"
+                ]
+              },
+              "example": {
+                "name": "Welcome flow",
+                "list_id": 1,
+                "multicast": 0,
+                "definition": [
+                  {
+                    "trigger_id": "trig000001",
+                    "type": "welcome",
+                    "properties": {},
+                    "next": [
+                      {
+                        "id": "mail000001",
+                        "type": "mail",
+                        "properties": {
+                          "name": "Welcome",
+                          "template": 10,
+                          "subject": "Welcome aboard",
+                          "senderName": "Shop",
+                          "senderMail": "info@example.com"
+                        },
+                        "next": [
+                          {
+                            "id": "end0000001",
+                            "type": "end",
+                            "properties": {},
+                            "next": []
+                          }
+                        ]
+                      }
+                    ]
+                  }
+                ]
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Created",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "id": {
+                      "type": "integer"
+                    },
+                    "status": {
+                      "type": "string"
+                    },
+                    "triggers_count": {
+                      "type": "integer"
+                    },
+                    "actions_count": {
+                      "type": "integer"
+                    },
+                    "edit_url": {
+                      "type": "string"
+                    }
+                  }
+                },
+                "example": {
+                  "id": 123,
+                  "status": "stopped",
+                  "triggers_count": 1,
+                  "actions_count": 2,
+                  "edit_url": "https://youraccount.ecomailapp.cz/automation/123/edit"
+                }
+              }
+            }
+          },
+          "413": {
+            "description": "Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string"
+                    }
+                  }
+                },
+                "example": {
+                  "message": "The request body must not exceed 1048576 bytes."
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Unprocessable Entity",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string"
+                    },
+                    "errors": {
+                      "type": "object",
+                      "properties": {
+                        "list_id": {
+                          "type": "array",
+                          "items": {
+                            "type": "string"
+                          }
+                        }
+                      }
+                    }
+                  }
+                },
+                "example": {
+                  "message": "The contact list does not exist in the account.",
+                  "errors": {
+                    "list_id": [
+                      "The contact list does not exist in the account."
+                    ]
+                  }
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "Too Many Requests",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string"
+                    }
+                  }
+                },
+                "example": {
+                  "message": "Too Many Attempts."
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/pipelines/{id}/actions": {
       "get": {
         "operationId": "automationsGetActions",

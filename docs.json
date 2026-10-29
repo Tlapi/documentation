@@ -30,6 +30,7 @@
             "group": "Automations",
             "pages": [
               "api-reference/automations/list-all",
+              "api-reference/automations/import",
               "api-reference/automations/get-actions",
               "api-reference/automations/get-action-detail",
               "api-reference/automations/trigger",
