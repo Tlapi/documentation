@@ -2846,6 +2846,87 @@
         }
       }
     },
+    "/coupons/folders": {
+      "get": {
+        "operationId": "couponsFolders",
+        "summary": "List coupon folders",
+        "description": "Retrieve every coupon folder with the number of coupons that can still be sent and the number of expired unused coupons.",
+        "tags": [
+          "Discount coupons"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "folders": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "id": {},
+                          "name": {
+                            "type": "string"
+                          },
+                          "is_default": {
+                            "type": "boolean"
+                          },
+                          "remaining": {
+                            "type": "integer"
+                          },
+                          "expired": {
+                            "type": "integer"
+                          }
+                        }
+                      }
+                    }
+                  }
+                },
+                "example": {
+                  "folders": [
+                    {
+                      "id": null,
+                      "name": "default",
+                      "is_default": true,
+                      "remaining": 120,
+                      "expired": 4
+                    },
+                    {
+                      "id": 12,
+                      "name": "Black Friday",
+                      "is_default": false,
+                      "remaining": 0,
+                      "expired": 0
+                    }
+                  ]
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string"
+                    }
+                  }
+                },
+                "example": {
+                  "message": "Wrong api key"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/domains": {
       "get": {
         "operationId": "domainsListAll",
