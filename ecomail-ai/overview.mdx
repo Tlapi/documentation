@@ -3,7 +3,7 @@ title: 'Ecomail AI'
 description: 'Connect your Ecomail account to AI assistants and developer tools via the Model Context Protocol (MCP).'
 ---
 
-Ecomail MCP lets you talk to your email marketing data using natural language. Ask questions, analyze performance, manage templates and more — all from your favorite AI tool.
+Ecomail MCP lets you talk to your email marketing data using natural language. Ask questions, analyze performance, build and edit automations, segments and templates, and more — all from your favorite AI tool.
 
 We offer two ways to connect, depending on how you work.
 
@@ -18,7 +18,8 @@ We offer two ways to connect, depending on how you work.
     - One-click OAuth setup
     - Works in the browser
     - CDP analytics (RFM, CLV, conversions, products)
-    - Ideal for day-to-day insights
+    - Builds and edits automations, segments, templates and campaign drafts
+    - Ideal for day-to-day insights and hands-on work
   </Card>
   <Card title="Local MCP server" icon="terminal" href="/ecomail-ai/mcp">
     **For developers and power users**
@@ -42,16 +43,25 @@ We offer two ways to connect, depending on how you work.
     Look up any subscriber by email. See their tags, lists, engagement history, purchases and automation log.
   </Card>
   <Card title="Manage templates" icon="palette">
-    Browse, create, duplicate or delete email templates directly from the conversation.
+    Browse, create, edit, duplicate or delete email templates directly from the conversation. Upload images from a public URL to the file manager.
   </Card>
   <Card title="Monitor automations" icon="robot">
     Check automation stats, inspect individual steps, or trigger an automation for a specific subscriber.
+  </Card>
+  <Card title="Build and edit automations" icon="diagram-project">
+    Create an automation, then add, change, remove and reconnect its steps and triggers. *(Remote server only, stopped automations only)*
+  </Card>
+  <Card title="Work with segments" icon="filter">
+    Read the conditions of a saved segment, create a new one, or change an existing one. *(Remote server only)*
+  </Card>
+  <Card title="Prepare campaigns" icon="paper-plane">
+    Create a campaign draft with subject, sender, recipients and template, and adjust it later. You send it yourself in Ecomail.
   </Card>
   <Card title="CDP analytics" icon="chart-pie">
     Dive into RFM segmentation, customer lifetime value, conversion analytics and product performance. *(Remote server only, requires CDP)*
   </Card>
   <Card title="Track deliverability" icon="inbox">
-    Monitor inbox placement, bounce rates and spam complaints across mailbox providers.
+    Monitor bounce rates, spam complaints and engagement across mailbox providers.
   </Card>
 </CardGroup>
 
@@ -63,7 +73,8 @@ We offer two ways to connect, depending on how you work.
 | **Setup** | Click + OAuth in browser | `npx` + API key in terminal |
 | **Clients** | Claude.ai, ChatGPT | Claude Code, Cursor, Claude Desktop |
 | **CDP analytics** | Yes | No |
-| **Full API access** | Read + templates + triggers | All endpoints (read/write) |
+| **What it can change** | Templates, campaign drafts, automations, segments, images | All public API endpoints (read/write) |
+| **Automation and segment editing** | Yes | No |
 | **Installation** | None | Node.js required |
 
 <Tip>

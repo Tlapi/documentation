@@ -5,6 +5,18 @@ description: 'Complete reference of all tools available in the Ecomail remote MC
 
 The Ecomail [remote MCP server](/ecomail-ai/remote-mcp) exposes the following tools to AI assistants like Claude.ai and ChatGPT.
 
+You see only the tools your role in the Ecomail account allows. For example, a role without access to automations does not get the automation tools.
+
+## Tools that change your account
+
+Most tools only read data. The tools below create or change something, so your AI assistant asks you to confirm them, depending on how your assistant is set up.
+
+- **Nothing is sent or started.** A new campaign is a draft and a new automation is stopped. You review it in Ecomail and send or start it yourself.
+- **Automations must be stopped.** The tools that edit steps, connections and triggers refuse a running automation. Pause it in Ecomail first, then start it again when you finish.
+- **Updates are partial.** When you update a step, a trigger or a segment, only the values you pass change.
+- **Invalid changes are refused.** A step type or property that does not exist, an ID of a template, list or automation that does not exist, or a connection that would create a loop is rejected and nothing is saved.
+- **Segment updates apply immediately.** A changed segment affects every campaign and automation step that uses it, including running automations.
+
 ## Account
 
 | Tool | Description |
@@ -13,22 +25,42 @@ The Ecomail [remote MCP server](/ecomail-ai/remote-mcp) exposes the following to
 
 ## Automations
 
+### Reading and running
+
 | Tool | Description |
 | --- | --- |
 | `automation-action-detail-tool` | Get detail of a specific action (node/step) in an automation, including its type and configuration. |
-| `automation-actions-tool` | List all actions (nodes/steps) in an automation with their types and properties. |
-| `automation-detail-tool` | Get detailed information about a specific automation, including name, list, type, status and configuration. |
+| `automation-actions-tool` | List all actions (nodes/steps) in an automation with their types, properties and connections. |
+| `automation-detail-tool` | Get detailed information about a specific automation, including name, list, status, entry settings and its triggers. |
+| `automation-link-stats-tool` | Get click statistics for individual links in an automation — each tracked URL with total and unique clicks. |
 | `automation-list-tool` | List all automations (pipelines) with optional filtering by active/inactive status. |
 | `automation-stats-tool` | Get statistics for an automation — triggered count, sent, opens, clicks, bounces, unsubscribes, conversions and more. Optionally grouped by action nodes. |
 | `automation-trigger-tool` | Trigger an automation for a specific subscriber by email address. |
+
+### Building and editing
+
+| Tool | Description |
+| --- | --- |
+| `automation-action-create-tool` | Add one step to an existing automation. The step is created without connections. Supported types: `mail`, `wait`, `check`, `tag`, `untag`, `webhook`, `sms`, `subscribe`, `unsubscribe`, `trigger` and `end`. |
+| `automation-action-delete-tool` | Delete one step and the connections that point to it. The steps that followed it stay and need a new connection. |
+| `automation-action-update-tool` | Change the settings of one step, for example an email subject or a wait length. The step type cannot change. |
+| `automation-connect-tool` | Connect a trigger or a step to another step. For a condition step you choose the `yes` or `no` branch. |
+| `automation-create-tool` | Create a new automation from a trigger, steps and connections. The automation is created stopped. |
+| `automation-disconnect-tool` | Remove one connection between a trigger or a step and the step it points to. |
+| `automation-trigger-create-tool` | Add a trigger to an existing automation. The trigger is created without a connection. |
+| `automation-trigger-delete-tool` | Delete the trigger of an automation. This cannot be undone. |
+| `automation-trigger-update-tool` | Change the settings of a trigger, for example the tag, the schedule or the segment. The trigger type cannot change. |
 
 ## Campaigns
 
 | Tool | Description |
 | --- | --- |
+| `campaign-create-tool` | Create a new email or SMS campaign as a draft, optionally with subject, sender details, recipient lists and template. The campaign is not sent. |
 | `campaign-detail-tool` | Get detailed information about a specific campaign, including configuration, recipient lists and delivery statistics. |
 | `campaign-link-stats-tool` | Get click statistics for individual links in a campaign. Returns each tracked URL with its click count, ordered by most clicked. |
 | `campaign-list-tool` | List campaigns with optional filtering by status, title or send date range (`sent_from` / `sent_to`), sorted by campaign columns or performance metrics. Each campaign carries a `stats` block — `detail=brief` (default) for rates and key counts, `detail=full` for every raw count. |
+| `campaign-products-tool` | See which products customers bought after a campaign, with quantity, revenue and number of orders per product. |
+| `campaign-update-tool` | Edit an existing draft campaign in place — subject, name, sender, recipients or template. |
 
 ## Contact Lists
 
@@ -36,6 +68,14 @@ The Ecomail [remote MCP server](/ecomail-ai/remote-mcp) exposes the following to
 | --- | --- |
 | `contact-list-detail-tool` | Get detailed information about a specific contact list by ID, including sender configuration, subscriber counts by status, custom fields and segments with their subscriber counts. |
 | `contact-list-list-tool` | List all contact lists with their names, sender details and active subscriber counts. |
+
+## Segments
+
+| Tool | Description |
+| --- | --- |
+| `segment-create-tool` | Create a saved segment on a list from a set of conditions. The subscriber count is calculated in the background. |
+| `segment-detail-tool` | Get one saved segment with its conditions, parent segment, exclusion setting and last subscriber count. |
+| `segment-update-tool` | Change a saved segment — its name, conditions, parent segment or exclusion setting. |
 
 ## CDP Analytics
 
@@ -55,6 +95,22 @@ The Ecomail [remote MCP server](/ecomail-ai/remote-mcp) exposes the following to
 | Tool | Description |
 | --- | --- |
 | `deliverability-tool` | Retrieve deliverability metrics for a selected period — bounce rates, spam complaints, engagement and other delivery trends. Break the period down with `group_by` (`day`, `week`, `month`, `domain`, `sending_domain`, `mailbox_provider` or `campaign`), filter by recipient domains, sending domains or mailbox provider, and pick `detail=brief` or `detail=full`. Up to 90 days of historical data. Inbox-vs-spam folder placement is not available. |
+| `device-stats-tool` | Get the account-wide device split for email opens — mobile versus desktop. |
+| `subscriber-growth-tool` | Get subscription growth over a date range — new subscribers, unsubscribes, net change, current active subscribers and a breakdown over time. |
+
+## Products
+
+| Tool | Description |
+| --- | --- |
+| `product-catalog-search-tool` | Search the product catalog imported from your product feed and get real product data — name, price, availability, product URL and image URL. |
+| `product-feed-list-tool` | List the product feeds connected to the account with their source URL, product count, last refresh and any import error. |
+| `shop-list-tool` | List the e-shops that have e-commerce tracking data on the account. |
+
+## Files
+
+| Tool | Description |
+| --- | --- |
+| `asset-upload-tool` | Copy a PNG, JPG or GIF image from a public URL into the file manager and return its permanent URL for use in templates. The URL must return the image directly, without a redirect, and the image can be at most 15 MB. |
 
 ## Feedback
 
@@ -77,11 +133,12 @@ The Ecomail [remote MCP server](/ecomail-ai/remote-mcp) exposes the following to
 
 | Tool | Description |
 | --- | --- |
-| `template-create-tool` | Create a new HTML email template with a name and HTML content. |
+| `template-create-tool` | Create a new email template that you can edit in the visual editor. Raw HTML is supported when you ask for it. |
 | `template-delete-tool` | Delete an email template by ID. |
 | `template-detail-tool` | Get the content and details of a specific email template by ID. |
 | `template-duplicate-tool` | Create a copy of an existing email template. |
 | `template-list-tool` | List saved email templates with optional search filtering. |
+| `template-update-tool` | Edit an existing email template in place — its name or its content. |
 
 <Tip>
   You don't need to remember tool names. Just describe what you want in natural language and the AI assistant will pick the right tool automatically. For example, ask *"Show me the open rate for my last campaign"* and it will use `campaign-list-tool` and `campaign-detail-tool` behind the scenes.

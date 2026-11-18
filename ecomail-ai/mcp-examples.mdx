@@ -23,6 +23,60 @@ Once you have the [remote MCP server](/ecomail-ai/remote-mcp) connected, you can
     List all steps in my abandoned cart automation and show me the configuration of each step.
     ```
   </Accordion>
+  <Accordion title="Top clicked links in an automation">
+    ```
+    Which links got the most clicks in my welcome automation?
+    ```
+  </Accordion>
+</AccordionGroup>
+
+## Building and editing automations
+
+<Note>
+  Editing works only on a stopped automation. Pause the automation in Ecomail first and start it again when you finish. A new automation is always created stopped.
+</Note>
+
+<AccordionGroup>
+  <Accordion title="Create an automation">
+    ```
+    Create a welcome automation on my Newsletter list: send template "Welcome" right after signup, wait 3 days, then send template "Our bestsellers".
+    ```
+  </Accordion>
+  <Accordion title="Change an email subject">
+    ```
+    In my welcome automation, change the subject of the first email to "Welcome aboard".
+    ```
+  </Accordion>
+  <Accordion title="Change a wait">
+    ```
+    Change the wait before the second email in my welcome automation from 3 days to 5 days.
+    ```
+  </Accordion>
+  <Accordion title="Insert a step">
+    ```
+    Add a 1-day wait between the trigger and the first email in my welcome automation.
+    ```
+  </Accordion>
+  <Accordion title="Remove a step">
+    ```
+    Delete the tag step in my welcome automation and connect the steps around it.
+    ```
+  </Accordion>
+  <Accordion title="Add a condition">
+    ```
+    After the first email in my welcome automation, add a condition for subscribers who opened any email in the last 30 days. If yes, end the automation. If no, send template "Reminder".
+    ```
+  </Accordion>
+  <Accordion title="Change when an automation starts">
+    ```
+    Change the daily trigger of my win-back automation to 9:30.
+    ```
+  </Accordion>
+  <Accordion title="Limit an automation to a segment">
+    ```
+    Make my win-back automation start only for the subscribers in my "VIP" segment.
+    ```
+  </Accordion>
 </AccordionGroup>
 
 ## Campaigns
@@ -48,12 +102,56 @@ Once you have the [remote MCP server](/ecomail-ai/remote-mcp) connected, you can
     Which links got the most clicks in my last campaign?
     ```
   </Accordion>
+  <Accordion title="Prepare a campaign draft">
+    ```
+    Create a draft email campaign called "Spring sale" for my Newsletter list with the subject "Spring sale starts today" and my "Spring sale" template. Do not send it.
+    ```
+  </Accordion>
+  <Accordion title="Change a draft">
+    ```
+    Change the subject of my "Spring sale" draft campaign to "Spring sale: last 3 days".
+    ```
+  </Accordion>
+  <Accordion title="Products bought after a campaign">
+    ```
+    Which products did customers buy after my last campaign? Show quantity and revenue per product.
+    ```
+  </Accordion>
   <Accordion title="Campaigns sent in a period">
     ```
     List every campaign sent between 1 June and 31 August with its open rate, click rate and unsubscribe rate, sorted by open rate.
     ```
   </Accordion>
 </AccordionGroup>
+
+## Segments
+
+<AccordionGroup>
+  <Accordion title="See what a segment contains">
+    ```
+    Show me the exact conditions of my "VIP" segment in the Newsletter list.
+    ```
+  </Accordion>
+  <Accordion title="Create a segment">
+    ```
+    Create a segment in my Newsletter list of subscribers who did not open any email in the last 90 days.
+    ```
+  </Accordion>
+  <Accordion title="Change a segment">
+    ```
+    Change my "Inactive" segment to subscribers who did not open any email in the last 60 days.
+    ```
+  </Accordion>
+  <Accordion title="Rename a segment">
+    ```
+    Rename my "VIP" segment to "VIP customers".
+    ```
+  </Accordion>
+</AccordionGroup>
+
+<Warning>
+  A changed segment applies immediately to every campaign and automation that uses it. Ask the assistant to show you the current conditions first.
+</Warning>
 
 ## Contact Lists
 
@@ -265,4 +363,18 @@ These examples combine multiple tools in a single conversation to get deeper ins
     Duplicate my "Welcome Email" template so I can use it as a starting point for a new version.
     ```
   </Accordion>
+  <Accordion title="Edit a template">
+    ```
+    In my "Spring sale" template, change the headline to "Last days of the sale" and keep everything else.
+    ```
+  </Accordion>
+  <Accordion title="Use your own image">
+    ```
+    Upload https://www.example.com/images/logo.png to my file manager and use it as the header image in my "Spring sale" template.
+    ```
+  </Accordion>
 </AccordionGroup>
+
+<Note>
+  Images must be available at a public URL that returns a PNG, JPG or GIF directly. The assistant cannot read files from your computer.
+</Note>
