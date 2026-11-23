@@ -1,0 +1,169 @@
+---
+title: 'Import automation'
+api: 'POST https://api2.ecomailapp.cz/pipelines/import'
+description: 'Create a new automation from an exported automation definition.'
+---
+
+The endpoint creates the automation in the stopped state. Start it in the application.
+
+Every template, list, automation, and campaign that the definition references must exist in your account. Every sender email address must be on a verified domain.
+
+Limits:
+
+- The request body is at most 1 MB (`413`).
+- The definition has at most 500 nodes and is nested at most 100 levels deep (`422`).
+- A node ID has at most 64 characters, and one node has at most 400 KB (`422`).
+- You can send at most 30 requests per minute with one API key (`429`).
+
+<ParamField body="name" type="string" required>
+  Automation name. Maximum 255 characters.
+</ParamField>
+
+<ParamField body="list_id" type="integer" required>
+  ID of an existing contact list in your account.
+</ParamField>
+
+<ParamField body="multicast" type="integer" default="0">
+  Whether one contact can go through the automation more than once.
+  `0` — only once. `1` — repeatedly, one run at a time. `2` — repeatedly, with runs in parallel.
+</ParamField>
+
+<ParamField body="definition" type="array" required>
+  The trigger nodes of the automation graph, in the format the application exports.
+  Each trigger has `trigger_id`, `type`, `properties`, and `next`.
+  Each action has `id`, `type`, `properties`, and `next`.
+  `next` is the list of nodes that follow the node.
+</ParamField>
+
+<RequestExample>
+```bash cURL
+curl -X POST https://api2.ecomailapp.cz/pipelines/import \
+  -H "key: YOUR_API_KEY" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "name": "Welcome flow",
+    "list_id": 1,
+    "multicast": 0,
+    "definition": [
+      {
+        "trigger_id": "trig000001",
+        "type": "welcome",
+        "properties": {},
+        "next": [
+          {
+            "id": "mail000001",
+            "type": "mail",
+            "properties": {
+              "name": "Welcome",
+              "template": 10,
+              "subject": "Welcome aboard",
+              "senderName": "Shop",
+              "senderMail": "info@example.com"
+            },
+            "next": [
+              {
+                "id": "end0000001",
+                "type": "end",
+                "properties": {},
+                "next": []
+              }
+            ]
+          }
+        ]
+      }
+    ]
+  }'
+```
+
+```php PHP
+$ch = curl_init();
+curl_setopt($ch, CURLOPT_URL, 'https://api2.ecomailapp.cz/pipelines/import');
+curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+curl_setopt($ch, CURLOPT_POST, true);
+curl_setopt($ch, CURLOPT_HTTPHEADER, [
+    'key: YOUR_API_KEY',
+    'Content-Type: application/json',
+]);
+curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode([
+    'name' => 'Welcome flow',
+    'list_id' => 1,
+    'multicast' => 0,
+    'definition' => [
+        [
+            'trigger_id' => 'trig000001',
+            'type' => 'welcome',
+            'properties' => new stdClass(),
+            'next' => [
+                [
+                    'id' => 'mail000001',
+                    'type' => 'mail',
+                    'properties' => [
+                        'name' => 'Welcome',
+                        'template' => 10,
+                        'subject' => 'Welcome aboard',
+                        'senderName' => 'Shop',
+                        'senderMail' => 'info@example.com',
+                    ],
+                    'next' => [
+                        [
+                            'id' => 'end0000001',
+                            'type' => 'end',
+                            'properties' => new stdClass(),
+                            'next' => [],
+                        ],
+                    ],
+                ],
+            ],
+        ],
+    ],
+]));
+$response = curl_exec($ch);
+curl_close($ch);
+```
+</RequestExample>
+
+<ResponseExample>
+```json 201
+{
+  "id": 123,
+  "status": "stopped",
+  "triggers_count": 1,
+  "actions_count": 2,
+  "edit_url": "https://youraccount.ecomailapp.cz/automation/123/edit"
+}
+```
+
+```json 413 Body too large
+{
+  "message": "The request body must not exceed 1048576 bytes."
+}
+```
+
+```json 422 Invalid definition
+{
+  "message": "Node \"mail000001\" mail: template must be the ID of an existing template in the account",
+  "errors": {
+    "definition": [
+      "Node \"mail000001\" mail: template must be the ID of an existing template in the account"
+    ]
+  }
+}
+```
+
+```json 422 Missing list
+{
+  "message": "The contact list does not exist in the account.",
+  "errors": {
+    "list_id": [
+      "The contact list does not exist in the account."
+    ]
+  }
+}
+```
+
+```json 429 Rate limit exceeded
+{
+  "message": "Too Many Attempts."
+}
+```
+</ResponseExample>
