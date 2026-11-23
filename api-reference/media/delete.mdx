@@ -1,0 +1,82 @@
+---
+title: 'Delete folders and images'
+api: 'DELETE https://api2.ecomailapp.cz/media'
+description: 'Delete images and folders from your image library.'
+---
+
+Deletes up to 100 images or folders in one request. Deleting a folder deletes everything inside it.
+
+<Warning>
+  Deleted images disappear from the library, but they stay stored and publicly readable, so images in emails you already sent keep working. Deleting does not free storage space.
+</Warning>
+
+<Note>
+  Image management is available only for accounts on a paid plan. Other accounts receive `403`.
+</Note>
+
+<ParamField body="items" type="object[]" required>
+  Images and folders to delete, 1 to 100 items.
+  <Expandable title="properties">
+    <ParamField body="type" type="string" required>
+      `file` for an image, `folder` for a folder.
+    </ParamField>
+    <ParamField body="name" type="string" required>
+      Name of the image or folder.
+    </ParamField>
+    <ParamField body="path" type="string" required>
+      Folder that holds the item. Starts and ends with `/`.
+    </ParamField>
+  </Expandable>
+</ParamField>
+
+<RequestExample>
+```bash cURL
+curl -X DELETE https://api2.ecomailapp.cz/media \
+  -H "key: YOUR_API_KEY" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "items": [
+      {"type": "file", "name": "logo.png", "path": "/banners/"},
+      {"type": "folder", "name": "2025", "path": "/banners/"}
+    ]
+  }'
+```
+
+```php PHP
+$ch = curl_init();
+curl_setopt($ch, CURLOPT_URL, 'https://api2.ecomailapp.cz/media');
+curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+curl_setopt($ch, CURLOPT_CUSTOMREQUEST, 'DELETE');
+curl_setopt($ch, CURLOPT_HTTPHEADER, [
+    'key: YOUR_API_KEY',
+    'Content-Type: application/json',
+]);
+curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode([
+    'items' => [
+        ['type' => 'file', 'name' => 'logo.png', 'path' => '/banners/'],
+        ['type' => 'folder', 'name' => '2025', 'path' => '/banners/'],
+    ],
+]));
+$response = curl_exec($ch);
+curl_close($ch);
+```
+</RequestExample>
+
+<ResponseExample>
+```json 204
+```
+
+```json 403
+{
+  "errors": ["Available only for accounts on a paid plan"]
+}
+```
+
+```json 422
+{
+  "errors": {
+    "items.0.type": ["The selected items.0.type is invalid."]
+  }
+}
+```
+</ResponseExample>
