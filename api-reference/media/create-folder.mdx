@@ -1,0 +1,71 @@
+---
+title: 'Create folder'
+api: 'POST https://api2.ecomailapp.cz/media/folders'
+description: 'Create a folder in your image library.'
+---
+
+Creates a folder inside an existing folder. When a folder with the same name was deleted before, it is restored with its images.
+
+<Note>
+  Image management is available only for accounts on a paid plan. Other accounts receive `403`.
+</Note>
+
+<ParamField body="name" type="string" required>
+  Folder name, at most 255 characters. It must not contain `/` and must not be `.` or `..`.
+</ParamField>
+
+<ParamField body="path" type="string" required>
+  Parent folder. Starts and ends with `/`, for example `/` or `/banners/`.
+</ParamField>
+
+<RequestExample>
+```bash cURL
+curl -X POST https://api2.ecomailapp.cz/media/folders \
+  -H "key: YOUR_API_KEY" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "name": "2026",
+    "path": "/banners/"
+  }'
+```
+
+```php PHP
+$ch = curl_init();
+curl_setopt($ch, CURLOPT_URL, 'https://api2.ecomailapp.cz/media/folders');
+curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+curl_setopt($ch, CURLOPT_POST, true);
+curl_setopt($ch, CURLOPT_HTTPHEADER, [
+    'key: YOUR_API_KEY',
+    'Content-Type: application/json',
+]);
+curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode([
+    'name' => '2026',
+    'path' => '/banners/',
+]));
+$response = curl_exec($ch);
+curl_close($ch);
+```
+</RequestExample>
+
+<ResponseExample>
+```json 201
+{
+  "name": "2026",
+  "path": "/banners/"
+}
+```
+
+```json 403
+{
+  "errors": ["Available only for accounts on a paid plan"]
+}
+```
+
+```json 422
+{
+  "errors": {
+    "name": ["The name field format is invalid."]
+  }
+}
+```
+</ResponseExample>

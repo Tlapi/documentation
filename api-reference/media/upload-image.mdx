@@ -1,0 +1,73 @@
+---
+title: 'Upload image'
+api: 'POST https://api2.ecomailapp.cz/media/images'
+description: 'Upload an image into a folder of your image library and get its public URL.'
+---
+
+Send the image as `multipart/form-data`. The image is publicly readable at the returned URL. When the folder already holds a file with the same name, the new image gets a numbered name, for example `logo-1.png`.
+
+<Note>
+  Image management is available only for accounts on a paid plan. Other accounts receive `403`.
+</Note>
+
+<ParamField body="image" type="file" required>
+  The image file: PNG, JPG, GIF, or WebP, at most 15 MB. Both the file content and the file name extension must match one of these types.
+</ParamField>
+
+<ParamField body="path" type="string" required>
+  Target folder. Starts and ends with `/`, for example `/` or `/banners/`.
+</ParamField>
+
+<RequestExample>
+```bash cURL
+curl -X POST https://api2.ecomailapp.cz/media/images \
+  -H "key: YOUR_API_KEY" \
+  -F "image=@logo.png" \
+  -F "path=/banners/"
+```
+
+```php PHP
+$ch = curl_init();
+curl_setopt($ch, CURLOPT_URL, 'https://api2.ecomailapp.cz/media/images');
+curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+curl_setopt($ch, CURLOPT_POST, true);
+curl_setopt($ch, CURLOPT_HTTPHEADER, [
+    'key: YOUR_API_KEY',
+]);
+curl_setopt($ch, CURLOPT_POSTFIELDS, [
+    'image' => new CURLFile('logo.png', 'image/png'),
+    'path' => '/banners/',
+]);
+$response = curl_exec($ch);
+curl_close($ch);
+```
+</RequestExample>
+
+<ResponseExample>
+```json 201
+{
+  "name": "logo.png",
+  "url": "https://storage.googleapis.com/youraccount123/banners/logo.png"
+}
+```
+
+```json 403
+{
+  "errors": ["Available only for accounts on a paid plan"]
+}
+```
+
+```json 422
+{
+  "errors": {
+    "image": ["The image field must be a file of type: png, jpg, jpeg, gif, webp."]
+  }
+}
+```
+
+```json 503
+{
+  "errors": ["The image storage is not available right now. Please try again later."]
+}
+```
+</ResponseExample>

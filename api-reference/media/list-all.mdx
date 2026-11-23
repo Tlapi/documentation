@@ -1,0 +1,76 @@
+---
+title: 'List folders and images'
+api: 'GET https://api2.ecomailapp.cz/media'
+description: 'List the folders and images stored directly in one folder of your image library.'
+---
+
+Returns the direct children of the given folder: folders first, then images, each group sorted by name. Subfolders are not listed recursively.
+
+<Note>
+  Image management is available only for accounts on a paid plan. Other accounts receive `403`.
+</Note>
+
+<Note>
+  The listing is limited to 30,000 stored objects per folder.
+</Note>
+
+<ParamField query="path" type="string" required>
+  Folder to list. Starts and ends with `/`, for example `/` for the root or `/banners/` for a subfolder.
+</ParamField>
+
+<RequestExample>
+```bash cURL
+curl "https://api2.ecomailapp.cz/media?path=/banners/" \
+  -H "key: YOUR_API_KEY"
+```
+
+```php PHP
+$ch = curl_init();
+curl_setopt($ch, CURLOPT_URL, 'https://api2.ecomailapp.cz/media?' . http_build_query(['path' => '/banners/']));
+curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+curl_setopt($ch, CURLOPT_HTTPHEADER, [
+    'key: YOUR_API_KEY',
+]);
+$response = curl_exec($ch);
+curl_close($ch);
+```
+</RequestExample>
+
+<ResponseExample>
+```json 200
+[
+  {
+    "name": "2026",
+    "type": "folder",
+    "path": "/banners/",
+    "url": "",
+    "date": null,
+    "size": "",
+    "extension": ""
+  },
+  {
+    "name": "logo.png",
+    "type": "file",
+    "path": "/banners/",
+    "url": "https://storage.googleapis.com/youraccount123/banners/logo.png",
+    "date": "2026-09-14T15:24:23.586Z",
+    "size": "10240",
+    "extension": "image/png"
+  }
+]
+```
+
+```json 403
+{
+  "errors": ["Available only for accounts on a paid plan"]
+}
+```
+
+```json 422
+{
+  "errors": {
+    "path": ["The path field format is invalid."]
+  }
+}
+```
+</ResponseExample>

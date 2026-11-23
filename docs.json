@@ -62,6 +62,15 @@
             ]
           },
           {
+            "group": "Media",
+            "pages": [
+              "api-reference/media/list-all",
+              "api-reference/media/create-folder",
+              "api-reference/media/upload-image",
+              "api-reference/media/delete"
+            ]
+          },
+          {
             "group": "Domains",
             "pages": [
               "api-reference/domains/list-all",

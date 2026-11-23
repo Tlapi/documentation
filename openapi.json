@@ -38,6 +38,9 @@
       "description": "Import and delete discount coupons."
     },
     {
+      "name": "Media"
+    },
+    {
       "name": "Domains",
       "description": "Manage sending domains and their verification status."
     },
@@ -2991,6 +2994,502 @@
                 },
                 "example": {
                   "message": "Wrong api key"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/media": {
+      "get": {
+        "operationId": "mediaListAll",
+        "summary": "List folders and images",
+        "description": "List the folders and images stored directly in one folder of your image library.",
+        "tags": [
+          "Media"
+        ],
+        "parameters": [
+          {
+            "name": "path",
+            "in": "query",
+            "required": true,
+            "description": "Folder to list. Starts and ends with `/`, for example `/` for the root or `/banners/` for a subfolder.",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "name": {
+                        "type": "string"
+                      },
+                      "type": {
+                        "type": "string"
+                      },
+                      "path": {
+                        "type": "string"
+                      },
+                      "url": {
+                        "type": "string"
+                      },
+                      "date": {},
+                      "size": {
+                        "type": "string"
+                      },
+                      "extension": {
+                        "type": "string"
+                      }
+                    }
+                  }
+                },
+                "example": [
+                  {
+                    "name": "2026",
+                    "type": "folder",
+                    "path": "/banners/",
+                    "url": "",
+                    "date": null,
+                    "size": "",
+                    "extension": ""
+                  },
+                  {
+                    "name": "logo.png",
+                    "type": "file",
+                    "path": "/banners/",
+                    "url": "https://storage.googleapis.com/youraccount123/banners/logo.png",
+                    "date": "2026-09-14T15:24:23.586Z",
+                    "size": "10240",
+                    "extension": "image/png"
+                  }
+                ]
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "errors": {
+                      "type": "array",
+                      "items": {
+                        "type": "string"
+                      }
+                    }
+                  }
+                },
+                "example": {
+                  "errors": [
+                    "Available only for accounts on a paid plan"
+                  ]
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Unprocessable Entity",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "errors": {
+                      "type": "object",
+                      "properties": {
+                        "path": {
+                          "type": "array",
+                          "items": {
+                            "type": "string"
+                          }
+                        }
+                      }
+                    }
+                  }
+                },
+                "example": {
+                  "errors": {
+                    "path": [
+                      "The path field format is invalid."
+                    ]
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "delete": {
+        "operationId": "mediaDelete",
+        "summary": "Delete folders and images",
+        "description": "Delete images and folders from your image library.",
+        "tags": [
+          "Media"
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "items": {
+                    "type": "string",
+                    "description": "Images and folders to delete, 1 to 100 items."
+                  },
+                  "type": {
+                    "type": "string",
+                    "description": "`file` for an image, `folder` for a folder."
+                  },
+                  "name": {
+                    "type": "string",
+                    "description": "Name of the image or folder."
+                  },
+                  "path": {
+                    "type": "string",
+                    "description": "Folder that holds the item. Starts and ends with `/`."
+                  }
+                },
+                "required": [
+                  "items",
+                  "type",
+                  "name",
+                  "path"
+                ]
+              },
+              "example": {
+                "items": [
+                  {
+                    "type": "file",
+                    "name": "logo.png",
+                    "path": "/banners/"
+                  },
+                  {
+                    "type": "folder",
+                    "name": "2025",
+                    "path": "/banners/"
+                  }
+                ]
+              }
+            }
+          }
+        },
+        "responses": {
+          "204": {
+            "description": "No Content",
+            "content": {
+              "application/json": {}
+            }
+          },
+          "403": {
+            "description": "Forbidden",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "errors": {
+                      "type": "array",
+                      "items": {
+                        "type": "string"
+                      }
+                    }
+                  }
+                },
+                "example": {
+                  "errors": [
+                    "Available only for accounts on a paid plan"
+                  ]
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Unprocessable Entity",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "errors": {
+                      "type": "object",
+                      "properties": {
+                        "items.0.type": {
+                          "type": "array",
+                          "items": {
+                            "type": "string"
+                          }
+                        }
+                      }
+                    }
+                  }
+                },
+                "example": {
+                  "errors": {
+                    "items.0.type": [
+                      "The selected items.0.type is invalid."
+                    ]
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/media/folders": {
+      "post": {
+        "operationId": "mediaCreateFolder",
+        "summary": "Create folder",
+        "description": "Create a folder in your image library.",
+        "tags": [
+          "Media"
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "name": {
+                    "type": "string",
+                    "description": "Folder name, at most 255 characters. It must not contain `/` and must not be `.` or `..`."
+                  },
+                  "path": {
+                    "type": "string",
+                    "description": "Parent folder. Starts and ends with `/`, for example `/` or `/banners/`."
+                  }
+                },
+                "required": [
+                  "name",
+                  "path"
+                ]
+              },
+              "example": {
+                "name": "2026",
+                "path": "/banners/"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Created",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "name": {
+                      "type": "string"
+                    },
+                    "path": {
+                      "type": "string"
+                    }
+                  }
+                },
+                "example": {
+                  "name": "2026",
+                  "path": "/banners/"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "errors": {
+                      "type": "array",
+                      "items": {
+                        "type": "string"
+                      }
+                    }
+                  }
+                },
+                "example": {
+                  "errors": [
+                    "Available only for accounts on a paid plan"
+                  ]
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Unprocessable Entity",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "errors": {
+                      "type": "object",
+                      "properties": {
+                        "name": {
+                          "type": "array",
+                          "items": {
+                            "type": "string"
+                          }
+                        }
+                      }
+                    }
+                  }
+                },
+                "example": {
+                  "errors": {
+                    "name": [
+                      "The name field format is invalid."
+                    ]
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/media/images": {
+      "post": {
+        "operationId": "mediaUploadImage",
+        "summary": "Upload image",
+        "description": "Upload an image into a folder of your image library and get its public URL.",
+        "tags": [
+          "Media"
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "image": {
+                    "type": "string",
+                    "description": "The image file: PNG, JPG, GIF, or WebP, at most 15 MB. Both the file content and the file name extension must match one of these types."
+                  },
+                  "path": {
+                    "type": "string",
+                    "description": "Target folder. Starts and ends with `/`, for example `/` or `/banners/`."
+                  }
+                },
+                "required": [
+                  "image",
+                  "path"
+                ]
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Created",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "name": {
+                      "type": "string"
+                    },
+                    "url": {
+                      "type": "string"
+                    }
+                  }
+                },
+                "example": {
+                  "name": "logo.png",
+                  "url": "https://storage.googleapis.com/youraccount123/banners/logo.png"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "errors": {
+                      "type": "array",
+                      "items": {
+                        "type": "string"
+                      }
+                    }
+                  }
+                },
+                "example": {
+                  "errors": [
+                    "Available only for accounts on a paid plan"
+                  ]
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Unprocessable Entity",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "errors": {
+                      "type": "object",
+                      "properties": {
+                        "image": {
+                          "type": "array",
+                          "items": {
+                            "type": "string"
+                          }
+                        }
+                      }
+                    }
+                  }
+                },
+                "example": {
+                  "errors": {
+                    "image": [
+                      "The image field must be a file of type: png, jpg, jpeg, gif, webp."
+                    ]
+                  }
+                }
+              }
+            }
+          },
+          "503": {
+            "description": "Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "errors": {
+                      "type": "array",
+                      "items": {
+                        "type": "string"
+                      }
+                    }
+                  }
+                },
+                "example": {
+                  "errors": [
+                    "The image storage is not available right now. Please try again later."
+                  ]
                 }
               }
             }
