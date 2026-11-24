@@ -4,18 +4,18 @@ api: 'POST https://api2.ecomailapp.cz/media/folders'
 description: 'Create a folder in your image library.'
 ---
 
-Creates a folder inside an existing folder. When a folder with the same name was deleted before, it is restored with its images.
+Creates a folder inside an existing folder. When a folder with the same name was deleted before, the folder is listed again, but the images deleted with it stay deleted.
 
 <Note>
   Image management is available only for accounts on a paid plan. Other accounts receive `403`.
 </Note>
 
 <ParamField body="name" type="string" required>
-  Folder name, at most 255 characters. It must not contain `/` and must not be `.` or `..`.
+  Folder name, at most 255 characters. It must not contain `/`, `\`, `#`, `?`, or control characters, and must not be `.` or `..`.
 </ParamField>
 
 <ParamField body="path" type="string" required>
-  Parent folder. Starts and ends with `/`, for example `/` or `/banners/`.
+  Parent folder. Starts and ends with `/`, for example `/` or `/banners/`. Folder names in it must not contain `\`, `#`, `?`, or control characters.
 </ParamField>
 
 <RequestExample>

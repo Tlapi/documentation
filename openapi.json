@@ -3014,7 +3014,7 @@
             "name": "path",
             "in": "query",
             "required": true,
-            "description": "Folder to list. Starts and ends with `/`, for example `/` for the root or `/banners/` for a subfolder.",
+            "description": "Folder to list. Starts and ends with `/`, for example `/` for the root or `/banners/` for a subfolder. Folder names in it must not contain `\\`, `#`, `?`, or control characters.",
             "schema": {
               "type": "string"
             }
@@ -3158,7 +3158,7 @@
                   },
                   "path": {
                     "type": "string",
-                    "description": "Folder that holds the item. Starts and ends with `/`."
+                    "description": "Folder that holds the item. Starts and ends with `/`. Folder names in it must not contain `\\`, `#`, `?`, or control characters."
                   }
                 },
                 "required": [
@@ -3244,6 +3244,24 @@
                 }
               }
             }
+          },
+          "429": {
+            "description": "Too Many Requests",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "error": {
+                      "type": "string"
+                    }
+                  }
+                },
+                "example": {
+                  "error": "Too Many Attempts."
+                }
+              }
+            }
           }
         }
       }
@@ -3265,11 +3283,11 @@
                 "properties": {
                   "name": {
                     "type": "string",
-                    "description": "Folder name, at most 255 characters. It must not contain `/` and must not be `.` or `..`."
+                    "description": "Folder name, at most 255 characters. It must not contain `/`, `\\`, `#`, `?`, or control characters, and must not be `.` or `..`."
                   },
                   "path": {
                     "type": "string",
-                    "description": "Parent folder. Starts and ends with `/`, for example `/` or `/banners/`."
+                    "description": "Parent folder. Starts and ends with `/`, for example `/` or `/banners/`. Folder names in it must not contain `\\`, `#`, `?`, or control characters."
                   }
                 },
                 "required": [
@@ -3380,11 +3398,11 @@
                 "properties": {
                   "image": {
                     "type": "string",
-                    "description": "The image file: PNG, JPG, GIF, or WebP, at most 15 MB. Both the file content and the file name extension must match one of these types."
+                    "description": "The image file: PNG, JPG, or GIF, at most 15 MB. Both the file content and the file name extension must match one of these types. The file name must not contain `#`, `?`, or control characters."
                   },
                   "path": {
                     "type": "string",
-                    "description": "Target folder. Starts and ends with `/`, for example `/` or `/banners/`."
+                    "description": "Target folder. Starts and ends with `/`, for example `/` or `/banners/`. Folder names in it must not contain `\\`, `#`, `?`, or control characters."
                   }
                 },
                 "required": [
@@ -3464,9 +3482,27 @@
                 "example": {
                   "errors": {
                     "image": [
-                      "The image field must be a file of type: png, jpg, jpeg, gif, webp."
+                      "The image field must be a file of type: png, jpg, jpeg, gif."
                     ]
                   }
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "Too Many Requests",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "error": {
+                      "type": "string"
+                    }
+                  }
+                },
+                "example": {
+                  "error": "Too Many Attempts."
                 }
               }
             }

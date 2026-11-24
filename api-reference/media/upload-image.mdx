@@ -10,12 +10,16 @@ Send the image as `multipart/form-data`. The image is publicly readable at the r
   Image management is available only for accounts on a paid plan. Other accounts receive `403`.
 </Note>
 
+<Note>
+  Uploads and deletes share a limit of 30 requests per minute per account. Above it you receive `429` with a `Retry-After` header that says how many seconds to wait.
+</Note>
+
 <ParamField body="image" type="file" required>
-  The image file: PNG, JPG, GIF, or WebP, at most 15 MB. Both the file content and the file name extension must match one of these types.
+  The image file: PNG, JPG, or GIF, at most 15 MB. Both the file content and the file name extension must match one of these types. The file name must not contain `#`, `?`, or control characters.
 </ParamField>
 
 <ParamField body="path" type="string" required>
-  Target folder. Starts and ends with `/`, for example `/` or `/banners/`.
+  Target folder. Starts and ends with `/`, for example `/` or `/banners/`. Folder names in it must not contain `\`, `#`, `?`, or control characters.
 </ParamField>
 
 <RequestExample>
@@ -60,8 +64,14 @@ curl_close($ch);
 ```json 422
 {
   "errors": {
-    "image": ["The image field must be a file of type: png, jpg, jpeg, gif, webp."]
+    "image": ["The image field must be a file of type: png, jpg, jpeg, gif."]
   }
+}
+```
+
+```json 429
+{
+  "error": "Too Many Attempts."
 }
 ```
 

@@ -14,6 +14,10 @@ Deletes up to 100 images or folders in one request. Deleting a folder deletes ev
   Image management is available only for accounts on a paid plan. Other accounts receive `403`.
 </Note>
 
+<Note>
+  Uploads and deletes share a limit of 30 requests per minute per account. Above it you receive `429` with a `Retry-After` header that says how many seconds to wait.
+</Note>
+
 <ParamField body="items" type="object[]" required>
   Images and folders to delete, 1 to 100 items.
   <Expandable title="properties">
@@ -24,7 +28,7 @@ Deletes up to 100 images or folders in one request. Deleting a folder deletes ev
       Name of the image or folder.
     </ParamField>
     <ParamField body="path" type="string" required>
-      Folder that holds the item. Starts and ends with `/`.
+      Folder that holds the item. Starts and ends with `/`. Folder names in it must not contain `\`, `#`, `?`, or control characters.
     </ParamField>
   </Expandable>
 </ParamField>
@@ -79,4 +83,10 @@ curl_close($ch);
   }
 }
 ```
+```json 429
+{
+  "error": "Too Many Attempts."
+}
+```
+
 </ResponseExample>

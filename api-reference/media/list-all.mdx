@@ -15,7 +15,7 @@ Returns the direct children of the given folder: folders first, then images, eac
 </Note>
 
 <ParamField query="path" type="string" required>
-  Folder to list. Starts and ends with `/`, for example `/` for the root or `/banners/` for a subfolder.
+  Folder to list. Starts and ends with `/`, for example `/` for the root or `/banners/` for a subfolder. Folder names in it must not contain `\`, `#`, `?`, or control characters.
 </ParamField>
 
 <RequestExample>
