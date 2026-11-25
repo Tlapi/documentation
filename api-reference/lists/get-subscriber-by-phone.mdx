@@ -12,6 +12,10 @@ description: 'Retrieve a specific subscriber from a list by their phone number.'
   Phone number of the subscriber. Must be a valid international phone number.
 </ParamField>
 
+<Note>
+  `open_tracking` in the response: `false` means Ecomail does not track opens for the contact. `true` and `null` both mean opens are tracked. `null` means the value was never set.
+</Note>
+
 <RequestExample>
 ```bash cURL
 curl https://api2.ecomailapp.cz/lists/789/subscriber-by-phone/+420777888999 \
@@ -44,7 +48,8 @@ curl_close($ch);
     "status": 1,
     "subscribed_at": "2023-01-01T00:00:00.000000Z",
     "custom_fields": { "id": "123" },
-    "source": "API"
+    "source": "API",
+    "open_tracking": true
   }
 }
 ```

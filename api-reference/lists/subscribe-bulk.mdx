@@ -31,6 +31,10 @@ description: 'Subscribe multiple contacts to a specific list in a single request
     <ParamField body="subscriber_data[][fcm_app_id]" type="string">
       Firebase application ID associated with the FCM token. Max 150 characters. Required whenever you send `fcm_token`.
     </ParamField>
+
+    <ParamField body="subscriber_data[][open_tracking]" type="boolean">
+      Track email opens for this contact. Send `false` to stop tracking opens in campaigns and automations sent to the contact: Ecomail does not record the contact's opens, and a click no longer counts as an open. Send `true` to track opens again. Only the JSON values `true` and `false` are accepted. A new contact, and an anonymized contact that the request adds again, gets `true` when you leave the field out. Any other existing contact keeps its stored value when you leave the field out or when `update_existing` is `false`. Double opt-in confirmation emails and transactional emails are not affected.
+    </ParamField>
   </Expandable>
 </ParamField>
 
@@ -68,7 +72,8 @@ curl -X POST https://api2.ecomailapp.cz/lists/1/subscribe-bulk \
         "custom_fields": { "category": "customer" },
         "fcm_token": "fcmExampleToken:APA91bExampleRegistrationToken",
         "fcm_platform": "ios",
-        "fcm_app_id": "1:1234567890:ios:abc123def456"
+        "fcm_app_id": "1:1234567890:ios:abc123def456",
+        "open_tracking": true
       },
       {
         "name": "Foo 2",
@@ -101,6 +106,7 @@ curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode([
             'fcm_token' => 'fcmExampleToken:APA91bExampleRegistrationToken',
             'fcm_platform' => 'ios',
             'fcm_app_id' => '1:1234567890:ios:abc123def456',
+            'open_tracking' => true,
         ],
         [
             'name' => 'Foo 2',

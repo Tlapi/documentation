@@ -24,6 +24,10 @@ description: 'Retrieve a paginated list of subscribers from a specific list.'
   Status values in the response: `1` = subscribed, `2` = unsubscribed, `4` = hard bounce, `5` = spam complaint, `6` = unconfirmed.
 </Note>
 
+<Note>
+  `open_tracking` in the response: `false` means Ecomail does not track opens for the contact. `true` and `null` both mean opens are tracked. `null` means the value was never set.
+</Note>
+
 <RequestExample>
 ```bash cURL
 curl https://api2.ecomailapp.cz/lists/75/subscribers?page=1&per_page=20 \
@@ -68,7 +72,8 @@ curl_close($ch);
         "company": null,
         "city": "City",
         "country": "CZ",
-        "phone": null
+        "phone": null,
+        "open_tracking": true
       }
     }
   ],
