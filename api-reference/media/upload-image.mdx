@@ -15,7 +15,7 @@ Send the image as `multipart/form-data`. The image is publicly readable at the r
 </Note>
 
 <ParamField body="image" type="file" required>
-  The image file: PNG, JPG, or GIF, at most 15 MB. Both the file content and the file name extension must match one of these types. The file name must not contain `#`, `?`, or control characters.
+  The image file: PNG, JPG, or GIF, at most 2 MB. Both the file content and the file name extension must match one of these types. The file name must not contain `#`, `?`, or control characters.
 </ParamField>
 
 <ParamField body="path" type="string" required>
@@ -71,7 +71,7 @@ curl_close($ch);
 
 ```json 429
 {
-  "error": "Too Many Attempts."
+  "errors": ["Too Many Attempts."]
 }
 ```
 

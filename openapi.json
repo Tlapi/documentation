@@ -3252,13 +3252,18 @@
                 "schema": {
                   "type": "object",
                   "properties": {
-                    "error": {
-                      "type": "string"
+                    "errors": {
+                      "type": "array",
+                      "items": {
+                        "type": "string"
+                      }
                     }
                   }
                 },
                 "example": {
-                  "error": "Too Many Attempts."
+                  "errors": [
+                    "Too Many Attempts."
+                  ]
                 }
               }
             }
@@ -3398,7 +3403,7 @@
                 "properties": {
                   "image": {
                     "type": "string",
-                    "description": "The image file: PNG, JPG, or GIF, at most 15 MB. Both the file content and the file name extension must match one of these types. The file name must not contain `#`, `?`, or control characters."
+                    "description": "The image file: PNG, JPG, or GIF, at most 2 MB. Both the file content and the file name extension must match one of these types. The file name must not contain `#`, `?`, or control characters."
                   },
                   "path": {
                     "type": "string",
@@ -3496,13 +3501,18 @@
                 "schema": {
                   "type": "object",
                   "properties": {
-                    "error": {
-                      "type": "string"
+                    "errors": {
+                      "type": "array",
+                      "items": {
+                        "type": "string"
+                      }
                     }
                   }
                 },
                 "example": {
-                  "error": "Too Many Attempts."
+                  "errors": [
+                    "Too Many Attempts."
+                  ]
                 }
               }
             }
