@@ -16,6 +16,10 @@ description: 'Retrieve a specific subscriber from a list by their email address.
   Status values in the response: `1` = subscribed, `2` = unsubscribed, `4` = hard bounce, `5` = spam complaint, `6` = unconfirmed.
 </Note>
 
+<Note>
+  `open_tracking` in the response: `false` means Ecomail does not track opens for the contact. `true` and `null` both mean opens are tracked. `null` means the value was never set.
+</Note>
+
 <RequestExample>
 ```bash cURL
 curl https://api2.ecomailapp.cz/lists/42/subscriber/john.doe@example.com \
@@ -60,7 +64,8 @@ curl_close($ch);
     "groups": { "grp_60ddec46df422": ["a", "b"] },
     "fcm_token": "fcmExampleToken:APA91bExampleRegistrationToken",
     "fcm_platform": "android",
-    "fcm_app_id": "1:1234567890:android:abc123def456"
+    "fcm_app_id": "1:1234567890:android:abc123def456",
+    "open_tracking": true
   }
 }
 ```

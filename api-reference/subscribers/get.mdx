@@ -8,6 +8,10 @@ description: 'Get subscriber details globally across all lists in the account.'
   Subscriber's email address.
 </ParamField>
 
+<Note>
+  `open_tracking` in the response: `false` means Ecomail does not track opens for the contact. `true` and `null` both mean opens are tracked. `null` means the value was never set.
+</Note>
+
 <RequestExample>
 ```bash cURL
 curl https://api2.ecomailapp.cz/subscribers/foo@bar.cz \
@@ -43,6 +47,7 @@ curl_close($ch);
     "rating": 2.5,
     "country": "CZ",
     "tags": ["Completed", "SomeTag"],
+    "open_tracking": false,
     "lists": {
       "1": {
         "id": 407704,

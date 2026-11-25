@@ -472,18 +472,6 @@
                         "total_open": {
                           "type": "integer"
                         },
-                        "prefetched": {
-                          "type": "integer"
-                        },
-                        "proxy": {
-                          "type": "integer"
-                        },
-                        "machine_open": {
-                          "type": "integer"
-                        },
-                        "total_user_open": {
-                          "type": "integer"
-                        },
                         "not_opened": {
                           "type": "integer"
                         },
@@ -549,10 +537,6 @@
                     "open": 0,
                     "open_rate": 0,
                     "total_open": 0,
-                    "prefetched": 0,
-                    "proxy": 0,
-                    "machine_open": 0,
-                    "total_user_open": 0,
                     "not_opened": 2,
                     "send": 2,
                     "click": 1,
@@ -2043,18 +2027,6 @@
                         "open_rate": {
                           "type": "integer"
                         },
-                        "prefetched": {
-                          "type": "integer"
-                        },
-                        "proxy": {
-                          "type": "integer"
-                        },
-                        "machine_open": {
-                          "type": "integer"
-                        },
-                        "total_user_open": {
-                          "type": "integer"
-                        },
                         "click": {
                           "type": "integer"
                         },
@@ -2106,10 +2078,6 @@
                     "open": 5,
                     "total_open": 10,
                     "open_rate": 10,
-                    "prefetched": 3,
-                    "proxy": 1,
-                    "machine_open": 3,
-                    "total_user_open": 7,
                     "click": 2,
                     "total_click": 4,
                     "click_rate": 4,
@@ -4183,7 +4151,10 @@
                               "country": {
                                 "type": "string"
                               },
-                              "phone": {}
+                              "phone": {},
+                              "open_tracking": {
+                                "type": "boolean"
+                              }
                             }
                           }
                         }
@@ -4218,7 +4189,8 @@
                         "company": null,
                         "city": "City",
                         "country": "CZ",
-                        "phone": null
+                        "phone": null,
+                        "open_tracking": true
                       }
                     }
                   ],
@@ -4342,6 +4314,9 @@
                         },
                         "fcm_app_id": {
                           "type": "string"
+                        },
+                        "open_tracking": {
+                          "type": "boolean"
                         }
                       }
                     }
@@ -4377,7 +4352,8 @@
                     },
                     "fcm_token": "fcmExampleToken:APA91bExampleRegistrationToken",
                     "fcm_platform": "android",
-                    "fcm_app_id": "1:1234567890:android:abc123def456"
+                    "fcm_app_id": "1:1234567890:android:abc123def456",
+                    "open_tracking": true
                   }
                 }
               }
@@ -4473,6 +4449,9 @@
                         },
                         "source": {
                           "type": "string"
+                        },
+                        "open_tracking": {
+                          "type": "boolean"
                         }
                       }
                     }
@@ -4488,7 +4467,8 @@
                     "custom_fields": {
                       "id": "123"
                     },
-                    "source": "API"
+                    "source": "API",
+                    "open_tracking": true
                   }
                 }
               }
@@ -4645,6 +4625,10 @@
                       "fcm_app_id": {
                         "type": "string",
                         "description": "Firebase application ID associated with the FCM token. Max 150 characters. Required whenever you send `fcm_token`."
+                      },
+                      "open_tracking": {
+                        "type": "boolean",
+                        "description": "Track email opens for this contact. Send `false` to stop tracking opens in campaigns and automations sent to the contact: Ecomail does not record the contact's opens, and a click no longer counts as an open. Send `true` to track opens again. Only the JSON values `true` and `false` are accepted. A new contact, and an anonymized contact that the request adds again, gets `true` when you leave the field out. Any other existing contact keeps its stored value when you leave the field out or when `update_existing` is `false`. Double opt-in confirmation emails and transactional emails are not affected."
                       }
                     },
                     "required": [
@@ -4710,7 +4694,8 @@
                   },
                   "fcm_token": "fcmExampleToken:APA91bExampleRegistrationToken",
                   "fcm_platform": "android",
-                  "fcm_app_id": "1:1234567890:android:abc123def456"
+                  "fcm_app_id": "1:1234567890:android:abc123def456",
+                  "open_tracking": true
                 },
                 "trigger_autoresponders": false,
                 "update_existing": false,
@@ -4750,6 +4735,9 @@
                     "inserted_at": {
                       "type": "string"
                     },
+                    "open_tracking": {
+                      "type": "boolean"
+                    },
                     "already_subscribed": {
                       "type": "boolean"
                     }
@@ -4765,6 +4753,7 @@
                   "bounced_hard": 0,
                   "bounce_message": null,
                   "inserted_at": "2015-01-21 10:50:04",
+                  "open_tracking": true,
                   "already_subscribed": true
                 }
               }
@@ -4864,6 +4853,10 @@
                         "fcm_app_id": {
                           "type": "string",
                           "description": "Firebase application ID associated with the FCM token. Max 150 characters. Required whenever you send `fcm_token`."
+                        },
+                        "open_tracking": {
+                          "type": "boolean",
+                          "description": "Track email opens for this contact. Send `false` to stop tracking opens in campaigns and automations sent to the contact: Ecomail does not record the contact's opens, and a click no longer counts as an open. Send `true` to track opens again. Only the JSON values `true` and `false` are accepted. A new contact, and an anonymized contact that the request adds again, gets `true` when you leave the field out. Any other existing contact keeps its stored value when you leave the field out or when `update_existing` is `false`. Double opt-in confirmation emails and transactional emails are not affected."
                         }
                       },
                       "required": [
@@ -4902,7 +4895,8 @@
                     },
                     "fcm_token": "fcmExampleToken:APA91bExampleRegistrationToken",
                     "fcm_platform": "ios",
-                    "fcm_app_id": "1:1234567890:ios:abc123def456"
+                    "fcm_app_id": "1:1234567890:ios:abc123def456",
+                    "open_tracking": true
                   },
                   {
                     "name": "Foo 2",
@@ -5213,6 +5207,10 @@
                       "fcm_app_id": {
                         "type": "string",
                         "description": "Firebase application ID associated with the FCM token. Max 150 characters. Required whenever you send `fcm_token`."
+                      },
+                      "open_tracking": {
+                        "type": "boolean",
+                        "description": "Track email opens for this contact. Send `false` to stop tracking opens in campaigns and automations sent to the contact: Ecomail does not record the contact's opens, and a click no longer counts as an open. Send `true` to track opens again. Only the JSON values `true` and `false` are accepted. Leave the field out to keep the stored value. Double opt-in confirmation emails and transactional emails are not affected."
                       }
                     }
                   }
@@ -5243,7 +5241,8 @@
                   },
                   "fcm_token": "fcmExampleToken:APA91bExampleRegistrationToken",
                   "fcm_platform": "web",
-                  "fcm_app_id": "1:1234567890:web:abc123def456"
+                  "fcm_app_id": "1:1234567890:web:abc123def456",
+                  "open_tracking": false
                 }
               }
             }
@@ -5288,6 +5287,9 @@
                     },
                     "fcm_app_id": {
                       "type": "string"
+                    },
+                    "open_tracking": {
+                      "type": "boolean"
                     }
                   }
                 },
@@ -5303,7 +5305,8 @@
                   "inserted_at": "2022-11-15 13:59:21",
                   "fcm_token": "fcmExampleToken:APA91bExampleRegistrationToken",
                   "fcm_platform": "web",
-                  "fcm_app_id": "1:1234567890:web:abc123def456"
+                  "fcm_app_id": "1:1234567890:web:abc123def456",
+                  "open_tracking": false
                 }
               }
             }
@@ -5410,6 +5413,10 @@
                         "fcm_app_id": {
                           "type": "string",
                           "description": "Firebase application ID associated with the FCM token. Max 150 characters. Required whenever you send `fcm_token`."
+                        },
+                        "open_tracking": {
+                          "type": "boolean",
+                          "description": "Track email opens for this contact. Send `false` to stop tracking opens in campaigns and automations sent to the contact: Ecomail does not record the contact's opens, and a click no longer counts as an open. Send `true` to track opens again. Only the JSON values `true` and `false` are accepted. Leave the field out to keep the stored value. Double opt-in confirmation emails and transactional emails are not affected."
                         }
                       },
                       "required": [
@@ -5441,7 +5448,8 @@
                     ],
                     "fcm_token": "fcmExampleToken:APA91bExampleRegistrationToken",
                     "fcm_platform": "android",
-                    "fcm_app_id": "1:1234567890:android:abc123def456"
+                    "fcm_app_id": "1:1234567890:android:abc123def456",
+                    "open_tracking": false
                   },
                   {
                     "email": "foo2@bar.cz",
@@ -7314,6 +7322,9 @@
                             "type": "string"
                           }
                         },
+                        "open_tracking": {
+                          "type": "boolean"
+                        },
                         "lists": {
                           "type": "object",
                           "properties": {
@@ -7361,6 +7372,7 @@
                       "Completed",
                       "SomeTag"
                     ],
+                    "open_tracking": false,
                     "lists": {
                       "1": {
                         "id": 407704,
